@@ -2,5 +2,166 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
-  "projects": {}
+  "projects": {
+    "libs": {
+      "projectType": "library",
+      "root": "projects/libs",
+      "sourceRoot": "projects/libs/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/libs/tsconfig.lib.json",
+            "project": "projects/libs/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/libs/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/libs/src/test.ts",
+            "tsConfig": "projects/libs/tsconfig.spec.json",
+            "karmaConfig": "projects/libs/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/libs/tsconfig.lib.json",
+              "projects/libs/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "libs-mock": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "projects/libs-mock",
+      "sourceRoot": "projects/libs-mock/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/libs-mock",
+            "index": "projects/libs-mock/src/index.html",
+            "main": "projects/libs-mock/src/main.ts",
+            "polyfills": "projects/libs-mock/src/polyfills.ts",
+            "tsConfig": "projects/libs-mock/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "projects/libs-mock/src/favicon.ico",
+              "projects/libs-mock/src/assets"
+            ],
+            "styles": [
+              "projects/libs-mock/src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/libs-mock/src/environments/environment.ts",
+                  "with": "projects/libs-mock/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "libs-mock:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "libs-mock:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "libs-mock:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/libs-mock/src/test.ts",
+            "polyfills": "projects/libs-mock/src/polyfills.ts",
+            "tsConfig": "projects/libs-mock/tsconfig.spec.json",
+            "karmaConfig": "projects/libs-mock/karma.conf.js",
+            "assets": [
+              "projects/libs-mock/src/favicon.ico",
+              "projects/libs-mock/src/assets"
+            ],
+            "styles": [
+              "projects/libs-mock/src/styles.css"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/libs-mock/tsconfig.app.json",
+              "projects/libs-mock/tsconfig.spec.json",
+              "projects/libs-mock/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/libs-mock/e2e/protractor.conf.js",
+            "devServerTarget": "libs-mock:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "libs-mock:serve:production"
+            }
+          }
+        }
+      }
+    }},
+  "cli": {
+    "analytics": "b472af18-ac63-41a0-8cbe-5ebb21a1ea4b"
+  },
+  "defaultProject": "libs"
 }

@@ -2,6 +2,18 @@
  * Public API Surface of libs
  */
 
-export * from './lib/libs.service';
-export * from './lib/libs.component';
-export * from './lib/libs.module';
+export {
+  LibModule
+} from './lib.module';
+export * from './services/settings.service';
+export * from './services/storage.service';
+export * from './services/thread.service';
+export * from './services/file-library.service';
+export * from './services/message.service';
+export * from './services/log.service';
+export * from './services/event.service';
+export * from './services/user.service';
+export * from './utils/date.util';
+export * from './utils/device-info.util';
+export * from './utils/eventsNames.util';
+export * from './utils/security.util';

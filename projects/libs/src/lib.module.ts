@@ -31,8 +31,7 @@ import {CommonModule} from '@angular/common';
 import {UploadFileProgressComponent} from './components/upload-file-progress.component';
 import {VerifyEMailDialogComponent} from './components/verify-email-dialog.component';
 import {DialogDeleteComponent} from './components/delete-dialog.component';
-
-export const configs = {version: ''};
+import {ConfigsService} from './services/configs.service';
 
 @NgModule({
   imports: [
@@ -86,6 +85,6 @@ export const configs = {version: ''};
 
 export class LibModule {
   static start(config: { version: string } = {version: ''}): void {
-    configs.version = config.version;
+    ConfigsService.versionName = config.version;
   }
 }

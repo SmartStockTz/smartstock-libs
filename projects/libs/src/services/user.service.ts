@@ -16,11 +16,11 @@ import {VerifyEMailDialogComponent} from '../components/verify-email-dialog.comp
 export class UserService {
 
 
-  constructor(private readonly _httpClient: HttpClient,
-              private readonly _settings: SettingsService,
+  constructor(private readonly httpClient: HttpClient,
+              private readonly settingsService: SettingsService,
               private readonly dialog: MatDialog,
               private readonly logger: LogService,
-              private readonly _storage: StorageService) {
+              private readonly storageService: StorageService) {
   }
 
   async currentUser(): Promise<any> {
@@ -43,7 +43,7 @@ export class UserService {
   }
 
   async getAllUser(pagination: { size: number, skip: number }): Promise<UserModel[]> {
-    const projectId = await this._settings.getCustomerProjectId();
+    const projectId = await this.settingsService.getCustomerProjectId();
     return BFast.database().collection('_User')
       .query()
       .equalTo('projectId', projectId)
@@ -61,12 +61,12 @@ export class UserService {
 
   async login(user: { username: string, password: string }): Promise<UserModel> {
     const authUser = await BFast.auth().logIn<UserModel>(user.username, user.password);
-    await this._storage.removeActiveShop();
+    await this.storageService.removeActiveShop();
     if (authUser && authUser.role !== 'admin') {
-      await this._storage.saveActiveUser(authUser);
+      await this.storageService.saveActiveUser(authUser);
       return authUser;
     } else if (authUser && authUser.verified === true) {
-      await this._storage.saveActiveUser(authUser);
+      await this.storageService.saveActiveUser(authUser);
       return authUser;
     } else {
       await BFast.functions().request('/functions/users/reVerifyAccount/' + user.username).post();
@@ -80,8 +80,8 @@ export class UserService {
 
   async logout(user: UserModel) {
     await BFast.auth().logOut();
-    await this._storage.removeActiveUser();
-    await this._storage.removeActiveShop();
+    await this.storageService.removeActiveUser();
+    await this.storageService.removeActiveShop();
     return;
   }
 
@@ -95,9 +95,9 @@ export class UserService {
         allowWholesale: true
       };
       user.shops = [];
-      await this._storage.removeActiveShop();
+      await this.storageService.removeActiveShop();
       return await BFast.functions().request('/functions/users/create').post(user, {
-        headers: this._settings.ssmFunctionsHeader
+        headers: this.settingsService.ssmFunctionsHeader
       });
     } catch (e) {
       if (e && e.response && e.response.data) {
@@ -118,7 +118,7 @@ export class UserService {
 
   addUser(user: UserModel): Promise<UserModel> {
     return new Promise<UserModel>(async (resolve, reject) => {
-      const shop = await this._storage.getActiveShop();
+      const shop = await this.storageService.getActiveShop();
       const shops = user.shops ? user.shops : [];
       const shops1 = shops.filter(value => value.applicationId !== shop.applicationId);
       user.applicationId = shop.applicationId;
@@ -127,8 +127,8 @@ export class UserService {
       user.businessName = shop.businessName;
       user.settings = shop.settings;
       user.shops = shops1;
-      this._httpClient.post<UserModel>(this._settings.ssmFunctionsURL + '/functions/users/seller', user, {
-        headers: this._settings.ssmFunctionsHeader
+      this.httpClient.post<UserModel>(this.settingsService.ssmFunctionsURL + '/functions/users/seller', user, {
+        headers: this.settingsService.ssmFunctionsHeader
       }).subscribe(value => {
         resolve(value);
       }, error => {
@@ -139,7 +139,7 @@ export class UserService {
 
   async getShops(): Promise<ShopModel[]> {
     try {
-      const user = await this._storage.getActiveUser();
+      const user = await this.storageService.getActiveUser();
       const shops = [];
       user.shops.forEach(element => {
         shops.push(element);
@@ -162,7 +162,7 @@ export class UserService {
 
   async getCurrentShop(): Promise<ShopModel> {
     try {
-      const activeShop = await this._storage.getActiveShop();
+      const activeShop = await this.storageService.getActiveShop();
       if (activeShop && activeShop.projectId && activeShop.applicationId && activeShop.projectUrlId) {
         return activeShop;
       } else {
@@ -175,8 +175,8 @@ export class UserService {
 
   async saveCurrentShop(shop: ShopModel): Promise<ShopModel> {
     try {
-      await this._storage.saveCurrentProjectId(shop.projectId);
-      return await this._storage.saveActiveShop(shop);
+      await this.storageService.saveCurrentProjectId(shop.projectId);
+      return await this.storageService.saveActiveShop(shop);
     } catch (e) {
       throw e;
     }
@@ -205,10 +205,10 @@ export class UserService {
 
   updatePassword(user: UserModel, password: string): Promise<any> {
     return new Promise<UserModel>((resolve, reject) => {
-      this._httpClient.put<any>(this._settings.ssmFunctionsURL + '/functions/users/password/' + user.id, {
+      this.httpClient.put<any>(this.settingsService.ssmFunctionsURL + '/functions/users/password/' + user.id, {
         password: password
       }, {
-        headers: this._settings.ssmFunctionsHeader
+        headers: this.settingsService.ssmFunctionsHeader
       }).subscribe(value => {
         resolve(value);
       }, error => {
@@ -219,8 +219,8 @@ export class UserService {
 
   updateUser(user: UserModel, data: { [p: string]: any }): Promise<UserModel> {
     return new Promise(async (resolve, reject) => {
-      this._httpClient.put<UserModel>(this._settings.ssmFunctionsURL + '/functions/users/' + user.id, data, {
-        headers: this._settings.ssmFunctionsHeader
+      this.httpClient.put<UserModel>(this.settingsService.ssmFunctionsURL + '/functions/users/' + user.id, data, {
+        headers: this.settingsService.ssmFunctionsHeader
       }).subscribe(value => resolve(value), error1 => {
         reject(error1);
       });
@@ -229,7 +229,7 @@ export class UserService {
 
   async updateCurrentUser(user: UserModel): Promise<UserModel> {
     try {
-      return await this._storage.saveActiveUser(user);
+      return await this.storageService.saveActiveUser(user);
     } catch (e) {
       throw e;
     }
@@ -237,12 +237,12 @@ export class UserService {
 
   changePasswordFromOld(data: { lastPassword: string; password: string; user: UserModel }): Promise<any> {
     return new Promise<any>((resolve, reject) => {
-      this._httpClient.put<UserModel>(this._settings.ssmFunctionsURL + '/functions/users/password/change/' + data.user.id, {
+      this.httpClient.put<UserModel>(this.settingsService.ssmFunctionsURL + '/functions/users/password/change/' + data.user.id, {
         lastPassword: data.lastPassword,
         username: data.user.username,
         password: data.password
       }, {
-        headers: this._settings.ssmFunctionsHeader
+        headers: this.settingsService.ssmFunctionsHeader
       }).subscribe(value => resolve(value), error1 => {
         reject(error1);
       });

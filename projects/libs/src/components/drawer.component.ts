@@ -5,7 +5,7 @@ import {UserService} from '../services/user.service';
 import {LogService} from '../services/log.service';
 import {SsmEvents} from '../utils/eventsNames.util';
 import {ShopModel} from '../models/shop.model';
-import {configs} from '../lib.module';
+import {ConfigsService} from '../services/configs.service';
 
 @Component({
   selector: 'smartstock-drawer',
@@ -146,7 +146,7 @@ export class DrawerComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.versionNumber = of(configs.version);
+    this.versionNumber = of(ConfigsService.versionName);
     this.userService.getCurrentShop().then(shop => {
       this.shop = shop;
     }).catch(reason => {

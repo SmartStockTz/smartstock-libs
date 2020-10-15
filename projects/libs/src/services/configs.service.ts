@@ -4,6 +4,6 @@ import {Injectable} from '@angular/core';
   providedIn: 'root'
 })
 
-export class ConfigService{
-  version = '';
+export class ConfigsService{
+  static versionName = '';
 }

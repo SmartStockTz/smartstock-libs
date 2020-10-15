@@ -6,14 +6,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class MessageService {
 
-  constructor(private readonly _snack: MatSnackBar) {
+  constructor(private readonly matSnackBar: MatSnackBar) {
   }
 
-  showMobileInfoMessage(message: string, duration: number = 3000, position: 'bottom' | 'top' = 'top') {
-    this._snack.open(message, 'Ok', {
+  showMobileInfoMessage(message: string, duration: number = 3000, position: 'bottom' | 'top' = 'top'): void {
+    this.matSnackBar.open(message, 'Ok', {
       horizontalPosition: 'center',
       verticalPosition: position,
-      duration: duration
+      duration
     });
   }
 }

@@ -1,6 +1,12 @@
 {
-  "name": "@smartstock/core-libs",
-  "version": "0.0.3",
+  "name": "@smartstocktz/core-libs",
+  "version": "0.0.1",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": {
+    "url": "git://github.com/SmartStockTz/smartstock-core-libs.git"
+  },
   "peerDependencies": {
     "@angular/common": "^10.1.5",
     "@angular/core": "^10.1.5",

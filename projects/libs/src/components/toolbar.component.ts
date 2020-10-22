@@ -114,8 +114,8 @@ export class ToolbarComponent implements OnInit {
 
   logout(): void {
     this.userDatabase.logout(null).finally(() => {
-      return this.router.navigateByUrl('');
-    }).catch(err => console.log(''));
+      return this.router.navigateByUrl('/');
+    }).catch(err => console.log);
   }
 
   private _clearSearchInputListener(): void {

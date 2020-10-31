@@ -14,6 +14,9 @@ export interface UserModel {
   country: string;
   region: string;
   street: string;
+  rbac: {
+    pages: string
+  };
   id?: string;
   verified?: boolean;
   createdAt?: string;

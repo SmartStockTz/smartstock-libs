@@ -31,93 +31,57 @@ import {ConfigsService} from '../services/configs.service';
           <mat-divider></mat-divider>
         </div>
 
-        <mat-accordion [multi]="true" class="mat-elevation-z0">
-          <mat-nav-list *ngIf="isAdmin()" class="mat-elevation-z0">
-            <mat-list-item [ngStyle]="shouldExpand('dashboard')?selectedMenu:{}" routerLink="/dashboard">
-              <mat-icon matListIcon matPrefix>dashboard</mat-icon>
-              <span matLine style="margin-left: 8px">Dashboard</span>
-            </mat-list-item>
-          </mat-nav-list>
+        <mat-nav-list *ngIf="isAdmin()">
+          <mat-list-item [ngStyle]="shouldExpand('dashboard')?selectedMenu:{}" routerLink="/dashboard">
+            <mat-icon matListIcon matPrefix>dashboard</mat-icon>
+            <span matLine style="margin-left: 8px">Dashboard</span>
+          </mat-list-item>
+        </mat-nav-list>
 
-          <mat-divider *ngIf="isAdmin()"></mat-divider>
+        <mat-divider *ngIf="isAdmin()"></mat-divider>
 
-          <mat-expansion-panel *ngIf="isAdmin()" [expanded]="shouldExpand('report')" class="mat-elevation-z0">
-            <mat-expansion-panel-header>
-              <mat-icon matPrefix>table_chart</mat-icon>
-              <span style="margin-left: 8px">Reports</span>
-            </mat-expansion-panel-header>
-            <mat-nav-list>
-              <a mat-list-item routerLink="/report/sales">Sales Reports</a>
-              <a mat-list-item routerLink="/report/stocks">Stock Reports</a>
-            </mat-nav-list>
-          </mat-expansion-panel>
+        <mat-nav-list *ngIf="isAdmin()">
+          <mat-list-item [ngStyle]="shouldExpand('report')?selectedMenu:{}" routerLink="/report">
+            <mat-icon matListIcon matPrefix>table_chart</mat-icon>
+            <span matLine style="margin-left: 8px">Report</span>
+          </mat-list-item>
+        </mat-nav-list>
 
-          <mat-divider *ngIf="currentUser && currentUser.role==='admin'"></mat-divider>
+        <mat-divider *ngIf="currentUser && currentUser.role==='admin'"></mat-divider>
 
-          <mat-nav-list>
-            <mat-list-item [ngStyle]="shouldExpand('sale')?selectedMenu:{}" routerLink="/sale">
-              <mat-icon matListIcon matPrefix>shop_front</mat-icon>
-              <span matLine style="margin-left: 8px">Sale</span>
-            </mat-list-item>
-          </mat-nav-list>
+        <mat-nav-list>
+          <mat-list-item [ngStyle]="shouldExpand('sale')?selectedMenu:{}" routerLink="/sale">
+            <mat-icon matListIcon matPrefix>shop_front</mat-icon>
+            <span matLine style="margin-left: 8px">Sale</span>
+          </mat-list-item>
+        </mat-nav-list>
 
-          <mat-divider></mat-divider>
+        <mat-divider></mat-divider>
 
-          <mat-expansion-panel *ngIf="isManager()" [expanded]="shouldExpand('purchase')" class="mat-elevation-z0">
-            <mat-expansion-panel-header>
-              <mat-icon matPrefix>receipts</mat-icon>
-              <span style="margin-left: 8px">Purchase</span>
-            </mat-expansion-panel-header>
-            <mat-nav-list>
-              <a mat-list-item routerLink="/purchase">All Purchases</a>
-              <a mat-list-item routerLink="/purchase/create">New Purchase</a>
-              <a mat-list-item routerLink="/stock" [queryParams]="{t:3}">Suppliers</a>
-            </mat-nav-list>
-          </mat-expansion-panel>
+        <mat-nav-list *ngIf="isManager()">
+          <mat-list-item [ngStyle]="shouldExpand('purchase')?selectedMenu:{}" routerLink="/purchase">
+            <mat-icon matListIcon matPrefix>receipts</mat-icon>
+            <span matLine style="margin-left: 8px">Purchase</span>
+          </mat-list-item>
+        </mat-nav-list>
 
-          <mat-divider *ngIf="currentUser && (currentUser.role==='admin' || currentUser.role === 'manager')"></mat-divider>
+        <mat-divider *ngIf="isManager()"></mat-divider>
 
-          <mat-nav-list *ngIf="isManager()">
-            <mat-list-item [ngStyle]="shouldExpand('stock')?selectedMenu:{}" routerLink="/stock">
-              <mat-icon matListIcon matPrefix>store</mat-icon>
-              <span matLine style="margin-left: 8px">Stock</span>
-            </mat-list-item>
-          </mat-nav-list>
+        <mat-nav-list *ngIf="isManager()">
+          <mat-list-item [ngStyle]="shouldExpand('stock')?selectedMenu:{}" routerLink="/stock">
+            <mat-icon matListIcon matPrefix>store</mat-icon>
+            <span matLine style="margin-left: 8px">Stock</span>
+          </mat-list-item>
+        </mat-nav-list>
 
-          <mat-divider *ngIf="isManager()"></mat-divider>
+        <mat-divider *ngIf="isManager()"></mat-divider>
 
-          <mat-expansion-panel [expanded]="shouldExpand('settings')" class="mat-elevation-z0">
-            <mat-expansion-panel-header>
-              <mat-icon matPrefix>supervisor_account</mat-icon>
-              <span style="margin-left: 8px">Account</span>
-            </mat-expansion-panel-header>
-            <mat-nav-list>
-              <a *ngIf="isManager()" mat-list-item
-                 routerLink="/account/settings">
-                <div class="d-flex flex-row flex-nowrap btn-block">
-                  <span>Settings</span>
-                  <span class="flex-grow-1"></span>
-                  <mat-icon>settings</mat-icon>
-                </div>
-              </a>
-              <a *ngIf="isManager()" mat-list-item
-                 routerLink="/account/users">
-                <div class="d-flex flex-row flex-nowrap btn-block">
-                  <span>Users</span>
-                  <span class="flex-grow-1"></span>
-                  <mat-icon>person_add</mat-icon>
-                </div>
-              </a>
-              <a mat-list-item routerLink="/account/profile">
-                <div class="d-flex flex-row flex-nowrap btn-block">
-                  <span>Profile</span>
-                  <span class="flex-grow-1"></span>
-                  <mat-icon>person</mat-icon>
-                </div>
-              </a>
-            </mat-nav-list>
-          </mat-expansion-panel>
-        </mat-accordion>
+        <mat-nav-list>
+          <mat-list-item [ngStyle]="shouldExpand('account')?selectedMenu:{}" routerLink="/account">
+            <mat-icon matListIcon matPrefix>supervisor_account</mat-icon>
+            <span matLine style="margin-left: 8px">Profile</span>
+          </mat-list-item>
+        </mat-nav-list>
 
       </div>
       <span style="flex-grow: 1"></span>

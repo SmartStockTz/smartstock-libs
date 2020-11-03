@@ -1,6 +1,6 @@
 {
   "name": "@smartstocktz/core-libs",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "scripts": {
     "ng": "ng",
     "start": "ng serve libs-mock",

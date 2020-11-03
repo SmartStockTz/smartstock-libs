@@ -12,7 +12,7 @@ import {ConfigsService} from '../services/configs.service';
   template: `
     <div class="my-side-nav">
       <div>
-        <div class="d-flex justify-content-center align-items-center flex-column" style="padding-bottom: 8px">
+        <div style="padding-bottom: 8px; display: flex; flex-direction: column; justify-content: center;align-items: center">
           <div style="padding: 16px; justify-content: center; align-items: center">
             <mat-icon style="width: 70px; height: 70px; font-size: 70px" color="primary">store</mat-icon>
           </div>

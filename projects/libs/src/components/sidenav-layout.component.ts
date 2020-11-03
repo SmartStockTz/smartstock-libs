@@ -13,7 +13,7 @@ import {FormControl} from '@angular/forms';
       <mat-sidenav #cartDrawer [mode]="rightDrawerMode" [opened]="rightDrawerOpened" position="end">
         <ng-container *ngTemplateOutlet="rightDrawer"></ng-container>
       </mat-sidenav>
-      <mat-sidenav-content style="min-height: 100vh">
+      <mat-sidenav-content style="height: 100vh">
         <smartstock-toolbar [sidenav]="leftDrawer?sidenav:undefined"
                             [showProgress]="showProgress"
                             [hasBackRoute]="hasBackRoute"

@@ -6,12 +6,14 @@ import {Observable, of} from 'rxjs';
   template: `
     <smartstock-layout-sidenav [heading]="'Core Libs'"
                                [leftDrawer]="drawer"
+                               [leftDrawerMode]="'side'"
+                               [leftDrawerOpened]="true"
                                [version]="mock" [body]="body">
       <ng-template #drawer>
         <smartstock-drawer></smartstock-drawer>
       </ng-template>
       <ng-template #body>
-        <h1>
+        <h1 style="height: 200vh">
           body Contents
         </h1>
       </ng-template>

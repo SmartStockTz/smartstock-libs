@@ -16,7 +16,7 @@
     "@angular/compiler": "~10.2.1",
     "@angular/core": "~10.2.1",
     "@angular/forms": "~10.2.1",
-    "@angular/material": "^10.2.4",
+    "@angular/material": "^10.2.7",
     "@angular/cdk": "^10.2.7",
     "bfastjs": "^4.0.0-beta.25",
     "@angular/platform-browser": "~10.2.1",

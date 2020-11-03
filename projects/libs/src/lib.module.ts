@@ -32,6 +32,8 @@ import {UploadFileProgressComponent} from './components/upload-file-progress.com
 import {VerifyEMailDialogComponent} from './components/verify-email-dialog.component';
 import {DialogDeleteComponent} from './components/delete-dialog.component';
 import {ConfigsService} from './services/configs.service';
+import {SidenavLayoutComponent} from './components/sidenav-layout.component';
+import {MatSidenavModule} from '@angular/material/sidenav';
 
 @NgModule({
   imports: [
@@ -53,7 +55,8 @@ import {ConfigsService} from './services/configs.service';
     MatSelectModule,
     MatBadgeModule,
     MatTooltipModule,
-    MatRippleModule
+    MatRippleModule,
+    MatSidenavModule
   ],
   exports: [
     DrawerComponent,
@@ -64,7 +67,8 @@ import {ConfigsService} from './services/configs.service';
     DataNotReadyComponent,
     UploadFilesComponent,
     DashCardComponent,
-    UploadFileProgressComponent
+    UploadFileProgressComponent,
+    SidenavLayoutComponent
   ],
   declarations: [
     DrawerComponent,
@@ -79,7 +83,8 @@ import {ConfigsService} from './services/configs.service';
     DashCardComponent,
     DialogDeleteComponent,
     UploadFileProgressComponent,
-    VerifyEMailDialogComponent
+    VerifyEMailDialogComponent,
+    SidenavLayoutComponent
   ]
 })
 

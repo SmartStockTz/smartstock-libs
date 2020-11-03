@@ -4,17 +4,21 @@ import {Observable, of} from 'rxjs';
 @Component({
   selector: 'app-root',
   template: `
-    <mat-sidenav-container>
-      <mat-sidenav #sidenav [opened]="true">
-        <smartstock-drawer style="width: 300px" [versionNumber]="mock"></smartstock-drawer>
-      </mat-sidenav>
-      <mat-sidenav-content style="min-height: 100vh">
-        <smartstock-toolbar [sidenav]="sidenav" [heading]="'Core'"></smartstock-toolbar>
-      </mat-sidenav-content>
-    </mat-sidenav-container>
+    <smartstock-layout-sidenav [heading]="'Core Libs'"
+                               [leftDrawer]="drawer"
+                               [version]="mock" [body]="body">
+      <ng-template #drawer>
+        <smartstock-drawer></smartstock-drawer>
+      </ng-template>
+      <ng-template #body>
+        <h1>
+          body Contents
+        </h1>
+      </ng-template>
+    </smartstock-layout-sidenav>
   `,
 })
 export class AppComponent {
   title = 'libs-mock';
-  mock: Observable<string> = of('mock');
+  mock: Observable<string> = of('mock_11');
 }

@@ -6,18 +6,17 @@ import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 import {StorageService} from '../services/storage.service';
 import {UserService} from '../services/user.service';
 import {UserModel} from '../models/user.model';
-import {SsmEvents} from '../utils/eventsNames.util';
 import {EventService} from '../services/event.service';
 
 @Component({
   selector: 'smartstock-toolbar',
   template: `
-    <mat-toolbar color="primary" class="sticky-top mat-elevation-z4">
+    <mat-toolbar [color]="color" class="sticky-top mat-elevation-z4">
       <mat-toolbar-row>
-<!--        <button routerLink="{{backLink}}" *ngIf="hasBackRoute && backLink" mat-icon-button>-->
-<!--          <mat-icon>arrow_back</mat-icon>-->
-<!--        </button>-->
-        <button mat-icon-button (click)="sidenav.toggle()">
+        <!--        <button routerLink="{{backLink}}" *ngIf="hasBackRoute && backLink" mat-icon-button>-->
+        <!--          <mat-icon>arrow_back</mat-icon>-->
+        <!--        </button>-->
+        <button mat-icon-button *ngIf="sidenav" (click)="sidenav.toggle()">
           <mat-icon>menu</mat-icon>
         </button>
         <span>{{heading}}</span>
@@ -25,19 +24,18 @@ import {EventService} from '../services/event.service';
         <span *ngIf="!isMobile && showSearch" style="width: 16px"></span>
         <span *ngIf="!isMobile && !showSearch" style="flex: 1 1 auto"></span>
         <smartstock-search-input [searchProgressFlag]="searchProgressFlag"
-                          *ngIf="!isMobile && showSearch" style="flex: 1 1 auto"
-                          [showSearch]="showSearch"
-                          [searchInputControl]="searchInputControl"
-                          [searchPlaceholder]="searchPlaceholder">
+                                 *ngIf="!isMobile && showSearch" style="flex: 1 1 auto"
+                                 [showSearch]="showSearch"
+                                 [searchInputControl]="searchInputControl"
+                                 [searchPlaceholder]="searchPlaceholder">
         </smartstock-search-input>
         <span *ngIf="!isMobile && showSearch" style="width: 16px"></span>
-        <button *ngIf="noOfProductsInCart> 0 && !isMobile" mat-icon-button (click)="cartdrawer.toggle()"
-                [matBadge]="noOfProductsInCart">
+        <button *ngIf="cartDrawer" mat-icon-button (click)="cartDrawer.toggle()">
           <mat-icon>shopping_cart</mat-icon>
         </button>
-        <button *ngIf="!isMobile" class="ft-button" mat-button [matMenuTriggerFor]="menu">
+        <button class="ft-button" mat-button [matMenuTriggerFor]="menu">
           <mat-icon>account_circle</mat-icon>
-          <span *ngIf="currentUser">{{"  " + currentUser.username}}</span>
+          <span *ngIf="currentUser">{{"  " + currentUser.firstname}}</span>
         </button>
         <button *ngIf="isMobile" mat-icon-button [matMenuTriggerFor]="menu">
           <mat-icon>more_vert</mat-icon>
@@ -58,10 +56,10 @@ import {EventService} from '../services/event.service';
       <mat-toolbar-row *ngIf="isMobile && showSearch">
         <!--    <span style="flex-grow: 1"></span>-->
         <smartstock-search-input [searchProgressFlag]="searchProgressFlag"
-                          style="flex: 1 1 auto"
-                          [showSearch]="showSearch"
-                          [searchInputControl]="searchInputControl"
-                          [searchPlaceholder]="searchPlaceholder">
+                                 style="flex: 1 1 auto"
+                                 [showSearch]="showSearch"
+                                 [searchInputControl]="searchInputControl"
+                                 [searchPlaceholder]="searchPlaceholder">
         </smartstock-search-input>
         <!--    <span style="flex-grow: 1"></span>-->
       </mat-toolbar-row>
@@ -69,21 +67,20 @@ import {EventService} from '../services/event.service';
   `,
 })
 export class ToolbarComponent implements OnInit {
+  @Input() color = 'primary';
   @Input() heading: string;
   @Input() showProgress = false;
   @Input() sidenav: MatSidenav;
   @Input() hasBackRoute = false;
   @Input() backLink: string;
-  @Input() cartdrawer: MatSidenav;
+  @Input() cartDrawer: MatSidenav;
   @Input() showSearch = false;
   @Output() searchCallback = new EventEmitter<string>();
   @Input() searchInputControl = new FormControl('');
   @Input() searchPlaceholder: string | 'Type to search';
   currentUser: UserModel;
-
-  noOfProductsInCart;
   @Input() searchProgressFlag = false;
-  isMobile = false; // environment.android;
+  @Input() isMobile = false;
 
   constructor(private readonly router: Router,
               private readonly storage: StorageService,
@@ -101,15 +98,7 @@ export class ToolbarComponent implements OnInit {
     ).subscribe(_ => {
       this.searchCallback.emit(this.searchInputControl.value);
     });
-
-    this.getProductsInCart();
     this._clearSearchInputListener();
-  }
-
-  getProductsInCart(): void {
-    this.eventService.listen(SsmEvents.NO_OF_CART, (data) => {
-      this.noOfProductsInCart = data.detail;
-    });
   }
 
   logout(): void {

@@ -11,7 +11,7 @@ import {EventService} from '../services/event.service';
 @Component({
   selector: 'smartstock-toolbar',
   template: `
-    <mat-toolbar style="position: sticky; top: 0" [color]="color" class="mat-elevation-z4">
+    <mat-toolbar style="position: sticky; top: 0; z-index: 3000000000" [color]="color" class="mat-elevation-z4">
       <mat-toolbar-row>
         <!--        <button routerLink="{{backLink}}" *ngIf="hasBackRoute && backLink" mat-icon-button>-->
         <!--          <mat-icon>arrow_back</mat-icon>-->

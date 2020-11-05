@@ -89,7 +89,15 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 })
 
 export class LibModule {
-  static start(config: { version: string } = {version: ''}): void {
+  static start(config: {
+    browser?: boolean;
+    production?: boolean;
+    electron?: boolean;
+    version?: string
+  } = {version: '', browser: true, electron: true, production: true}): void {
     ConfigsService.versionName = config.version;
+    ConfigsService.browser = config.browser;
+    ConfigsService.electron = config.electron;
+    ConfigsService.production = config.production;
   }
 }

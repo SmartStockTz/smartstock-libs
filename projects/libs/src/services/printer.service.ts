@@ -50,13 +50,13 @@ export class PrintService {
     //   return 'done printing';
     // }
 
-    if (ConfigsService.electron && !cSettings.saleWithoutPrinter) {
+    if (!cSettings.saleWithoutPrinter) {
       return await this.printInDesktop(printModel);
     }
 
-    if (ConfigsService.browser && !cSettings.saleWithoutPrinter) {
-      return await this.printInDesktop(printModel);
-    }
+    // if (!cSettings.saleWithoutPrinter) {
+    //   return await this.printInDesktop(printModel);
+    // }
 
     return;
   }

@@ -40,10 +40,10 @@ export class PrintService {
 
     printModel.data = data;
 
-    if (!ConfigsService.production) {
-      console.warn('print services disabled in dev mode');
-      return;
-    }
+    // if (!ConfigsService.production) {
+    //   console.warn('print services disabled in dev mode');
+    //   return;
+    // }
 
     // // console.log(cSettings.saleWithoutPrinter);
     // if (ConfigsService.android && !cSettings.saleWithoutPrinter) {

@@ -9,6 +9,7 @@ export * from './services/settings.service';
 export * from './services/storage.service';
 export * from './services/file-library.service';
 export * from './services/message.service';
+export * from './services/printer.service';
 export * from './services/log.service';
 export * from './services/event.service';
 export * from './services/user.service';

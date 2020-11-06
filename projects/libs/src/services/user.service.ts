@@ -24,12 +24,16 @@ export class UserService {
   }
 
   async currentUser(): Promise<any> {
-    const user = await BFast.auth().currentUser();
-    if (user && user.role !== 'admin') {
-      return user;
-    } else if (user && user.verified === true) {
-      return user;
-    } else {
+    try {
+      const user = await BFast.auth().currentUser();
+      if (user && user.role !== 'admin') {
+        return user;
+      } else if (user && user.verified === true) {
+        return user;
+      } else {
+        return await BFast.auth().setCurrentUser(undefined);
+      }
+    } catch (reason) {
       return await BFast.auth().setCurrentUser(undefined);
     }
   }
@@ -113,7 +117,11 @@ export class UserService {
   }
 
   async refreshToken(): Promise<any> {
-    return BFast.auth().currentUser();
+    try {
+      return BFast.auth().currentUser();
+    } catch (e) {
+      return BFast.auth().setCurrentUser(undefined);
+    }
   }
 
   addUser(user: UserModel): Promise<UserModel> {

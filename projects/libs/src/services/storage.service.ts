@@ -21,7 +21,11 @@ export class StorageService {
   }
 
   async getActiveUser(): Promise<UserModel> {
-    return await BFast.auth().currentUser();
+    try {
+      return await BFast.auth().currentUser();
+    } catch (e) {
+      return await BFast.auth().setCurrentUser(undefined);
+    }
   }
 
   async saveSales(batchs: BatchModel[]): Promise<any> {

@@ -69,7 +69,8 @@ import {RbacComponent} from './components/rbac.component';
     UploadFilesComponent,
     DashCardComponent,
     UploadFileProgressComponent,
-    SidenavLayoutComponent
+    SidenavLayoutComponent,
+    RbacComponent
   ],
   declarations: [
     DrawerComponent,

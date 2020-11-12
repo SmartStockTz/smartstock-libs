@@ -1,4 +1,4 @@
-import {Component, Input, TemplateRef} from '@angular/core';
+import {Component, Input, OnInit, TemplateRef} from '@angular/core';
 import {RbacService} from '../services/rbac.service';
 
 @Component({
@@ -9,15 +9,18 @@ import {RbacService} from '../services/rbac.service';
     </div>
   `
 })
-export class RbacComponent {
+export class RbacComponent implements OnInit{
   hasAccess = false;
   @Input() groups: string[] = [];
   @Input() component: TemplateRef<any>;
 
   constructor(private readonly rbacService: RbacService) {
+  }
+
+  ngOnInit(): void {
     this.rbacService.hasAccess(this.groups).then(value => {
       this.hasAccess = value;
-    });
+    }).catch(console.log);
   }
 
 }

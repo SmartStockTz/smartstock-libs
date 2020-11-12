@@ -19,3 +19,4 @@ export * from './utils/eventsNames.util';
 export * from './utils/security.util';
 export * from './components/no-stock-dialog.component';
 export * from './components/sidenav-layout.component';
+export * from './components/rbac.component';

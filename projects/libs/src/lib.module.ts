@@ -34,6 +34,7 @@ import {DialogDeleteComponent} from './components/delete-dialog.component';
 import {ConfigsService} from './services/configs.service';
 import {SidenavLayoutComponent} from './components/sidenav-layout.component';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import {RbacComponent} from './components/rbac.component';
 
 @NgModule({
   imports: [
@@ -84,7 +85,8 @@ import {MatSidenavModule} from '@angular/material/sidenav';
     DialogDeleteComponent,
     UploadFileProgressComponent,
     VerifyEMailDialogComponent,
-    SidenavLayoutComponent
+    SidenavLayoutComponent,
+    RbacComponent
   ]
 })
 

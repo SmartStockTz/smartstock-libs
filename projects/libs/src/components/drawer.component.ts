@@ -31,56 +31,67 @@ import {ConfigsService} from '../services/configs.service';
           <mat-divider></mat-divider>
         </div>
 
-        <mat-nav-list *ngIf="isAdmin()">
-          <mat-list-item [ngStyle]="shouldExpand('dashboard')?selectedMenu:{}" routerLink="/dashboard">
-            <mat-icon matListIcon matPrefix>dashboard</mat-icon>
-            <span matLine style="margin-left: 8px">Dashboard</span>
-          </mat-list-item>
-        </mat-nav-list>
-
-        <mat-divider *ngIf="isAdmin()"></mat-divider>
-
-        <mat-nav-list *ngIf="isAdmin()">
-          <mat-list-item [ngStyle]="shouldExpand('report')?selectedMenu:{}" routerLink="/report">
-            <mat-icon matListIcon matPrefix>table_chart</mat-icon>
-            <span matLine style="margin-left: 8px">Report</span>
-          </mat-list-item>
-        </mat-nav-list>
-
-        <mat-divider *ngIf="currentUser && currentUser.role==='admin'"></mat-divider>
-
         <mat-nav-list>
+
+          <smartstock-libs-rbac [groups]="['admin']" [component]="dashboard">
+            <ng-template #dashboard>
+              <mat-list-item [ngStyle]="shouldExpand('dashboard')?selectedMenu:{}" routerLink="/dashboard">
+                <mat-icon matListIcon matPrefix>dashboard</mat-icon>
+                <span matLine style="margin-left: 8px">Dashboard</span>
+              </mat-list-item>
+              <mat-divider></mat-divider>
+            </ng-template>
+          </smartstock-libs-rbac>
+
+          <smartstock-libs-rbac [groups]="['admin']" [component]="report">
+            <ng-template #report>
+              <mat-list-item [ngStyle]="shouldExpand('report')?selectedMenu:{}" routerLink="/report">
+                <mat-icon matListIcon matPrefix>table_chart</mat-icon>
+                <span matLine style="margin-left: 8px">Report</span>
+              </mat-list-item>
+              <mat-divider></mat-divider>
+            </ng-template>
+          </smartstock-libs-rbac>
+
+          <!--          <smartstock-libs-rbac [groups]="['admin', 'manager', 'user']" [component]="sale">-->
+          <!--            <ng-template #sale>-->
           <mat-list-item [ngStyle]="shouldExpand('sale')?selectedMenu:{}" routerLink="/sale">
             <mat-icon matListIcon matPrefix>shop_front</mat-icon>
             <span matLine style="margin-left: 8px">Sale</span>
           </mat-list-item>
-        </mat-nav-list>
+          <mat-divider></mat-divider>
+          <!--            </ng-template>-->
+          <!--          </smartstock-libs-rbac>-->
 
-        <mat-divider></mat-divider>
+          <smartstock-libs-rbac [groups]="['admin', 'manager']" [component]="purchase">
+            <ng-template #purchase>
+              <mat-list-item [ngStyle]="shouldExpand('purchase')?selectedMenu:{}" routerLink="/purchase">
+                <mat-icon matListIcon matPrefix>receipts</mat-icon>
+                <span matLine style="margin-left: 8px">Purchase</span>
+              </mat-list-item>
+              <mat-divider></mat-divider>
+            </ng-template>
+          </smartstock-libs-rbac>
 
-        <mat-nav-list *ngIf="isManager()">
-          <mat-list-item [ngStyle]="shouldExpand('purchase')?selectedMenu:{}" routerLink="/purchase">
-            <mat-icon matListIcon matPrefix>receipts</mat-icon>
-            <span matLine style="margin-left: 8px">Purchase</span>
-          </mat-list-item>
-        </mat-nav-list>
+          <smartstock-libs-rbac [groups]="['admin', 'manager']" [component]="stock">
+            <ng-template #stock>
+              <mat-list-item [ngStyle]="shouldExpand('stock')?selectedMenu:{}" routerLink="/stock">
+                <mat-icon matListIcon matPrefix>store</mat-icon>
+                <span matLine style="margin-left: 8px">Stock</span>
+              </mat-list-item>
+              <mat-divider></mat-divider>
+            </ng-template>
+          </smartstock-libs-rbac>
 
-        <mat-divider *ngIf="isManager()"></mat-divider>
-
-        <mat-nav-list *ngIf="isManager()">
-          <mat-list-item [ngStyle]="shouldExpand('stock')?selectedMenu:{}" routerLink="/stock">
-            <mat-icon matListIcon matPrefix>store</mat-icon>
-            <span matLine style="margin-left: 8px">Stock</span>
-          </mat-list-item>
-        </mat-nav-list>
-
-        <mat-divider *ngIf="isManager()"></mat-divider>
-
-        <mat-nav-list>
+          <!--          <smartstock-libs-rbac [groups]="['admin', 'manager', 'user']" [component]="account">-->
+          <!--            <ng-template #account>-->
           <mat-list-item [ngStyle]="shouldExpand('account')?selectedMenu:{}" routerLink="/account">
             <mat-icon matListIcon matPrefix>supervisor_account</mat-icon>
             <span matLine style="margin-left: 8px">Profile</span>
           </mat-list-item>
+          <!--            </ng-template>-->
+          <!--          </smartstock-libs-rbac>-->
+
         </mat-nav-list>
 
       </div>

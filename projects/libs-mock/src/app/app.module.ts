@@ -9,6 +9,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {HttpClientModule} from '@angular/common/http';
 import {BFast} from 'bfastjs';
 import {environment} from '../environments/environment';
+import {MatButtonModule} from '@angular/material/button';
 
 
 const routes: Routes = [
@@ -25,7 +26,8 @@ const routes: Routes = [
     LibModule,
     BrowserAnimationsModule,
     MatSidenavModule,
-    HttpClientModule
+    HttpClientModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

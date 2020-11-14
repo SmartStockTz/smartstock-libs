@@ -1,5 +1,8 @@
 import {Component} from '@angular/core';
 import {Observable, of} from 'rxjs';
+import {MatDialog} from '@angular/material/dialog';
+import {FileBrowserDialogComponent} from '../../../libs/src/components/file-browser-dialog.component';
+import {UserService} from '../../../libs/src/public-api';
 
 @Component({
   selector: 'app-root',
@@ -13,9 +16,12 @@ import {Observable, of} from 'rxjs';
         <smartstock-drawer></smartstock-drawer>
       </ng-template>
       <ng-template #body>
-        <h1 style="height: 200vh">
-          body Contents
-        </h1>
+        <div style="height: 200vh">
+          <h1>body Contents</h1>
+          <button color="primary" (click)="showFileBrowser()" mat-flat-button>
+            Show File Browser
+          </button>
+        </div>
       </ng-template>
     </smartstock-layout-sidenav>
   `,
@@ -23,4 +29,20 @@ import {Observable, of} from 'rxjs';
 export class AppComponent {
   title = 'libs-mock';
   mock: Observable<string> = of('mock_11');
+
+  constructor(private readonly dialog: MatDialog,
+              private readonly userService: UserService) {
+  }
+
+  async showFileBrowser(): Promise<void> {
+    this.dialog.open(FileBrowserDialogComponent, {
+      closeOnNavigation: false,
+      disableClose: true,
+      data: {
+        shop: await this.userService.getCurrentShop()
+      }
+    }).afterClosed().subscribe(value => {
+      console.log(value);
+    });
+  }
 }

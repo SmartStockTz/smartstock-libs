@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { OnFetchComponent } from '../components/on-fetch.component';
 
@@ -6,7 +6,7 @@ describe('OnFetchComponent', () => {
   let component: OnFetchComponent;
   let fixture: ComponentFixture<OnFetchComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ OnFetchComponent ]
     })

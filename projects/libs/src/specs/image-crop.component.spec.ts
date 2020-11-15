@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ImageCropComponent } from '../components/image-crop.component';
 
@@ -6,7 +6,7 @@ describe('DialogImageCropComponent', () => {
   let component: ImageCropComponent;
   let fixture: ComponentFixture<ImageCropComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ImageCropComponent ]
     })

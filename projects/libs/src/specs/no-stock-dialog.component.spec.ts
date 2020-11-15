@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { NoStockDialogComponent } from '../components/no-stock-dialog.component';
 
@@ -6,7 +6,7 @@ describe('NoStockDialogComponent', () => {
   let component: NoStockDialogComponent;
   let fixture: ComponentFixture<NoStockDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ NoStockDialogComponent ]
     })

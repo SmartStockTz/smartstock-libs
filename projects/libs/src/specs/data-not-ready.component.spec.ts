@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DataNotReadyComponent } from '../components/data-not-ready.component';
 
@@ -6,7 +6,7 @@ describe('DataNotReadyComponent', () => {
   let component: DataNotReadyComponent;
   let fixture: ComponentFixture<DataNotReadyComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ DataNotReadyComponent ]
     })

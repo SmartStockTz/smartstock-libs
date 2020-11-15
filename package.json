@@ -1,6 +1,6 @@
 {
   "name": "@smartstocktz/core-libs",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "scripts": {
     "ng": "ng",
     "start": "ng serve libs-mock",
@@ -21,7 +21,6 @@
     "@angular/platform-browser": "~10.2.1",
     "@angular/platform-browser-dynamic": "~10.2.1",
     "@angular/router": "~10.2.1",
-    "angular-file-uploader": "^7.0.3",
     "bfastjs": "^4.0.0-beta.25",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",

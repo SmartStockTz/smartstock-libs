@@ -1,6 +1,6 @@
 {
   "name": "@smartstocktz/core-libs",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/smartstocktz"
   },
@@ -15,6 +15,7 @@
     "bfastjs": "^4.0.0-beta.25"
   },
   "dependencies": {
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.0",
+    "angular-file-uploader": "^7.0.3"
   }
 }

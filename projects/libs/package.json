@@ -14,8 +14,10 @@
     "@angular/material": "^11.0.0",
     "bfastjs": "^4.0.0-beta.25"
   },
+  "bundleDependencies": [
+    "angular-file-uploader"
+  ],
   "dependencies": {
-    "tslib": "^2.0.0",
-    "angular-file-uploader": "^7.0.3"
+    "tslib": "^2.0.0"
   }
 }

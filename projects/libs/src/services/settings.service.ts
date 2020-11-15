@@ -44,7 +44,7 @@ export class SettingsService {
     }
   }
 
-  async getCustomerApplicationId() {
+  async getCustomerApplicationId(): Promise<string> {
     try {
       const activeShop = await this.storageService.getActiveShop();
       if (!activeShop) {
@@ -56,7 +56,7 @@ export class SettingsService {
     }
   }
 
-  async getCustomerServerURLId() {
+  async getCustomerServerURLId(): Promise<string> {
     try {
       const activeShop = await this.storageService.getActiveShop();
       if (!activeShop) {
@@ -113,7 +113,7 @@ export class SettingsService {
   /**
    * @deprecated
    */
-  public getPrinterAddress(callback: (value: { ip: string, name: string }) => void) {
+  public getPrinterAddress(callback: (value: { ip: string, name: string }) => void): void {
     // this.indexDb.getItem<{ ip: string, name: string }>('printerAddress').then(value => {
     //   callback(null);
     // }).catch(reason => {

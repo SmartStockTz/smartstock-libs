@@ -42,7 +42,7 @@ export class UserService {
     return BFast.functions()
       .request('/functions/users/' + user.id)
       .delete({
-        data: {context: {admin: await BFast.auth().currentUser()}}
+        headers: {'smartstock-context': {user: (await BFast.auth().currentUser()).id}}
       });
   }
 
@@ -82,7 +82,7 @@ export class UserService {
     }
   }
 
-  async logout(user: UserModel) {
+  async logout(user: UserModel): Promise<void> {
     await BFast.auth().logOut();
     await this.storageService.removeActiveUser();
     await this.storageService.removeActiveShop();
@@ -90,26 +90,19 @@ export class UserService {
   }
 
   async register(user: UserModel): Promise<UserModel> {
-    try {
-      user.settings = {
-        printerFooter: 'Thank you',
-        printerHeader: '',
-        saleWithoutPrinter: true,
-        allowRetail: true,
-        allowWholesale: true
-      };
-      user.shops = [];
-      await this.storageService.removeActiveShop();
-      return await BFast.functions().request('/functions/users/create').post(user, {
-        headers: this.settingsService.ssmFunctionsHeader
-      });
-    } catch (e) {
-      if (e && e.response && e.response.data) {
-        throw e.response.data;
-      } else {
-        throw e.toString();
-      }
-    }
+    user.settings = {
+      printerFooter: 'Thank you',
+      printerHeader: '',
+      saleWithoutPrinter: true,
+      allowRetail: true,
+      allowWholesale: true
+    };
+    user.ecommerce = {};
+    user.shops = [];
+    await this.storageService.removeActiveShop();
+    return await BFast.functions().request('/functions/users/create').post(user, {
+      headers: this.settingsService.ssmFunctionsHeader
+    });
   }
 
   resetPassword(username: string): Promise<any> {
@@ -124,30 +117,28 @@ export class UserService {
     }
   }
 
-  addUser(user: UserModel): Promise<UserModel> {
-    return new Promise<UserModel>(async (resolve, reject) => {
-      const shop = await this.storageService.getActiveShop();
-      const shops = user.shops ? user.shops : [];
-      const shops1 = shops.filter(value => value.applicationId !== shop.applicationId);
-      user.applicationId = shop.applicationId;
-      user.projectUrlId = shop.projectUrlId;
-      user.projectId = shop.projectId;
-      user.businessName = shop.businessName;
-      user.settings = shop.settings;
-      user.shops = shops1;
-      this.httpClient.post<UserModel>(this.settingsService.ssmFunctionsURL + '/functions/users/seller', user, {
-        headers: this.settingsService.ssmFunctionsHeader
-      }).subscribe(value => {
-        resolve(value);
-      }, error => {
-        reject(error);
-      });
+  /**
+   * @deprecate will be removed in next minor release
+   * @param user - {UserModel} model to save
+   */
+  async addUser(user: UserModel): Promise<UserModel> {
+    const shop = await this.storageService.getActiveShop();
+    const shops = user.shops ? user.shops : [];
+    const shops1 = shops.filter(value => value.applicationId !== shop.applicationId);
+    user.applicationId = shop.applicationId;
+    user.projectUrlId = shop.projectUrlId;
+    user.projectId = shop.projectId;
+    user.businessName = shop.businessName;
+    user.settings = shop.settings;
+    user.ecommerce = shop.ecommerce;
+    user.shops = shops1;
+    return BFast.functions().request('/functions/users/seller').post(user, {
+      headers: this.settingsService.ssmFunctionsHeader
     });
   }
 
-  async getShops(): Promise<ShopModel[]> {
+  async getShops(user: UserModel): Promise<ShopModel[]> {
     try {
-      const user = await this.storageService.getActiveUser();
       const shops = [];
       user.shops.forEach(element => {
         shops.push(element);
@@ -158,6 +149,7 @@ export class UserService {
         applicationId: user.applicationId,
         projectUrlId: user.projectUrlId,
         settings: user.settings,
+        ecommerce: user.ecommerce,
         street: user.street,
         country: user.country,
         region: user.region
@@ -168,26 +160,37 @@ export class UserService {
     }
   }
 
+  async updateShops(shops: ShopModel[], user: UserModel): Promise<boolean> {
+    const topLevelShop = shops.filter(x => x.projectId === user.projectId);
+    const otherShops = shops.filter(x => x.projectId !== user.projectId);
+    if (topLevelShop && Array.isArray(topLevelShop) && topLevelShop[0]) {
+      user.businessName = topLevelShop[0].businessName;
+      user.projectId = topLevelShop[0].projectId;
+      user.applicationId = topLevelShop[0].applicationId;
+      user.projectUrlId = topLevelShop[0].projectUrlId;
+      user.settings = topLevelShop[0].settings;
+      user.ecommerce = topLevelShop[0].ecommerce;
+      user.street = topLevelShop[0].street;
+      user.country = topLevelShop[0].country;
+      user.region = topLevelShop[0].region;
+    }
+    user.shops = otherShops as any;
+    await this.storageService.saveActiveUser(user);
+    return true;
+  }
+
   async getCurrentShop(): Promise<ShopModel> {
-    try {
-      const activeShop = await this.storageService.getActiveShop();
-      if (activeShop && activeShop.projectId && activeShop.applicationId && activeShop.projectUrlId) {
-        return activeShop;
-      } else {
-        throw new Error('No active shop in records');
-      }
-    } catch (e) {
-      throw e;
+    const activeShop = await this.storageService.getActiveShop();
+    if (activeShop && activeShop.projectId && activeShop.applicationId && activeShop.projectUrlId) {
+      return activeShop;
+    } else {
+      throw new Error('No active shop in records');
     }
   }
 
   async saveCurrentShop(shop: ShopModel): Promise<ShopModel> {
-    try {
-      await this.storageService.saveCurrentProjectId(shop.projectId);
-      return await this.storageService.saveActiveShop(shop);
-    } catch (e) {
-      throw e;
-    }
+    await this.storageService.saveCurrentProjectId(shop.projectId);
+    return this.storageService.saveActiveShop(shop);
   }
 
   createShop(data: { admin: UserModel, shop: ShopModel }): Promise<ShopModel> {
@@ -212,48 +215,30 @@ export class UserService {
   }
 
   updatePassword(user: UserModel, password: string): Promise<any> {
-    return new Promise<UserModel>((resolve, reject) => {
-      this.httpClient.put<any>(this.settingsService.ssmFunctionsURL + '/functions/users/password/' + user.id, {
-        password: password
-      }, {
-        headers: this.settingsService.ssmFunctionsHeader
-      }).subscribe(value => {
-        resolve(value);
-      }, error => {
-        reject(error);
-      });
+    return BFast.functions().request('/functions/users/password/' + user.id).put({
+      password
+    }, {
+      headers: this.settingsService.ssmFunctionsHeader
     });
   }
 
   updateUser(user: UserModel, data: { [p: string]: any }): Promise<UserModel> {
-    return new Promise(async (resolve, reject) => {
-      this.httpClient.put<UserModel>(this.settingsService.ssmFunctionsURL + '/functions/users/' + user.id, data, {
-        headers: this.settingsService.ssmFunctionsHeader
-      }).subscribe(value => resolve(value), error1 => {
-        reject(error1);
-      });
+    return BFast.functions().request('/functions/users/' + user.id).put(data, {
+      headers: this.settingsService.ssmFunctionsHeader
     });
   }
 
   async updateCurrentUser(user: UserModel): Promise<UserModel> {
-    try {
-      return await this.storageService.saveActiveUser(user);
-    } catch (e) {
-      throw e;
-    }
+    return await this.storageService.saveActiveUser(user);
   }
 
   changePasswordFromOld(data: { lastPassword: string; password: string; user: UserModel }): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      this.httpClient.put<UserModel>(this.settingsService.ssmFunctionsURL + '/functions/users/password/change/' + data.user.id, {
-        lastPassword: data.lastPassword,
-        username: data.user.username,
-        password: data.password
-      }, {
-        headers: this.settingsService.ssmFunctionsHeader
-      }).subscribe(value => resolve(value), error1 => {
-        reject(error1);
-      });
+    return BFast.functions().request('/functions/users/password/change/' + data.user.id).put({
+      lastPassword: data.lastPassword,
+      username: data.user.username,
+      password: data.password
+    }, {
+      headers: this.settingsService.ssmFunctionsHeader
     });
   }
 }

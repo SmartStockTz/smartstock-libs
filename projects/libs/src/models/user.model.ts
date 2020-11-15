@@ -29,6 +29,7 @@ export interface UserModel {
     allowRetail: boolean,
     allowWholesale: boolean,
   };
+  ecommerce?: any;
   shops?: {
     projectId: string,
     applicationId: string;

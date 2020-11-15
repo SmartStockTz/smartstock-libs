@@ -10,6 +10,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {BFast} from 'bfastjs';
 import {environment} from '../environments/environment';
 import {MatButtonModule} from '@angular/material/button';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 
 const routes: Routes = [
@@ -27,7 +28,8 @@ const routes: Routes = [
     BrowserAnimationsModule,
     MatSidenavModule,
     HttpClientModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

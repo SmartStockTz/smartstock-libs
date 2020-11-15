@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {FileModel} from '../models/file.model';
+import {FileResponseModel} from '../models/file-response.model';
 import {BFast} from 'bfastjs';
 import {ShopModel} from '../models/shop.model';
 
@@ -7,7 +7,7 @@ import {ShopModel} from '../models/shop.model';
   providedIn: 'root'
 })
 export class FilesService {
-  async getFiles(shop: ShopModel): Promise<FileModel[]> {
+  async getFiles(shop: ShopModel): Promise<FileResponseModel[]> {
     BFast.init({
       applicationId: shop.applicationId,
       projectId: shop.projectId

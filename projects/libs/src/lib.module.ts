@@ -77,6 +77,7 @@ import {MatChipsModule} from '@angular/material/chips';
     UploadFilesComponent,
     DashCardComponent,
     UploadFileProgressComponent,
+    FileBrowserDialogComponent,
     SidenavLayoutComponent,
     RbacComponent
   ],

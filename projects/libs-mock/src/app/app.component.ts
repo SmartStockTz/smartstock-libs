@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {FileBrowserDialogComponent} from '../../../libs/src/components/file-browser-dialog.component';
-import {UserService} from '../../../libs/src/public-api';
+import {MessageService, UserService} from '../../../libs/src/public-api';
 
 @Component({
   selector: 'app-root',
@@ -31,6 +31,7 @@ export class AppComponent {
   mock: Observable<string> = of('mock_11');
 
   constructor(private readonly dialog: MatDialog,
+              private readonly messageService: MessageService,
               private readonly userService: UserService) {
   }
 
@@ -42,7 +43,12 @@ export class AppComponent {
         shop: await this.userService.getCurrentShop()
       }
     }).afterClosed().subscribe(value => {
-      console.log(value);
+      if (value && value.url) {
+        console.log(value.url);
+      } else {
+        this.messageService.showMobileInfoMessage(value && value.message ?
+          value.message : 'Fails to select file', 2000, 'bottom');
+      }
     });
   }
 }

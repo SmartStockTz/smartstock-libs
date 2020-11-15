@@ -1,6 +1,7 @@
 export interface FileModel {
-  name?: string;
-  size?: number;
-  etag?: string;
-  lastModified?: any;
+  url: string;
+  size: string;
+  type: string;
+  suffix: string;
+  category: string;
 }

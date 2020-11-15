@@ -1,55 +1,81 @@
-import {AfterViewInit, Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {FilesService} from '../services/files.service';
 import {ShopModel} from '../models/shop.model';
 import {AngularFileUploaderConfig} from 'angular-file-uploader';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
+import {Subject} from 'rxjs';
+import {FilesState} from '../states/files.state';
+import {takeUntil} from 'rxjs/operators';
+import {FileModel} from '../models/file.model';
 
+// @dynamic
 @Component({
   selector: 'smartstock-libs-file-browser',
   template: `
     <div mat-dialog-title style="display: flex">
-      <!--      <h3>-->
-      <!--        Choose File-->
-      <!--      </h3>-->
       <mat-chip-list>
         <mat-chip (click)="filterFilter('all')" [selected]="isSelected('all')">ALL</mat-chip>
         <mat-chip (click)="filterFilter('image')" [selected]="isSelected('image')">IMAGE</mat-chip>
         <mat-chip (click)="filterFilter('video')" [selected]="isSelected('video')">VIDEO</mat-chip>
-        <mat-chip (click)="filterFilter('others')" [selected]="isSelected('others')">OTHERS</mat-chip>
+        <mat-chip (click)="filterFilter('audio')" [selected]="isSelected('audio')">AUDIO</mat-chip>
+        <mat-chip (click)="filterFilter('book')" [selected]="isSelected('book')">BOOK</mat-chip>
+        <mat-chip (click)="filterFilter('other')" [selected]="isSelected('other')">OTHER</mat-chip>
       </mat-chip-list>
       <span style="flex: 1 1 auto"></span>
-      <button mat-icon-button (click)="dialogRef.close('No file selected')">
+      <button (click)="filesState.fetchFiles(data.shop)" color="primary" mat-icon-button>
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button color="warn" mat-icon-button (click)="dialogRef.close({message: 'No file selected'})">
         <mat-icon>close</mat-icon>
       </button>
-      <mat-divider></mat-divider>
     </div>
-    <div mat-dialog-content id="dialog-contents">
-      <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center">
-        <div *ngIf="fetchFiles"
-             style="height: 25vh; width: 25vh; display: flex; flex-direction: column; justify-content: center; align-items: center">
-          <mat-progress-spinner diameter="30" mode="indeterminate" color="primary"></mat-progress-spinner>
-          <p>Fetch files...</p>
-        </div>
+
+    <mat-divider></mat-divider>
+    <div *ngIf="(filesState.isFetchFiles | async)===true"
+         style="display: flex; flex-direction: column; justify-content: center; align-items: center">
+      <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+      <p>Fetch files...</p>
+    </div>
+
+    <div mat-dialog-content id="dialog-contents" style="max-height: 50vh">
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
         <div *ngFor="let file of files.connect() | async">
-          <div [ngStyle]="{width: '300px', height: '180px', margin: '5px', borderRadius: '5px',
-             background: 'url('+ file.url +')'+' #f5f5f5 center', 'background-size': 'cover'}">
+          <img alt="{{file.suffix}}" *ngIf="file.category === 'image'" [src]="file.url" [ngStyle]="{width: '300px', height: '180px', margin: '5px', borderRadius: '5px',
+             background: '#f5f5f5 center', 'background-size': 'cover'}">
+
+          <video controls *ngIf="file.category === 'video'" [src]="file.url" [ngStyle]="{width: '300px', height: '180px', margin: '5px', borderRadius: '5px',
+             background: '#f5f5f5 center', 'background-size': 'cover'}">
+          </video>
+
+          <audio controls *ngIf="file.category === 'audio'"
+                 [src]="file.url"
+                 [ngStyle]="{width: '300px', height: '180px', margin: '5px', borderRadius: '5px',background: '#f5f5f5 center', 'background-size': 'cover'}">
+          </audio>
+
+          <div *ngIf="file.category === 'book'" [ngStyle]="{width: '300px', height: '180px', margin: '5px', borderRadius: '5px',
+             background: '#f5f5f5 center', 'background-size': 'cover', display: 'flex', justifyContent: 'center', alignItems: 'center'}">
+            <mat-icon color="primary" style="font-size: 100px; width: 100px; height: 100px">
+              description
+            </mat-icon>
           </div>
+
+          <div *ngIf="file.category === 'other'" [ngStyle]="{width: '300px', height: '180px', margin: '5px', borderRadius: '5px',
+             background: '#f5f5f5 center', 'background-size': 'cover', display: 'flex', justifyContent: 'center', alignItems: 'center'}">
+            <mat-icon color="primary" style="font-size: 100px; width: 100px; height: 100px">
+              description
+            </mat-icon>
+          </div>
+
+          <span style="display: block">{{file.suffix}}</span>
           <div style="display: flex; flex-wrap: wrap; margin-left: 5px; margin-right: 5px; margin-bottom: 16px; align-items: center">
             <span>{{file.type}} | {{file.size}}</span>
             <span style="flex: 1 1 auto"></span>
             <button (click)="selectedFile(file)" mat-flat-button color="primary">Select</button>
           </div>
         </div>
-        <!--        <img alt="" width="200px" height="200px" src="{{file.url}}" *ngFor="let file of files">-->
       </div>
       <mat-paginator #matPaginator [showFirstLastButtons]="true" [pageSize]="12"></mat-paginator>
-      <!--      <div *ngIf="!fetchFiles" style="height: 200px; display: flex; justify-content: center; align-items: center">-->
-      <!--        <button mat-button class="btn-outline-primary">-->
-      <!--          Load More-->
-      <!--        </button>-->
-      <!--      </div>-->
     </div>
     <div mat-dialog-actions style="padding: 16px">
       <mat-divider></mat-divider>
@@ -60,35 +86,39 @@ import {MatPaginator} from '@angular/material/paginator';
           [config]="afuConfig">
         </angular-file-uploader>
       </div>
-      <!--      <button mat-button color="warn" (click)="dialogRef.close('Process canceled')">-->
-      <!--        Cancel-->
-      <!--      </button>-->
     </div>
   `,
   styleUrls: ['../styles/files-browser.style.scss']
 })
 
-export class FileBrowserDialogComponent implements OnInit, AfterViewInit {
-  @ViewChild('matPaginator') matPaginator: MatPaginator;
-  filter = 'all';
-  fetchFiles = true;
-  files: MatTableDataSource<{ url: string, size: string, type: string }> = new MatTableDataSource([]);
-  filesArray: { url: string, size: string, type: string }[] = [];
-  afuConfig: AngularFileUploaderConfig;
+export class FileBrowserDialogComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(public readonly dialogRef: MatDialogRef<FileBrowserDialogComponent>,
-              private readonly filesService: FilesService,
-              @Inject(MAT_DIALOG_DATA) private readonly data: {
+              public readonly filesState: FilesState,
+              private readonly changeDetector: ChangeDetectorRef,
+              @Inject(MAT_DIALOG_DATA) public readonly data: {
                 shop: ShopModel
               }) {
+    filesState.files.pipe(
+      takeUntil(this.destroy)
+    ).subscribe(value => {
+      this.files.data = value;
+    });
   }
+
+  @ViewChild('matPaginator') matPaginator: MatPaginator;
+  destroy: Subject<any> = new Subject<any>();
+  filter = 'all';
+  files: MatTableDataSource<FileModel> = new MatTableDataSource([]);
+  afuConfig: AngularFileUploaderConfig;
 
   ngAfterViewInit(): void {
     this.files.paginator = this.matPaginator;
+    this.getFiles();
+    this.changeDetector.detectChanges();
   }
 
   ngOnInit(): void {
-    this.getFiles();
   }
 
   private getFiles(): void {
@@ -97,71 +127,53 @@ export class FileBrowserDialogComponent implements OnInit, AfterViewInit {
         maxSize: 1024,
         multiple: false,
         replaceTexts: {
-          // uploadBtn: 'Upload New File',
           selectFileBtn: 'Select File From Device'
         },
-        formatsAllowed: '.jpg,.png,.pdf,.docx, .txt,.gif,.jpeg,.mp4,.mkv,.mp3,.aac,.ebook',
+        formatsAllowed: '.jpg,.png,.pdf,.docx,.txt,.gif,.jpeg,.mp4,.mkv,.mp3,.aac,.epub',
         uploadAPI: {
           url: `https://${this.data.shop.projectId}-daas.bfast.fahamutech.com/storage/${this.data.shop.applicationId}`
         }
       };
-      this.fetchFiles = true;
-      this.filesService.getFiles(this.data.shop).then(value => {
-        this.files.data = value.sort((a, b) => a.lastModified > b.lastModified ? -1 : 1).map(x => {
-          const nameContents = x.name.split('.');
-          const suffixs = x.name.split('-');
-          return {
-            url: `https://${this.data.shop.projectId}-daas.bfast.fahamutech.com/storage/${this.data.shop.applicationId}/file/${x.name}`,
-            size: (Number(x.size) / (1024 * 1024)).toPrecision(3) + ' MB',
-            suffix: x.name;
-            type: nameContents[nameContents.length - 1].toUpperCase()
-          };
-        });
-        this.filesArray = this.files.data;
-      }).catch(reason => {
-        // this.dialogRef.close(reason && reason.message ? reason.message : 'Fails to fetch files');
-      }).finally(() => {
-        this.fetchFiles = false;
-      });
+      this.filesState.fetchFiles(this.data.shop);
     } else {
-      this.dialogRef.close('current shop must not be null');
+      this.dialogRef.close({message: 'current shop must not be null'});
     }
   }
 
-  selectedFile(file: { url: string; size: string, type: string }): void {
-    this.dialogRef.close(file.url);
+  selectedFile(file: FileModel): void {
+    this.dialogRef.close(file);
   }
 
   doneUpload(response): void {
     if (response && response.body && response.body.urls && Array.isArray(response.body.urls) && response.body.urls.length > 0) {
-      console.log(response.body.urls[0]);
-      const nameContents = response.body.urls[0].split('.');
-      this.files.data.unshift({
-        url: `https://${this.data.shop.projectId}-daas.bfast.fahamutech.com${response.body.urls[0]}`,
-        size: ' MB',
-        type: nameContents[nameContents.length - 1].toUpperCase()
-      });
-      this.files._updateChangeSubscription();
+      this.filesState.appendFile(response.body.urls[0], this.data.shop);
       this.files.paginator.firstPage();
       document.getElementById('dialog-contents').scrollTo(0, 0);
     }
   }
 
-  isSelected(value: 'all' | 'image' | 'video' | 'others'): boolean {
+  isSelected(value: 'all' | 'image' | 'video' | 'other' | 'book' | 'audio'): boolean {
     return this.filter === value;
   }
 
   filterFilter(value: string): void {
-    console.log(value);
     this.filter = value;
     if (value === 'all') {
       this.files.filter = '';
     } else if (value === 'image') {
-      this.files.filter = '.png';
+      this.files.filter = 'image';
     } else if (value === 'video') {
-      this.files.filter = '.mp4';
-    } else if (value === 'others') {
-      this.files.filter = '.pdf';
+      this.files.filter = 'video';
+    } else if (value === 'audio') {
+      this.files.filter = 'audio';
+    } else if (value === 'book') {
+      this.files.filter = 'book';
+    } else if (value === 'other') {
+      this.files.filter = 'other';
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy.next();
   }
 }

@@ -3,7 +3,6 @@ import {EventService} from './event.service';
 import {BFast} from 'bfastjs';
 import {SecurityUtil} from '../utils/security.util';
 import {SsmEvents} from '../utils/eventsNames.util';
-import {CacheController} from 'bfastjs/dist/controllers/CacheController';
 import {UserModel} from '../models/user.model';
 import {ShopModel} from '../models/shop.model';
 import {CustomerModel} from '../models/customer.model';
@@ -15,7 +14,7 @@ import {BatchModel} from '../models/batch.model';
   providedIn: 'root'
 })
 export class StorageService {
-  smartStockCache: CacheController = BFast.cache({database: 'smartstock', collection: 'config'});
+  smartStockCache = BFast.cache({database: 'smartstock', collection: 'config'});
 
   constructor(private readonly eventApi: EventService) {
   }

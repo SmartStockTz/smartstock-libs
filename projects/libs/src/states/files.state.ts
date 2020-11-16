@@ -46,6 +46,7 @@ export class FilesState {
             size: (Number(x.size) / (1024 * 1024)).toPrecision(3) + ' MB',
             suffix: suffixs[suffixs.length - 1],
             category: FilesState.getFileCategory(x.name),
+            name: x.name,
             type: nameContents[nameContents.length - 1].toUpperCase()
           };
         })
@@ -65,6 +66,7 @@ export class FilesState {
       url: `https://${shop.projectId}-daas.bfast.fahamutech.com${url}`,
       size: ' MB',
       suffix: suffixs[suffixs.length - 1],
+      name: url,
       category: FilesState.getFileCategory(url),
       type: nameContents[nameContents.length - 1].toUpperCase()
     });

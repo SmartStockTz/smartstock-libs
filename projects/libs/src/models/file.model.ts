@@ -3,5 +3,6 @@ export interface FileModel {
   size: string;
   type: string;
   suffix: string;
+  name: string;
   category: string;
 }

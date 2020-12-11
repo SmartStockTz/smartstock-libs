@@ -1,6 +1,6 @@
 {
   "name": "@smartstocktz/core-libs",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/smartstocktz"
   },
@@ -8,15 +8,12 @@
     "url": "git://github.com/SmartStockTz/smartstock-libs.git"
   },
   "peerDependencies": {
-    "@angular/common": "^11.0.0",
-    "@angular/core": "^11.0.0",
-    "@angular/cdk": "^11.0.0",
-    "@angular/material": "^11.0.0",
-    "bfastjs": "^4.0.0"
+    "@angular/common": "^11.0.4",
+    "@angular/core": "^11.0.4",
+    "@angular/cdk": "^11.0.2",
+    "@angular/material": "^11.0.2",
+    "bfastjs": "^4.0.1"
   },
-  "bundleDependencies": [
-    "angular-file-uploader"
-  ],
   "dependencies": {
     "tslib": "^2.0.0"
   }

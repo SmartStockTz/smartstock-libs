@@ -1,13 +1,14 @@
 import {AfterViewInit, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ShopModel} from '../models/shop.model';
-import {AngularFileUploaderConfig} from 'angular-file-uploader';
+
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {Subject} from 'rxjs';
 import {FilesState} from '../states/files.state';
 import {takeUntil} from 'rxjs/operators';
 import {FileModel} from '../models/file.model';
+import {FormControl, Validators} from '@angular/forms';
 
 // @dynamic
 @Component({
@@ -23,7 +24,7 @@ import {FileModel} from '../models/file.model';
         <mat-chip (click)="filterFilter('other')" [selected]="isSelected('other')">OTHER</mat-chip>
       </mat-chip-list>
       <span style="flex: 1 1 auto"></span>
-      <button (click)="filesState.fetchFiles(data.shop)" color="primary" mat-icon-button>
+      <button (click)="filesState.fetchFiles()" color="primary" mat-icon-button>
         <mat-icon>refresh</mat-icon>
       </button>
       <button color="warn" mat-icon-button (click)="dialogRef.close({message: 'No file selected'})">
@@ -41,15 +42,17 @@ import {FileModel} from '../models/file.model';
     <div mat-dialog-content id="dialog-contents" style="max-height: 50vh">
       <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
         <div *ngFor="let file of files.connect() | async">
-          <img alt="{{file.suffix}}" *ngIf="file.category === 'image'" [src]="file.url" [ngStyle]="{width: '300px', height: '180px', margin: '5px', borderRadius: '5px',
+          <img alt="{{file.suffix}}" *ngIf="file.category === 'image'" [src]="file.url"
+               [ngStyle]="{width: '300px', height: '180px', margin: '5px', borderRadius: '5px',
              background: '#f5f5f5 center', 'background-size': 'cover'}">
 
-          <video controls *ngIf="file.category === 'video'" [src]="file.url" [ngStyle]="{width: '300px', height: '180px', margin: '5px', borderRadius: '5px',
+          <video controls [preload]="'none'" *ngIf="file.category === 'video'" [src]="file.url" [ngStyle]="{width: '300px', height: '180px', margin: '5px', borderRadius: '5px',
              background: '#f5f5f5 center', 'background-size': 'cover'}">
           </video>
 
           <audio controls *ngIf="file.category === 'audio'"
                  [src]="file.url"
+                 [preload]="'none'"
                  [ngStyle]="{width: '300px', height: '180px', margin: '5px', borderRadius: '5px',background: '#f5f5f5 center', 'background-size': 'cover'}">
           </audio>
 
@@ -67,11 +70,16 @@ import {FileModel} from '../models/file.model';
             </mat-icon>
           </div>
 
-          <span style="display: block">{{file.suffix}}</span>
+          <div style="width: 290px; padding: 5px" class="text-break">
+            {{file.suffix}}
+          </div>
           <div style="display: flex; flex-wrap: wrap; margin-left: 5px; margin-right: 5px; margin-bottom: 16px; align-items: center">
             <span>{{file.type}} | {{file.size}}</span>
             <span style="flex: 1 1 auto"></span>
             <button (click)="selectedFile(file)" mat-flat-button color="primary">Select</button>
+<!--            <button mat-icon-button color="warn">-->
+            <!--              <mat-icon>delete</mat-icon>-->
+            <!--            </button>-->
           </div>
         </div>
       </div>
@@ -79,12 +87,19 @@ import {FileModel} from '../models/file.model';
     </div>
     <div mat-dialog-actions style="padding: 16px">
       <mat-divider></mat-divider>
-      <div class="container">
-        <angular-file-uploader
-          style="width: 100%"
-          (ApiResponse)="doneUpload($event)"
-          [config]="afuConfig">
-        </angular-file-uploader>
+      <div style="width: 100%">
+        <smartstock-upload-files [files]="filesSelected" [uploadFileFormControl]="filesFormControl"
+                                 [multiple]="true"></smartstock-upload-files>
+        <div>
+          <button *ngIf="filesFormControl.valid" [disabled]="filesState.isUploading | async" (click)="uploadFile()" mat-flat-button
+                  color="primary">Upload
+          </button>
+          <div style="width: 20px; height: 20px"></div>
+          <smartstock-upload-file-progress *ngIf="filesState.isUploading | async" [onUploadFlag]="true"
+                                           [name]="'Upload '+filesFormControl.value[0].name"
+                                           [uploadPercentage]="filesState.uploadingPercentage | async">
+          </smartstock-upload-file-progress>
+        </div>
       </div>
     </div>
   `,
@@ -110,7 +125,16 @@ export class FileBrowserDialogComponent implements OnInit, OnDestroy, AfterViewI
   destroy: Subject<any> = new Subject<any>();
   filter = 'all';
   files: MatTableDataSource<FileModel> = new MatTableDataSource([]);
-  afuConfig: AngularFileUploaderConfig;
+  filesFormControl = new FormControl([], [Validators.nullValidator, Validators.required]);
+
+  // doneUpload(response): void {
+  //   if (response && response.body && response.body.urls && Array.isArray(response.body.urls) && response.body.urls.length > 0) {
+  //     this.filesState.appendFile(response.body.urls[0], this.data.shop);
+  //     this.files.paginator.firstPage();
+  //     document.getElementById('dialog-contents').scrollTo(0, 0);
+  //   }
+  // }
+  filesSelected = [];
 
   ngAfterViewInit(): void {
     this.files.paginator = this.matPaginator;
@@ -123,18 +147,7 @@ export class FileBrowserDialogComponent implements OnInit, OnDestroy, AfterViewI
 
   private getFiles(): void {
     if (this.data && this.data.shop) {
-      this.afuConfig = {
-        maxSize: 1024,
-        multiple: false,
-        replaceTexts: {
-          selectFileBtn: 'Select File From Device'
-        },
-        formatsAllowed: '.jpg,.png,.pdf,.docx,.txt,.gif,.jpeg,.mp4,.mkv,.mp3,.aac,.epub',
-        uploadAPI: {
-          url: `https://${this.data.shop.projectId}-daas.bfast.fahamutech.com/storage/${this.data.shop.applicationId}`
-        }
-      };
-      this.filesState.fetchFiles(this.data.shop);
+      this.filesState.fetchFiles();
     } else {
       this.dialogRef.close({message: 'current shop must not be null'});
     }
@@ -142,14 +155,6 @@ export class FileBrowserDialogComponent implements OnInit, OnDestroy, AfterViewI
 
   selectedFile(file: FileModel): void {
     this.dialogRef.close(file);
-  }
-
-  doneUpload(response): void {
-    if (response && response.body && response.body.urls && Array.isArray(response.body.urls) && response.body.urls.length > 0) {
-      this.filesState.appendFile(response.body.urls[0], this.data.shop);
-      this.files.paginator.firstPage();
-      document.getElementById('dialog-contents').scrollTo(0, 0);
-    }
   }
 
   isSelected(value: 'all' | 'image' | 'video' | 'other' | 'book' | 'audio'): boolean {
@@ -175,5 +180,15 @@ export class FileBrowserDialogComponent implements OnInit, OnDestroy, AfterViewI
 
   ngOnDestroy(): void {
     this.destroy.next();
+  }
+
+  uploadFile(): void {
+    if (this.filesFormControl.valid) {
+      this.filesState.uploadFile(this.filesFormControl.value[0].url, () => {
+        this.filesSelected = [];
+        this.files.paginator.firstPage();
+        document.getElementById('dialog-contents').scrollTo(0, 0);
+      });
+    }
   }
 }

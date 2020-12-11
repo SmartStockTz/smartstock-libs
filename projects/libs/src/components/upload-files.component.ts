@@ -17,9 +17,10 @@ import {FormControl, Validators} from '@angular/forms';
           </button>
         </mat-card>
       </div>
-      <mat-card (click)="uploadFile.click()" matRipple style="width: 120px; height: 50px; margin: 5px">
+      <mat-card (click)="uploadFile.click()" matRipple
+                style="width: 120px; height: 50px; margin: 5px; align-items: center; display: flex; flex-direction: row">
         <mat-icon>attachment</mat-icon>
-        <span>Add File</span>
+        <span>Select File</span>
       </mat-card>
     </div>
 
@@ -27,7 +28,8 @@ import {FormControl, Validators} from '@angular/forms';
   `,
 })
 export class UploadFilesComponent implements OnInit {
-  @Input() files: { name: string, type: string, url: File }[] = [];
+  @Input() files: { name: string, type: string, url: File, size: string }[] = [];
+  @Input() multiple = true;
   @Input() uploadFileFormControl: FormControl = new FormControl([], [Validators.nullValidator, Validators.required]);
 
   constructor() {
@@ -36,27 +38,38 @@ export class UploadFilesComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  removeFile($event: MouseEvent, i: number) {
+  removeFile($event: MouseEvent, i: number): void {
     $event.preventDefault();
     this.files.splice(i, 1);
   }
 
-  async uploadFiles($event: Event, uploadFile: HTMLInputElement) {
-    const files: FileList = $event.target['files'];
+  async uploadFiles($event: Event, uploadFile: HTMLInputElement): Promise<void> {
+    // @ts-ignore
+    const files: FileList = $event.target.files;
     if (files.item(0)) {
       const file: File = files.item(0);
       if (this.files.length === 0) {
         this.files.push({
           name: file.name,
           type: file.type,
+          size: (file.size / (1024 * 1024)).toFixed(0),
           url: file,
         });
-      } else {
+      } else if (this.multiple === true) {
         this.files = this.files.filter(value => file.name !== value.name);
         this.files.push({
           name: file.name,
           type: file.type,
+          size: (file.size / (1024 * 1024)).toFixed(0),
           url: file
+        });
+      } else {
+        this.files.splice(0);
+        this.files.push({
+          name: file.name,
+          type: file.type,
+          size: (file.size / (1024 * 1024)).toFixed(0),
+          url: file,
         });
       }
       this.uploadFileFormControl.setValue(this.files);

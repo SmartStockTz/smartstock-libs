@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {FilesService} from '../services/files.service';
 import {BehaviorSubject} from 'rxjs';
-import {ShopModel} from '../models/shop.model';
 import {FileModel} from '../models/file.model';
 import {MessageService} from '../services/message.service';
+import {StorageService} from '../services/storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +11,13 @@ import {MessageService} from '../services/message.service';
 export class FilesState {
 
   constructor(private readonly fileService: FilesService,
+              private readonly storageService: StorageService,
               private readonly messageService: MessageService) {
   }
 
   isFetchFiles: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  isUploading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  uploadingPercentage: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   files: BehaviorSubject<FileModel[]> = new BehaviorSubject<FileModel[]>([]);
 
   private static getFileCategory(name: string): string {
@@ -34,15 +37,20 @@ export class FilesState {
     }
   }
 
-  fetchFiles(shop: ShopModel): void {
+  fetchFiles(): void {
     this.isFetchFiles.next(true);
-    this.fileService.getFiles(shop).then(value => {
+    this.storageService.getActiveShop().then(async shop => {
+      return {
+        files: await this.fileService.getFiles(),
+        shop
+      };
+    }).then(value => {
       this.files.next(
-        value.sort((a, b) => a.lastModified > b.lastModified ? -1 : 1).map(x => {
+        value.files.map(x => {
           const nameContents = x.name.split('.');
           const suffixs = x.name.split('-');
           return {
-            url: `https://${shop.projectId}-daas.bfast.fahamutech.com/storage/${shop.applicationId}/file/${x.name}`,
+            url: `https://${value.shop.projectId}-daas.bfast.fahamutech.com/storage/${value.shop.applicationId}/file/${x.name}`,
             size: (Number(x.size) / (1024 * 1024)).toPrecision(3) + ' MB',
             suffix: suffixs[suffixs.length - 1],
             category: FilesState.getFileCategory(x.name),
@@ -59,11 +67,11 @@ export class FilesState {
     });
   }
 
-  appendFile(url: string, shop: ShopModel): void {
+  appendFile(url: string): void {
     const nameContents = url.split('.');
     const suffixs = url.split('-');
     this.files.value.unshift({
-      url: `https://${shop.projectId}-daas.bfast.fahamutech.com${url}`,
+      url,
       size: ' MB',
       suffix: suffixs[suffixs.length - 1],
       name: url,
@@ -71,5 +79,21 @@ export class FilesState {
       type: nameContents[nameContents.length - 1].toUpperCase()
     });
     this.files.next(this.files.value);
+  }
+
+  uploadFile(file: File, done: () => void): void {
+    this.isUploading.next(true);
+    this.uploadingPercentage.next(0);
+    this.fileService.uploadFile(file, progress => {
+      this.uploadingPercentage.next(progress);
+    }).then(value => {
+      this.appendFile(value);
+      done();
+    }).catch(reason => {
+      this.messageService.showMobileInfoMessage(
+        reason && reason.message ? reason.message : reason.toString(), 2000, 'bottom');
+    }).finally(() => {
+      this.isUploading.next(false);
+    });
   }
 }

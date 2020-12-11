@@ -11,25 +11,40 @@ import {BFast} from 'bfastjs';
 import {environment} from '../environments/environment';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {LoginPageComponent} from './pages/login.page';
+import {MatCardModule} from '@angular/material/card';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {LandPageComponent} from './pages/land.page';
+import {MatInputModule} from '@angular/material/input';
 
 
 const routes: Routes = [
-  {path: '', component: AppComponent}
+  {path: 'account/login', component: LoginPageComponent},
+  {path: '', component: LandPageComponent}
 ];
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LandPageComponent,
+    LoginPageComponent
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
+    RouterModule.forRoot(routes),
     LibModule,
     BrowserAnimationsModule,
     MatSidenavModule,
     HttpClientModule,
     MatButtonModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatCardModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatProgressSpinnerModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]

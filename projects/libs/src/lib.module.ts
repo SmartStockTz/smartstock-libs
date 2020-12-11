@@ -36,7 +36,6 @@ import {SidenavLayoutComponent} from './components/sidenav-layout.component';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {RbacComponent} from './components/rbac.component';
 import {FileBrowserDialogComponent} from './components/file-browser-dialog.component';
-import {AngularFileUploaderModule} from 'angular-file-uploader';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatChipsModule} from '@angular/material/chips';
 
@@ -62,7 +61,6 @@ import {MatChipsModule} from '@angular/material/chips';
     MatTooltipModule,
     MatRippleModule,
     MatSidenavModule,
-    AngularFileUploaderModule,
     MatPaginatorModule,
     MatChipsModule
   ],

@@ -6,7 +6,6 @@ import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 import {StorageService} from '../services/storage.service';
 import {UserService} from '../services/user.service';
 import {UserModel} from '../models/user.model';
-import {EventService} from '../services/event.service';
 
 @Component({
   selector: 'smartstock-toolbar',
@@ -84,8 +83,7 @@ export class ToolbarComponent implements OnInit {
 
   constructor(private readonly router: Router,
               private readonly storage: StorageService,
-              private readonly userDatabase: UserService,
-              private readonly eventService: EventService) {
+              private readonly userService: UserService) {
   }
 
   ngOnInit(): void {
@@ -102,7 +100,7 @@ export class ToolbarComponent implements OnInit {
   }
 
   logout(): void {
-    this.userDatabase.logout(null).finally(() => {
+    this.userService.logout(null).finally(() => {
       return this.router.navigateByUrl('/account/login');
     }).catch(console.log);
   }

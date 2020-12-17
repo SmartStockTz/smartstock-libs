@@ -38,6 +38,7 @@ import {RbacComponent} from './components/rbac.component';
 import {FileBrowserDialogComponent} from './components/file-browser-dialog.component';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatChipsModule} from '@angular/material/chips';
+import {MatInputModule} from '@angular/material/input';
 
 @NgModule({
   imports: [
@@ -62,7 +63,8 @@ import {MatChipsModule} from '@angular/material/chips';
     MatRippleModule,
     MatSidenavModule,
     MatPaginatorModule,
-    MatChipsModule
+    MatChipsModule,
+    MatInputModule
   ],
   exports: [
     DrawerComponent,

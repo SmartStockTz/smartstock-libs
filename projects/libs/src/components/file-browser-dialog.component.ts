@@ -6,7 +6,7 @@ import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {Subject} from 'rxjs';
 import {FilesState} from '../states/files.state';
-import {takeUntil} from 'rxjs/operators';
+import {debounceTime, takeUntil} from 'rxjs/operators';
 import {FileModel} from '../models/file.model';
 import {FormControl, Validators} from '@angular/forms';
 
@@ -14,22 +14,27 @@ import {FormControl, Validators} from '@angular/forms';
 @Component({
   selector: 'smartstock-libs-file-browser',
   template: `
-    <div mat-dialog-title style="display: flex">
-      <mat-chip-list>
-        <mat-chip (click)="filterFilter('all')" [selected]="isSelected('all')">ALL</mat-chip>
-        <mat-chip (click)="filterFilter('image')" [selected]="isSelected('image')">IMAGE</mat-chip>
-        <mat-chip (click)="filterFilter('video')" [selected]="isSelected('video')">VIDEO</mat-chip>
-        <mat-chip (click)="filterFilter('audio')" [selected]="isSelected('audio')">AUDIO</mat-chip>
-        <mat-chip (click)="filterFilter('book')" [selected]="isSelected('book')">BOOK</mat-chip>
-        <mat-chip (click)="filterFilter('other')" [selected]="isSelected('other')">OTHER</mat-chip>
-      </mat-chip-list>
-      <span style="flex: 1 1 auto"></span>
-      <button (click)="filesState.fetchFiles()" color="primary" mat-icon-button>
-        <mat-icon>refresh</mat-icon>
-      </button>
-      <button color="warn" mat-icon-button (click)="dialogRef.close({message: 'No file selected'})">
-        <mat-icon>close</mat-icon>
-      </button>
+    <div mat-dialog-title>
+      <div style="display: flex">
+        <mat-chip-list>
+          <mat-chip (click)="filterFilter('all')" [selected]="isSelected('all')">ALL</mat-chip>
+          <mat-chip (click)="filterFilter('image')" [selected]="isSelected('image')">IMAGE</mat-chip>
+          <mat-chip (click)="filterFilter('video')" [selected]="isSelected('video')">VIDEO</mat-chip>
+          <mat-chip (click)="filterFilter('audio')" [selected]="isSelected('audio')">AUDIO</mat-chip>
+          <mat-chip (click)="filterFilter('book')" [selected]="isSelected('book')">BOOK</mat-chip>
+          <mat-chip (click)="filterFilter('other')" [selected]="isSelected('other')">OTHER</mat-chip>
+        </mat-chip-list>
+        <div style="margin: 0 4px">
+          <input [formControl]="filterFiles" placeholder="enter keyword">
+        </div>
+        <span style="flex: 1 1 auto"></span>
+        <button (click)="filesState.fetchFiles()" color="primary" mat-icon-button>
+          <mat-icon>refresh</mat-icon>
+        </button>
+        <button color="warn" mat-icon-button (click)="dialogRef.close({message: 'No file selected'})">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
     </div>
 
     <mat-divider></mat-divider>
@@ -39,7 +44,7 @@ import {FormControl, Validators} from '@angular/forms';
       <p>Fetch files...</p>
     </div>
 
-    <div mat-dialog-content id="dialog-contents" style="max-height: 50vh">
+    <div mat-dialog-content id="dialog-contents" style="max-height: 60vh">
       <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
         <div *ngFor="let file of files.connect() | async">
           <img alt="{{file.suffix}}" *ngIf="file.category === 'image'" [src]="file.url"
@@ -77,7 +82,7 @@ import {FormControl, Validators} from '@angular/forms';
             <span>{{file.type}} | {{file.size}}</span>
             <span style="flex: 1 1 auto"></span>
             <button (click)="selectedFile(file)" mat-flat-button color="primary">Select</button>
-<!--            <button mat-icon-button color="warn">-->
+            <!--            <button mat-icon-button color="warn">-->
             <!--              <mat-icon>delete</mat-icon>-->
             <!--            </button>-->
           </div>
@@ -135,6 +140,7 @@ export class FileBrowserDialogComponent implements OnInit, OnDestroy, AfterViewI
   //   }
   // }
   filesSelected = [];
+  filterFiles = new FormControl('');
 
   ngAfterViewInit(): void {
     this.files.paginator = this.matPaginator;
@@ -143,6 +149,15 @@ export class FileBrowserDialogComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   ngOnInit(): void {
+    this.filterFiles.valueChanges.pipe(
+      debounceTime(500)
+    ).subscribe(value => {
+      if (value) {
+        this.files.filter = value.toString().toLowerCase();
+      } else {
+        this.files.filter = '';
+      }
+    });
   }
 
   private getFiles(): void {

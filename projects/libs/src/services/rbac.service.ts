@@ -12,10 +12,11 @@ export class RbacService {
   async hasAccess(groups: string[]): Promise<boolean> {
     const user: UserModel = await this.userService.currentUser();
     let groupAccess: boolean;
-    if (groups && groups.length > 0 && groups[0] && groups[0] === '*') {
+    if (groups && groups.length === 1 && groups[0] === '*') {
       groupAccess = true;
     } else {
-      groupAccess = groups.join('.').includes(user.role);
+      const result = groups.filter(x => x.toLowerCase().trim() === user.role.toLowerCase().trim());
+      return result && result.length === 1;
     }
     return groupAccess;
   }

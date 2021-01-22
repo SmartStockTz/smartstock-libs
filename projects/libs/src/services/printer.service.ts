@@ -11,6 +11,7 @@ export class PrintService {
   url: string;
 
   constructor(private readonly settings: SettingsService,
+              private readonly configService: ConfigsService,
               private readonly httpClient: HttpClient) {
   }
 
@@ -19,7 +20,7 @@ export class PrintService {
   // }
 
   private async printInDesktop(printModel: PrinterModel): Promise<any> {
-    this.url = `${ConfigsService.printerUrl}/print`;
+    this.url = `${this.configService.printerUrl}/print`;
     return this.httpClient.post(this.url, {
       data: printModel.data,
       id: printModel.id

@@ -2,7 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
-import {LibModule} from '../../../libs/src/public-api';
+import {ConfigsService, LibModule} from '../../../libs/src/public-api';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule, Routes} from '@angular/router';
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -50,11 +50,62 @@ const routes: Routes = [
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor() {
+  constructor(private readonly configs: ConfigsService) {
     BFast.init({
       applicationId: environment.smartstock.applicationId,
       projectId: environment.smartstock.projectId,
       appPassword: environment.smartstock.pass,
     });
+    configs.versionName = 'demo-libs';
+    configs.menu = [
+      {
+        name: 'Dashboard',
+        icon: 'dashboard',
+        link: '/dashboard',
+        roles: ['admin']
+      },
+      {
+        name: 'Reports',
+        icon: 'table_chart',
+        link: '/reports',
+        roles: ['admin'],
+        pages: [
+          {
+            name: 'sales',
+            link: '/reports/sale',
+            roles: ['*']
+          },
+          {
+            name: 'stocks',
+            link: '/reports/stocks',
+            roles: ['*']
+          }
+        ]
+      },
+      {
+        name: 'Sale',
+        icon: 'shop_front',
+        link: '/sale',
+        roles: ['admin', 'manager', 'user']
+      },
+      {
+        name: 'Purchase',
+        icon: 'receipt',
+        link: '/purchase',
+        roles: ['admin', 'manager']
+      },
+      {
+        name: 'Stock',
+        icon: 'store',
+        link: '/stock',
+        roles: ['admin', 'manager']
+      },
+      {
+        name: 'Profile',
+        icon: 'supervisor_account',
+        link: '/account',
+        roles: ['admin', 'manager', 'user']
+      },
+    ];
   }
 }

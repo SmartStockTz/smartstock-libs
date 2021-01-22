@@ -31,7 +31,6 @@ import {CommonModule} from '@angular/common';
 import {UploadFileProgressComponent} from './components/upload-file-progress.component';
 import {VerifyEMailDialogComponent} from './components/verify-email-dialog.component';
 import {DialogDeleteComponent} from './components/delete-dialog.component';
-import {ConfigsService} from './services/configs.service';
 import {SidenavLayoutComponent} from './components/sidenav-layout.component';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {RbacComponent} from './components/rbac.component';
@@ -39,6 +38,7 @@ import {FileBrowserDialogComponent} from './components/file-browser-dialog.compo
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatInputModule} from '@angular/material/input';
+import {DrawerSubMenuComponent} from './components/drawer-sub-menu.component';
 
 @NgModule({
   imports: [
@@ -83,6 +83,7 @@ import {MatInputModule} from '@angular/material/input';
   ],
   declarations: [
     FileBrowserDialogComponent,
+    DrawerSubMenuComponent,
     DrawerComponent,
     ToolbarComponent,
     NoStockDialogComponent,
@@ -102,15 +103,13 @@ import {MatInputModule} from '@angular/material/input';
 })
 
 export class LibModule {
+
   static start(config: {
     browser?: boolean;
     production?: boolean;
     electron?: boolean;
     version?: string
-  } = {version: '', browser: true, electron: true, production: true}): void {
-    ConfigsService.versionName = config.version;
-    ConfigsService.browser = config.browser;
-    ConfigsService.electron = config.electron;
-    ConfigsService.production = config.production;
+  }): void {
+
   }
 }

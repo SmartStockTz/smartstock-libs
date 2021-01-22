@@ -1,13 +1,15 @@
 import {Injectable} from '@angular/core';
+import {MenuModel} from '../models/menu.model';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class ConfigsService {
-  static versionName = '';
-  static printerUrl = 'https://localhost:8080';
-  static production = true;
-  static electron = true;
-  static browser = true;
+  public versionName = '';
+  public printerUrl = 'https://localhost:8080';
+  public production = true;
+  public electron = true;
+  public browser = true;
+  public menu: MenuModel[] = [];
 }

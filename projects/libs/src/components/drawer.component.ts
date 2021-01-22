@@ -32,66 +32,18 @@ import {ConfigsService} from '../services/configs.service';
         </div>
 
         <mat-nav-list>
-
-          <smartstock-libs-rbac [groups]="['admin']" [component]="dashboard">
-            <ng-template #dashboard>
-              <mat-list-item [ngStyle]="shouldExpand('dashboard')?selectedMenu:{}" routerLink="/dashboard">
-                <mat-icon matListIcon matPrefix>dashboard</mat-icon>
-                <span matLine style="margin-left: 8px">Dashboard</span>
+          <smartstock-libs-rbac *ngFor="let modules of configs.menu" [groups]="modules.roles" [component]="menu">
+            <ng-template #menu>
+              <mat-list-item [ngStyle]="shouldExpand(modules.name.toLowerCase().trim())?selectedMenu:{}" routerLink="{{modules.link}}">
+                <mat-icon matListIcon matPrefix>{{modules.icon}}</mat-icon>
+                <span matLine style="margin-left: 8px">{{modules.name}}</span>
               </mat-list-item>
+              <div *ngIf="modules.pages && modules.pages.length>0 && shouldExpand(modules.name.toLowerCase().trim())" >
+                <smartstock-drawer-sub-menu *ngFor="let page of modules.pages" [page]="page"></smartstock-drawer-sub-menu>
+              </div>
               <mat-divider></mat-divider>
             </ng-template>
           </smartstock-libs-rbac>
-
-          <smartstock-libs-rbac [groups]="['admin']" [component]="report">
-            <ng-template #report>
-              <mat-list-item [ngStyle]="shouldExpand('report')?selectedMenu:{}" routerLink="/report">
-                <mat-icon matListIcon matPrefix>table_chart</mat-icon>
-                <span matLine style="margin-left: 8px">Report</span>
-              </mat-list-item>
-              <mat-divider></mat-divider>
-            </ng-template>
-          </smartstock-libs-rbac>
-
-          <!--          <smartstock-libs-rbac [groups]="['admin', 'manager', 'user']" [component]="sale">-->
-          <!--            <ng-template #sale>-->
-          <mat-list-item [ngStyle]="shouldExpand('sale')?selectedMenu:{}" routerLink="/sale">
-            <mat-icon matListIcon matPrefix>shop_front</mat-icon>
-            <span matLine style="margin-left: 8px">Sale</span>
-          </mat-list-item>
-          <mat-divider></mat-divider>
-          <!--            </ng-template>-->
-          <!--          </smartstock-libs-rbac>-->
-
-          <smartstock-libs-rbac [groups]="['admin', 'manager']" [component]="purchase">
-            <ng-template #purchase>
-              <mat-list-item [ngStyle]="shouldExpand('purchase')?selectedMenu:{}" routerLink="/purchase">
-                <mat-icon matListIcon matPrefix>receipts</mat-icon>
-                <span matLine style="margin-left: 8px">Purchase</span>
-              </mat-list-item>
-              <mat-divider></mat-divider>
-            </ng-template>
-          </smartstock-libs-rbac>
-
-          <smartstock-libs-rbac [groups]="['admin', 'manager']" [component]="stock">
-            <ng-template #stock>
-              <mat-list-item [ngStyle]="shouldExpand('stock')?selectedMenu:{}" routerLink="/stock">
-                <mat-icon matListIcon matPrefix>store</mat-icon>
-                <span matLine style="margin-left: 8px">Stock</span>
-              </mat-list-item>
-              <mat-divider></mat-divider>
-            </ng-template>
-          </smartstock-libs-rbac>
-
-          <!--          <smartstock-libs-rbac [groups]="['admin', 'manager', 'user']" [component]="account">-->
-          <!--            <ng-template #account>-->
-          <mat-list-item [ngStyle]="shouldExpand('account')?selectedMenu:{}" routerLink="/account">
-            <mat-icon matListIcon matPrefix>supervisor_account</mat-icon>
-            <span matLine style="margin-left: 8px">Profile</span>
-          </mat-list-item>
-          <!--            </ng-template>-->
-          <!--          </smartstock-libs-rbac>-->
-
         </mat-nav-list>
 
       </div>
@@ -107,6 +59,7 @@ export class DrawerComponent implements OnInit {
 
   constructor(private readonly userService: UserService,
               private readonly logger: LogService,
+              public readonly configs: ConfigsService,
               private readonly eventApi: EventService) {
   }
 
@@ -121,7 +74,7 @@ export class DrawerComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.versionNumber = of(ConfigsService.versionName);
+    this.versionNumber = of(this.configs.versionName);
     this.userService.getCurrentShop().then(shop => {
       this.shop = shop;
     }).catch(reason => {
@@ -144,13 +97,5 @@ export class DrawerComponent implements OnInit {
   shouldExpand(route: string): boolean {
     const url = new URL(location.href);
     return url.pathname.startsWith('/' + route);
-  }
-
-  isManager(): boolean {
-    return this.currentUser && (this.currentUser.role === 'admin' || this.currentUser.role === 'manager');
-  }
-
-  isAdmin(): boolean {
-    return this.currentUser && (this.currentUser.role === 'admin');
   }
 }

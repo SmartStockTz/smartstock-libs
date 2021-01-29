@@ -34,7 +34,7 @@ import {ConfigsService} from '../services/configs.service';
         <mat-nav-list>
           <smartstock-libs-rbac *ngFor="let modules of configs.menu" [groups]="modules.roles" [component]="menu">
             <ng-template #menu>
-              <mat-list-item [ngStyle]="shouldExpand(modules.name.toLowerCase().trim())?selectedMenu:{}" routerLink="{{modules.link}}">
+              <mat-list-item style="height: 38px" [ngStyle]="shouldExpand(modules.name.toLowerCase().trim())?selectedMenu:{}" routerLink="{{modules.link}}">
                 <mat-icon matListIcon matPrefix>{{modules.icon}}</mat-icon>
                 <span matLine style="margin-left: 8px">{{modules.name}}</span>
               </mat-list-item>

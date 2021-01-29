@@ -5,7 +5,7 @@ import {SubMenuModel} from '../models/menu.model';
 @Component({
   selector: 'smartstock-drawer-sub-menu',
   template: `
-    <mat-list-item routerLink="{{page.link}}" style="padding-left: 34px; height: 35px" *ngIf="hasAccess">
+    <mat-list-item routerLink="{{page.link}}" style="padding-left: 20px; height: 35px" *ngIf="hasAccess">
       <mat-icon matListIcon style="display: flex; justify-content: center; align-items: center">
         <div style="width: 8px; height: 3px; border-radius: 5px;background: black"></div>
       </mat-icon>

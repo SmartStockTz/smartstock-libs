@@ -3,7 +3,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {Component, Inject} from '@angular/core';
 
 @Component({
-  selector: 'smartstock-lisb-dialog-delete',
+  selector: 'app-lisb-dialog-delete',
   template: `
     <div class="container">
       <div class="row">

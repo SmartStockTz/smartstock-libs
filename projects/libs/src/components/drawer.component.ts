@@ -8,7 +8,7 @@ import {ShopModel} from '../models/shop.model';
 import {ConfigsService} from '../services/configs.service';
 
 @Component({
-  selector: 'smartstock-drawer',
+  selector: 'app-drawer',
   template: `
     <div class="my-side-nav">
       <div>
@@ -32,18 +32,18 @@ import {ConfigsService} from '../services/configs.service';
         </div>
 
         <mat-nav-list>
-          <smartstock-libs-rbac *ngFor="let modules of configs.menu" [groups]="modules.roles" [component]="menu">
+          <app-libs-rbac *ngFor="let modules of configs.menu" [groups]="modules.roles" [component]="menu">
             <ng-template #menu>
               <mat-list-item style="height: 38px" [ngStyle]="shouldExpand(modules.name.toLowerCase().trim())?selectedMenu:{}" routerLink="{{modules.link}}">
                 <mat-icon matListIcon matPrefix>{{modules.icon}}</mat-icon>
                 <span matLine style="margin-left: 8px">{{modules.name}}</span>
               </mat-list-item>
               <div *ngIf="modules.pages && modules.pages.length>0 && shouldExpand(modules.name.toLowerCase().trim())" >
-                <smartstock-drawer-sub-menu *ngFor="let page of modules.pages" [page]="page"></smartstock-drawer-sub-menu>
+                <app-drawer-sub-menu *ngFor="let page of modules.pages" [page]="page"></app-drawer-sub-menu>
               </div>
               <mat-divider></mat-divider>
             </ng-template>
-          </smartstock-libs-rbac>
+          </app-libs-rbac>
         </mat-nav-list>
 
       </div>

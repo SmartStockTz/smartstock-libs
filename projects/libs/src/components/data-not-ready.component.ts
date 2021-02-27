@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'smartstock-data-not-ready',
+  selector: 'app-data-not-ready',
   template: `
     <div *ngIf="!isLoading" style="margin-top: 10px; margin-bottom: 10px"
          class="d-flex flex-column justify-content-center align-items-center">

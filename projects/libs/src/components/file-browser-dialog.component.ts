@@ -12,7 +12,7 @@ import {FormControl, Validators} from '@angular/forms';
 
 // @dynamic
 @Component({
-  selector: 'smartstock-libs-file-browser',
+  selector: 'app-libs-file-browser',
   template: `
     <div mat-dialog-title>
       <div style="display: flex">
@@ -93,17 +93,17 @@ import {FormControl, Validators} from '@angular/forms';
     <div mat-dialog-actions style="padding: 16px">
       <mat-divider></mat-divider>
       <div style="width: 100%">
-        <smartstock-upload-files [files]="filesSelected" [uploadFileFormControl]="filesFormControl"
-                                 [multiple]="true"></smartstock-upload-files>
+        <app-upload-files [files]="filesSelected" [uploadFileFormControl]="filesFormControl"
+                                 [multiple]="true"></app-upload-files>
         <div>
           <button *ngIf="filesFormControl.valid" [disabled]="filesState.isUploading | async" (click)="uploadFile()" mat-flat-button
                   color="primary">Upload
           </button>
           <div style="width: 20px; height: 20px"></div>
-          <smartstock-upload-file-progress *ngIf="filesState.isUploading | async" [onUploadFlag]="true"
+          <app-upload-file-progress *ngIf="filesState.isUploading | async" [onUploadFlag]="true"
                                            [name]="'Upload '+filesFormControl.value[0].name"
                                            [uploadPercentage]="filesState.uploadingPercentage | async">
-          </smartstock-upload-file-progress>
+          </app-upload-file-progress>
         </div>
       </div>
     </div>

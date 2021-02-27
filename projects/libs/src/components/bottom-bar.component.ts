@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'smartstock-bottom-bar',
+  selector: 'app-bottom-bar',
   template: `
-    <mat-toolbar class="fixed-bottom bottom-smartstock-bar">
+    <mat-toolbar class="fixed-bottom bottom-app-bar">
 
       <div class="flex-grow-1 d-flex justify-content-center align-items-center flex-column">
         <button mat-icon-button *ngIf="activeNav('dashboard')" mat-flat-button routerLink="/dashboard">

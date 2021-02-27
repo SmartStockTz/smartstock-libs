@@ -4,7 +4,7 @@ import {MatSidenav} from '@angular/material/sidenav';
 import {FormControl} from '@angular/forms';
 
 @Component({
-  selector: 'smartstock-layout-sidenav',
+  selector: 'app-layout-sidenav',
   template: `
     <mat-sidenav-container>
       <mat-sidenav #sidenav [mode]="leftDrawerMode" [opened]="leftDrawerOpened" position="start">
@@ -14,7 +14,7 @@ import {FormControl} from '@angular/forms';
         <ng-container *ngTemplateOutlet="rightDrawer"></ng-container>
       </mat-sidenav>
       <mat-sidenav-content style="height: 100vh">
-        <smartstock-toolbar [sidenav]="leftDrawer?sidenav:undefined"
+        <app-toolbar [sidenav]="leftDrawer?sidenav:undefined"
                             [showProgress]="showProgress"
                             [hasBackRoute]="hasBackRoute"
                             [backLink]="backLink"
@@ -27,7 +27,7 @@ import {FormControl} from '@angular/forms';
                             [color]="color"
                             [isMobile]="isMobile"
                             [heading]="heading">
-        </smartstock-toolbar>
+        </app-toolbar>
         <ng-container *ngTemplateOutlet="body"></ng-container>
       </mat-sidenav-content>
     </mat-sidenav-container>

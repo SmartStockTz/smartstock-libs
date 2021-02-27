@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 
 @Component({
-  selector: 'smartstock-upload-files',
+  selector: 'app-upload-files',
   template: `
     <div style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; padding: 8px">
       <div *ngFor="let file of files; let i =index"

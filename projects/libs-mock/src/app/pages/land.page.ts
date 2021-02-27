@@ -7,13 +7,13 @@ import {FileBrowserDialogComponent} from '../../../../libs/src/components/file-b
 
 @Component({
   template: `
-    <smartstock-layout-sidenav [heading]="'Core Libs'"
+    <app-layout-sidenav [heading]="'Core Libs'"
                                [leftDrawer]="drawer"
                                [leftDrawerMode]="'side'"
                                [leftDrawerOpened]="true"
                                [version]="mock" [body]="body">
       <ng-template #drawer>
-        <smartstock-drawer></smartstock-drawer>
+        <app-drawer></app-drawer>
       </ng-template>
       <ng-template #body>
         <div style="height: 200vh">
@@ -23,7 +23,7 @@ import {FileBrowserDialogComponent} from '../../../../libs/src/components/file-b
           </button>
         </div>
       </ng-template>
-    </smartstock-layout-sidenav>
+    </app-layout-sidenav>
   `
 })
 export class LandPageComponent {

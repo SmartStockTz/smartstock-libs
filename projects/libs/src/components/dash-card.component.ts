@@ -2,7 +2,7 @@ import {Component, Input, OnInit, TemplateRef} from '@angular/core';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'smartstock-dash-card',
+  selector: 'app-dash-card',
   template: `
     <mat-card class="d-flex flex-column" [ngStyle]="{height:height+'px'}">
       <mat-card-header style="margin: 0">

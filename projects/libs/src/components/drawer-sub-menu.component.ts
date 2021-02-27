@@ -3,7 +3,7 @@ import {RbacService} from '../services/rbac.service';
 import {SubMenuModel} from '../models/menu.model';
 
 @Component({
-  selector: 'smartstock-drawer-sub-menu',
+  selector: 'app-drawer-sub-menu',
   template: `
     <mat-list-item routerLink="{{page.link}}" style="padding-left: 20px; height: 35px" *ngIf="hasAccess">
       <mat-icon matListIcon style="display: flex; justify-content: center; align-items: center">

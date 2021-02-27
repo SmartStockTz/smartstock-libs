@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'smartstock-upload-file-progress',
+  selector: 'app-upload-file-progress',
   template: `
     <div *ngIf="onUploadFlag">
       <mat-progress-bar [bufferValue]="100" mode="determinate" [value]="uploadPercentage"></mat-progress-bar>

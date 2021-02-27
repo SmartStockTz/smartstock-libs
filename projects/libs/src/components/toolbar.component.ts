@@ -8,7 +8,7 @@ import {UserService} from '../services/user.service';
 import {UserModel} from '../models/user.model';
 
 @Component({
-  selector: 'smartstock-toolbar',
+  selector: 'app-toolbar',
   template: `
     <mat-toolbar style="position: sticky; top: 0; z-index: 3000000000" [color]="color" class="mat-elevation-z4">
       <mat-toolbar-row>
@@ -22,12 +22,12 @@ import {UserModel} from '../models/user.model';
         <span *ngIf="isMobile" style="flex: 1 1 auto"></span>
         <span *ngIf="!isMobile && showSearch" style="width: 16px"></span>
         <span *ngIf="!isMobile && !showSearch" style="flex: 1 1 auto"></span>
-        <smartstock-search-input [searchProgressFlag]="searchProgressFlag"
+        <app-search-input [searchProgressFlag]="searchProgressFlag"
                                  *ngIf="!isMobile && showSearch" style="flex: 1 1 auto"
                                  [showSearch]="showSearch"
                                  [searchInputControl]="searchInputControl"
                                  [searchPlaceholder]="searchPlaceholder">
-        </smartstock-search-input>
+        </app-search-input>
         <span *ngIf="!isMobile && showSearch" style="width: 16px"></span>
         <button *ngIf="cartDrawer" mat-icon-button (click)="cartDrawer.toggle()">
           <mat-icon>shopping_cart</mat-icon>
@@ -54,12 +54,12 @@ import {UserModel} from '../models/user.model';
 
       <mat-toolbar-row *ngIf="isMobile && showSearch">
         <!--    <span style="flex-grow: 1"></span>-->
-        <smartstock-search-input [searchProgressFlag]="searchProgressFlag"
+        <app-search-input [searchProgressFlag]="searchProgressFlag"
                                  style="flex: 1 1 auto"
                                  [showSearch]="showSearch"
                                  [searchInputControl]="searchInputControl"
                                  [searchPlaceholder]="searchPlaceholder">
-        </smartstock-search-input>
+        </app-search-input>
         <!--    <span style="flex-grow: 1"></span>-->
       </mat-toolbar-row>
     </mat-toolbar>

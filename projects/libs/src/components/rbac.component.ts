@@ -2,7 +2,7 @@ import {Component, Input, OnInit, TemplateRef} from '@angular/core';
 import {RbacService} from '../services/rbac.service';
 
 @Component({
-  selector: 'smartstock-libs-rbac',
+  selector: 'app-libs-rbac',
   template: `
     <div *ngIf="hasAccess">
       <ng-container *ngTemplateOutlet="component"></ng-container>

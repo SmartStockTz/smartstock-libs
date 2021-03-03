@@ -26,7 +26,11 @@ export class FilesService {
 
   async uploadFile(file: File, callback: (progress: any) => void): Promise<string> {
     const shop = await this.storageService.getActiveShop();
-    return BFast.storage(shop.projectId).save(file, progress => {
+    return BFast.storage(shop.projectId).save({
+      filename: file.name,
+      data: file,
+      pn: false
+    }, progress => {
       callback(((progress.loaded / progress.total) * 100).toFixed(2));
     });
   }

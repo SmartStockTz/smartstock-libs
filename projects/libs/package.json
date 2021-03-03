@@ -1,6 +1,6 @@
 {
   "name": "@smartstocktz/core-libs",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/smartstocktz"
   },

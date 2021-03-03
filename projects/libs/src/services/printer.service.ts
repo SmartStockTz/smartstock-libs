@@ -47,7 +47,7 @@ export class PrintService {
     //   return 'done printing';
     // }
 
-    if (typeof process === 'undefined') {
+    if (typeof process === 'undefined' && forcePrint === false) {
       return 'can not print in web browser';
     }
 

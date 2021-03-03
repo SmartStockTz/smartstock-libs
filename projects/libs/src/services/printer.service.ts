@@ -15,10 +15,6 @@ export class PrintService {
               private readonly httpClient: HttpClient) {
   }
 
-  // private async printInMobile(printerModel: PrinterModel): Promise<string> {
-  //   return 'done printing';
-  // }
-
   private async printInDesktop(printModel: PrinterModel): Promise<any> {
     this.url = `${this.configService.printerUrl}/print`;
     return this.httpClient.post(this.url, {
@@ -32,7 +28,7 @@ export class PrintService {
     }).toPromise();
   }
 
-  async print(printModel: PrinterModel): Promise<any> {
+  async print(printModel: PrinterModel, forcePrint = false): Promise<any> {
     const cSettings = await this.settings.getSettings();
     let data = '';
     data = data.concat(cSettings.printerHeader + '\n');
@@ -51,7 +47,11 @@ export class PrintService {
     //   return 'done printing';
     // }
 
-    if (!cSettings.saleWithoutPrinter) {
+    if (typeof process === 'undefined') {
+      return 'can not print in web browser';
+    }
+
+    if (!cSettings.saleWithoutPrinter || forcePrint) {
       return await this.printInDesktop(printModel);
     }
 

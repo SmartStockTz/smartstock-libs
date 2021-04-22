@@ -1,8 +1,8 @@
 {
   "name": "@smartstocktz/core-libs",
-  "version": "0.0.29",
+  "version": "0.1.1",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/smartstocktz"
+    "registry": "https://npm.pkg.github.com"
   },
   "repository": {
     "url": "git://github.com/SmartStockTz/smartstock-libs.git"

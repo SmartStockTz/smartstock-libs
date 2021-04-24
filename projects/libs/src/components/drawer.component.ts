@@ -34,11 +34,12 @@ import {ConfigsService} from '../services/configs.service';
         <mat-nav-list>
           <app-libs-rbac *ngFor="let modules of configs.menu" [groups]="modules.roles" [component]="menu">
             <ng-template #menu>
-              <mat-list-item style="height: 38px" [ngStyle]="shouldExpand(modules.name.toLowerCase().trim())?selectedMenu:{}" routerLink="{{modules.link}}">
+              <mat-list-item style="height: 38px" [ngStyle]="shouldExpand(modules.name.toLowerCase().trim())?selectedMenu:{}"
+                             routerLink="{{modules.link}}">
                 <mat-icon matListIcon matPrefix>{{modules.icon}}</mat-icon>
                 <span matLine style="margin-left: 8px">{{modules.name}}</span>
               </mat-list-item>
-              <div *ngIf="modules.pages && modules.pages.length>0 && shouldExpand(modules.name.toLowerCase().trim())" >
+              <div *ngIf="modules.pages && modules.pages.length>0 && shouldExpand(modules.name.toLowerCase().trim())">
                 <app-drawer-sub-menu *ngFor="let page of modules.pages" [page]="page"></app-drawer-sub-menu>
               </div>
               <mat-divider></mat-divider>
@@ -95,7 +96,11 @@ export class DrawerComponent implements OnInit {
   }
 
   shouldExpand(route: string): boolean {
-    const url = new URL(location.href);
-    return url.pathname.startsWith('/' + route);
+    if (this.configs.selectedModuleName && this.configs.selectedModuleName !== '') {
+      return this.configs.selectedModuleName === route;
+    } else {
+      const url = new URL(location.href);
+      return url.pathname.startsWith('/' + route);
+    }
   }
 }

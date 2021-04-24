@@ -8,10 +8,10 @@ import {FileBrowserDialogComponent} from '../../../../libs/src/components/file-b
 @Component({
   template: `
     <app-layout-sidenav [heading]="'Core Libs'"
-                               [leftDrawer]="drawer"
-                               [leftDrawerMode]="'side'"
-                               [leftDrawerOpened]="true"
-                               [version]="mock" [body]="body">
+                        [leftDrawer]="drawer"
+                        [leftDrawerMode]="'side'"
+                        [leftDrawerOpened]="true"
+                        [version]="mock" [body]="body">
       <ng-template #drawer>
         <app-drawer></app-drawer>
       </ng-template>

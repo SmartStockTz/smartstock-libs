@@ -34,4 +34,28 @@ export class FilesService {
       callback(((progress.loaded / progress.total) * 100).toFixed(2));
     });
   }
+
+  // async browse(): Promise<FileModel> {
+  //   return this.userService.getCurrentShop().then(shop => {
+  //     return new Promise((resolve, reject) => {
+  //       this.matDialog.open(FileBrowserDialogComponent, {
+  //         closeOnNavigation: false,
+  //         disableClose: true,
+  //         data: {
+  //           shop
+  //         }
+  //       }).afterClosed().subscribe(value => {
+  //         if (value && value.url) {
+  //           resolve(value);
+  //         } else {
+  //           this.messageService.showMobileInfoMessage(value && value.message ?
+  //             value.message : 'Fails to select file', 2000, 'bottom');
+  //           reject(null);
+  //         }
+  //       }, error => {
+  //         reject(error);
+  //       });
+  //     });
+  //   });
+  // }
 }

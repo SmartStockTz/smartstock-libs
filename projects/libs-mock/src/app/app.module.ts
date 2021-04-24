@@ -18,10 +18,12 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {LandPageComponent} from './pages/land.page';
 import {MatInputModule} from '@angular/material/input';
+import {MatDialogModule} from '@angular/material/dialog';
 
 
 const routes: Routes = [
-  {path: 'account/login', component: LoginPageComponent},
+  {path: 'login', component: LoginPageComponent},
+  {path: 'profile', component: LandPageComponent},
   {path: '', component: LandPageComponent}
 ];
 
@@ -44,7 +46,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     MatFormFieldModule,
     MatProgressSpinnerModule,
-    MatInputModule
+    MatInputModule,
+    MatDialogModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
@@ -57,55 +60,19 @@ export class AppModule {
       appPassword: environment.smartstock.pass,
     });
     configs.versionName = 'demo-libs';
-    configs.menu = [
-      {
-        name: 'Dashboard',
-        icon: 'dashboard',
-        link: '/dashboard',
-        roles: ['admin']
-      },
-      {
-        name: 'Reports',
-        icon: 'table_chart',
-        link: '/reports',
-        roles: ['admin'],
-        pages: [
-          {
-            name: 'sales',
-            link: '/reports/sale',
-            roles: ['*']
-          },
-          {
-            name: 'stocks',
-            link: '/reports/stocks',
-            roles: ['*']
-          }
-        ]
-      },
-      {
-        name: 'Sale',
-        icon: 'shop_front',
-        link: '/sale',
-        roles: ['admin', 'manager', 'user']
-      },
-      {
-        name: 'Purchase',
-        icon: 'receipt',
-        link: '/purchase',
-        roles: ['admin', 'manager']
-      },
-      {
-        name: 'Stock',
-        icon: 'store',
-        link: '/stock',
-        roles: ['admin', 'manager']
-      },
-      {
-        name: 'Profile',
-        icon: 'supervisor_account',
-        link: '/account',
-        roles: ['admin', 'manager', 'user']
-      },
-    ];
+    this.configs.addMenu({
+      name: 'Profile',
+      icon: 'supervisor_account',
+      link: '/account',
+      roles: ['*'],
+      pages: [
+        {
+          link: '/login',
+          roles: ['*'],
+          name: 'Login'
+        }
+      ]
+    });
+    this.configs.selectedModuleName = 'profile';
   }
 }

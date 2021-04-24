@@ -47,7 +47,7 @@ import {FormControl, Validators} from '@angular/forms';
     <div mat-dialog-content id="dialog-contents" style="max-height: 60vh">
       <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
         <div *ngFor="let file of files.connect() | async">
-          <img alt="{{file.suffix}}" *ngIf="file.category === 'image'" [src]="file.url"
+          <img alt="{{file.suffix}}" *ngIf="file.category === 'image'" [src]="file.url.concat('/thumbnail?width=150')"
                [ngStyle]="{width: '300px', height: '180px', margin: '5px', borderRadius: '5px',
              background: '#f5f5f5 center', 'background-size': 'cover'}">
 

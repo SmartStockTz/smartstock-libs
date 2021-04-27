@@ -32,7 +32,7 @@ import {ConfigsService} from '../services/configs.service';
         </div>
 
         <mat-nav-list>
-          <app-libs-rbac *ngFor="let modules of configs.menu" [groups]="modules.roles" [component]="menu">
+          <app-libs-rbac *ngFor="let modules of configs.getMenu()" [groups]="modules.roles" [component]="menu">
             <ng-template #menu>
               <mat-list-item style="height: 38px" [ngStyle]="shouldExpand(modules.name.toLowerCase().trim())?selectedMenu:{}"
                              routerLink="{{modules.link}}">

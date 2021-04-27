@@ -60,19 +60,46 @@ export class AppModule {
       appPassword: environment.smartstock.pass,
     });
     configs.versionName = 'demo-libs';
-    this.configs.addMenu({
-      name: 'Profile',
-      icon: 'supervisor_account',
-      link: '/account',
-      roles: ['*'],
-      pages: [
-        {
-          link: '/login',
-          roles: ['*'],
-          name: 'Login'
-        }
-      ]
+    [
+      {
+        name: 'Dashboard',
+        link: '/dashboard',
+        roles: ['admin'],
+        icon: 'dashboard',
+      },
+      {
+        name: 'Report',
+        link: '/report',
+        roles: ['admin'],
+        icon: 'table_chart'
+      },
+      {
+        name: 'Sale',
+        link: '/sale',
+        roles: ['*'],
+        icon: 'shop_front',
+      },
+      {
+        name: 'Purchase',
+        link: '/purchase',
+        roles: ['manager', 'admin'],
+        icon: 'receipt',
+      },
+      {
+        name: 'Stock',
+        link: '/stock',
+        roles: ['manager', 'admin'],
+        icon: 'store',
+      },
+      {
+        name: 'Account',
+        link: '/account',
+        roles: ['*'],
+        icon: 'supervisor_account',
+      },
+    ].forEach(menu => {
+      this.configs.addMenu(menu);
     });
-    this.configs.selectedModuleName = 'profile';
+    this.configs.selectedModuleName = 'account';
   }
 }

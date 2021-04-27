@@ -15,7 +15,7 @@ export class ConfigsService {
   private pmenu: MenuModel[] = [];
 
   addMenu(menu: MenuModel): void {
-    if (this.pmenu && Array.isArray(this.pmenu)) {
+    if (this.pmenu && Array.isArray(this.pmenu) && this.pmenu.length > 0) {
       const index = this.pmenu.findIndex(value => value.name === menu.name);
       if (index && index >= 0) {
         this.pmenu[index] = menu;
@@ -23,7 +23,8 @@ export class ConfigsService {
         this.pmenu.push(menu);
       }
     } else {
-      this.pmenu = [menu];
+      this.pmenu = [];
+      this.pmenu.push(menu);
     }
   }
 

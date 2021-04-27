@@ -36,13 +36,13 @@ import {ConfigsService} from '../services/configs.service';
             <ng-template #menu>
               <mat-list-item style="height: 38px"
                              (click)="shouldExpand(this.modules.name.toLowerCase().trim())"
-                             [ngStyle]="this.selectedMenuName.toLowerCase().trim() === modules.name.toLowerCase().trim()?selectedMenu:{}"
+                             [ngStyle]="this.configs.selectedModuleName.toLowerCase().trim() === modules.name.toLowerCase().trim()?selectedMenu:{}"
                              routerLink="{{modules.link}}">
                 <mat-icon matListIcon matPrefix>{{modules.icon}}</mat-icon>
                 <span matLine style="margin-left: 8px">{{modules.name}}</span>
               </mat-list-item>
               <div
-                *ngIf="modules.pages && modules.pages.length>0 && this.selectedMenuName.toLowerCase().trim() === this.modules.name.toLowerCase().trim()">
+                *ngIf="modules.pages && modules.pages.length>0 && this.configs.selectedModuleName.toLowerCase().trim() === this.modules.name.toLowerCase().trim()">
                 <app-drawer-sub-menu *ngFor="let page of modules.pages" [page]="page"></app-drawer-sub-menu>
               </div>
               <mat-divider></mat-divider>
@@ -76,7 +76,6 @@ export class DrawerComponent implements OnInit {
     borderBottomRightRadius: '50px',
     color: 'white'
   };
-  selectedMenuName = '';
 
   ngOnInit(): void {
     this.versionNumber = of(this.configs.versionName);
@@ -100,9 +99,7 @@ export class DrawerComponent implements OnInit {
   }
 
   shouldExpand(menuName: string): void {
-    console.log(menuName);
-    this.selectedMenuName = menuName.toLowerCase().trim();
-    console.log(this.selectedMenuName);
+    this.configs.selectedModuleName = menuName.toLowerCase().trim();
     // if (this.configs.selectedModuleName && this.configs.selectedModuleName !== '') {
     //   return this.configs.selectedModuleName === route;
     // } else {

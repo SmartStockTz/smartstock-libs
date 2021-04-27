@@ -9,7 +9,7 @@ export class RbacService {
   constructor(private readonly userService: UserService) {
   }
 
-  async hasAccess(groups: string[]): Promise<boolean> {
+  async hasAccess(groups: string[] = []): Promise<boolean> {
     const user: UserModel = await this.userService.currentUser();
     let groupAccess: boolean;
     if (groups && groups.length === 1 && groups[0] === '*') {

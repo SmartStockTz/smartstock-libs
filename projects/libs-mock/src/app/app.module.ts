@@ -100,6 +100,19 @@ export class AppModule {
     ].forEach(menu => {
       this.configs.addMenu(menu);
     });
-    this.configs.selectedModuleName = 'account';
+    this.configs.addMenu({
+      name: 'Sale',
+      link: '/sale',
+      roles: ['*'],
+      icon: 'shop_front',
+      pages: [
+        {
+          name: 'retail',
+          link: '/sale/retail',
+          roles: ['*']
+        }
+      ]
+    });
+    this.configs.selectedModuleName = 'sale';
   }
 }

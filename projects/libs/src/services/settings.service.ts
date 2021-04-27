@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {StorageService} from './storage.service';
+import bfast from 'bfastjs';
 
 @Injectable({
   providedIn: 'root'
@@ -123,26 +124,26 @@ export class SettingsService {
     callback(null);
   }
 
-  saveSettings(settings: any): Promise<any> {
-    return new Promise<any>(async (resolve, reject) => {
-      try {
-        const activeShop = await this.storageService.getActiveShop();
-        this.httpClient.put<any>(this.ssmFunctionsURL + '/settings/' + activeShop.projectId, settings, {
-          headers: this.ssmFunctionsHeader
-        }).subscribe(_ => {
-          activeShop.settings = _.settings;
-          this.storageService.saveActiveShop(activeShop).then(_1 => {
-            resolve('Shop settings updated');
-          }).catch(reason => {
-            reject(reason);
-          });
-        }, error => {
-          reject(error);
-        });
-      } catch (e) {
-        reject(e);
-      }
+  async saveSettings(settings: any): Promise<any> {
+    const activeShop = await this.storageService.getActiveShop();
+    const _: any = await bfast.functions().request(this.ssmFunctionsURL + '/settings/' + activeShop.projectId).put(settings, {
+      headers: this.ssmFunctionsHeader
     });
+    activeShop.settings = _.settings;
+    await this.storageService.saveActiveShop(activeShop);
+    let user = await this.storageService.getActiveUser();
+    if (user.projectId === activeShop.projectId) {
+      user = Object.assign(user, activeShop);
+    } else {
+      user.shops.map(x => {
+        if (x.projectId === activeShop.projectId) {
+          x = Object.assign(x, activeShop);
+        }
+        return x;
+      });
+    }
+    await this.storageService.saveActiveUser(user);
+    return activeShop;
   }
 
   async getSettings(): Promise<{

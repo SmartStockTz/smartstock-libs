@@ -82,8 +82,9 @@ import {BottomNavModule} from 'ngx-bottom-nav';
     DashCardComponent,
     UploadFileProgressComponent,
     FileBrowserDialogComponent,
+    FileBrowserSheetComponent,
     SidenavLayoutComponent,
-    RbacComponent
+    RbacComponent,
   ],
   declarations: [
     FileBrowserDialogComponent,

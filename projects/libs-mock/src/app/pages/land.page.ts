@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
-import {MessageService} from '../../../../libs/src/services/message.service';
+import {MessageService} from '../../../../libs/src/public-api';
 import {FilesService} from '../../../../libs/src/public-api';
 
 @Component({

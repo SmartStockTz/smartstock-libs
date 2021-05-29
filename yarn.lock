@@ -6630,6 +6630,13 @@ ng-packagr@^11.0.2:
     stylus "^0.54.7"
     terser "^5.0.0"
 
+ngx-bottom-nav@^11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-bottom-nav/-/ngx-bottom-nav-11.0.0.tgz#ff9a46b934c2e223b3ce9c5b5c4b77e0d38e4cf7"
+  integrity sha512-hpDV4/4jWxpnhuFRRakbmcmtsYqI/bi7FMpgCBExNOegBd0FXgDPocgGz/kiLdBXWYB0ygMF/mVpRQjSSzokLQ==
+  dependencies:
+    tslib "^2.0.0"
+
 nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.npmjs.org/nice-try/-/nice-try-1.0.5.tgz"

@@ -39,6 +39,9 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatInputModule} from '@angular/material/input';
 import {DrawerSubMenuComponent} from './components/drawer-sub-menu.component';
+import {FileBrowserSheetComponent} from './components/file-browser-sheet.component';
+import {BottomNavComponent} from './components/bottom-nav.component';
+import {BottomNavModule} from 'ngx-bottom-nav';
 
 @NgModule({
   imports: [
@@ -64,7 +67,8 @@ import {DrawerSubMenuComponent} from './components/drawer-sub-menu.component';
     MatSidenavModule,
     MatPaginatorModule,
     MatChipsModule,
-    MatInputModule
+    MatInputModule,
+    BottomNavModule
   ],
   exports: [
     DrawerComponent,
@@ -98,7 +102,9 @@ import {DrawerSubMenuComponent} from './components/drawer-sub-menu.component';
     UploadFileProgressComponent,
     VerifyEMailDialogComponent,
     SidenavLayoutComponent,
-    RbacComponent
+    RbacComponent,
+    FileBrowserSheetComponent,
+    BottomNavComponent
   ]
 })
 

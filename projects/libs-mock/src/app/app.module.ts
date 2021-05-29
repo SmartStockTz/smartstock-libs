@@ -19,6 +19,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {LandPageComponent} from './pages/land.page';
 import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 
 
 const routes: Routes = [
@@ -48,6 +49,7 @@ const routes: Routes = [
     MatProgressSpinnerModule,
     MatInputModule,
     MatDialogModule,
+    MatBottomSheetModule
   ],
   providers: [],
   bootstrap: [AppComponent]
@@ -100,6 +102,7 @@ export class AppModule {
     ].forEach(menu => {
       this.configs.addMenu(menu);
     });
+
     this.configs.addMenu({
       name: 'Sale',
       link: '/sale',

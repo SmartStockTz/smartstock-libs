@@ -1,6 +1,7 @@
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @import '~@angular/material/theming';
+//@import "~ngx-bottom-nav/theming";
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
@@ -17,6 +18,8 @@ $purchases-mock-accent: mat-palette($mat-green, A200, A100, A400);
 // The warn palette is optional (defaults to red).
 $purchases-mock-warn: mat-palette($mat-red);
 
+$theme: mat-light-theme($purchases-mock-primary, $purchases-mock-accent, $purchases-mock-warn);
+
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
 $purchases-mock-theme: mat-light-theme((
@@ -31,6 +34,7 @@ $purchases-mock-theme: mat-light-theme((
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include angular-material-theme($purchases-mock-theme);
+//@include ngx-bottom-nav-theme($theme);
 
 /* You can add global styles to this file, and also import other style files */
 

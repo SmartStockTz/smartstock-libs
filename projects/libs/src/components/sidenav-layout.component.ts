@@ -1,39 +1,44 @@
-import {Component, EventEmitter, Input, Output, TemplateRef} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef} from '@angular/core';
+import {Observable, Subject} from 'rxjs';
 import {MatSidenav} from '@angular/material/sidenav';
 import {FormControl} from '@angular/forms';
+import {DeviceState} from '../states/device.state';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-layout-sidenav',
   template: `
     <mat-sidenav-container>
       <mat-sidenav #sidenav [mode]="leftDrawerMode" [opened]="leftDrawerOpened" position="start">
-        <ng-container *ngTemplateOutlet="leftDrawer"></ng-container>
+        <div *ngIf="!isSmallScreen">
+          <ng-container *ngTemplateOutlet="leftDrawer"></ng-container>
+        </div>
       </mat-sidenav>
       <mat-sidenav #cartDrawer [mode]="rightDrawerMode" [opened]="rightDrawerOpened" position="end">
         <ng-container *ngTemplateOutlet="rightDrawer"></ng-container>
       </mat-sidenav>
       <mat-sidenav-content style="height: 100vh">
         <app-toolbar [sidenav]="leftDrawer?sidenav:undefined"
-                            [showProgress]="showProgress"
-                            [hasBackRoute]="hasBackRoute"
-                            [backLink]="backLink"
-                            [cartDrawer]="rightDrawer?cartDrawer:undefined"
-                            [showSearch]="showSearch"
-                            (searchCallback)="searchCallback.emit($event)"
-                            [searchInputControl]="searchInputControl"
-                            [searchPlaceholder]="searchPlaceholder"
-                            [searchProgressFlag]="searchProgressFlag"
-                            [color]="color"
-                            [isMobile]="isMobile"
-                            [heading]="heading">
+                     [showProgress]="showProgress"
+                     [hasBackRoute]="hasBackRoute"
+                     [backLink]="backLink"
+                     [cartDrawer]="rightDrawer?cartDrawer:undefined"
+                     [showSearch]="showSearch"
+                     (searchCallback)="searchCallback.emit($event)"
+                     [searchInputControl]="searchInputControl"
+                     [searchPlaceholder]="searchPlaceholder"
+                     [searchProgressFlag]="searchProgressFlag"
+                     [heading]="heading">
         </app-toolbar>
-        <ng-container *ngTemplateOutlet="body"></ng-container>
+        <div style="margin-bottom: 100px">
+          <ng-container *ngTemplateOutlet="body"></ng-container>
+        </div>
+        <app-bottom-nav *ngIf="isSmallScreen"></app-bottom-nav>
       </mat-sidenav-content>
     </mat-sidenav-container>
   `
 })
-export class SidenavLayoutComponent {
+export class SidenavLayoutComponent implements OnInit, OnDestroy {
   @Input() body: TemplateRef<any>;
   @Input() version: Observable<string>;
   @Input() isMobile = false;
@@ -54,4 +59,21 @@ export class SidenavLayoutComponent {
   @Input() leftDrawerOpened = false;
   @Input() rightDrawerOpened = false;
   @Input() color = 'primary';
+  destroy = new Subject();
+  isSmallScreen = false;
+
+  constructor(private readonly deviceState: DeviceState) {
+  }
+
+  ngOnDestroy(): void {
+    this.destroy.next(true);
+  }
+
+  ngOnInit(): void {
+    this.deviceState.isSmallScreen
+      .pipe(takeUntil(this.destroy))
+      .subscribe(value => {
+        this.isSmallScreen = value;
+      });
+  }
 }

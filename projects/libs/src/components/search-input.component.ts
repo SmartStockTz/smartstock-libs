@@ -13,7 +13,6 @@ import {FormControl} from '@angular/forms';
                             color="primary"
                             *ngIf="showSearch && searchProgressFlag"
                             matSuffix>
-        <!--      <mat-icon>search</mat-icon>-->
       </mat-progress-spinner>
     </div>
   `,

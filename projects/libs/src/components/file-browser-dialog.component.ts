@@ -75,7 +75,7 @@ import {FormControl, Validators} from '@angular/forms';
             </mat-icon>
           </div>
 
-          <div style="width: 290px; padding: 5px" class="text-break">
+          <div style="width: 290px; padding: 5px; word-break: break-all">
             {{file.suffix}}
           </div>
           <div style="display: flex; flex-wrap: wrap; margin-left: 5px; margin-right: 5px; margin-bottom: 16px; align-items: center">
@@ -94,15 +94,15 @@ import {FormControl, Validators} from '@angular/forms';
       <mat-divider></mat-divider>
       <div style="width: 100%">
         <app-upload-files [files]="filesSelected" [uploadFileFormControl]="filesFormControl"
-                                 [multiple]="true"></app-upload-files>
+                          [multiple]="true"></app-upload-files>
         <div>
           <button *ngIf="filesFormControl.valid" [disabled]="filesState.isUploading | async" (click)="uploadFile()" mat-flat-button
                   color="primary">Upload
           </button>
           <div style="width: 20px; height: 20px"></div>
           <app-upload-file-progress *ngIf="filesState.isUploading | async" [onUploadFlag]="true"
-                                           [name]="'Upload '+filesFormControl.value[0].name"
-                                           [uploadPercentage]="filesState.uploadingPercentage | async">
+                                    [name]="'Upload '+filesFormControl.value[0].name"
+                                    [uploadPercentage]="filesState.uploadingPercentage | async">
           </app-upload-file-progress>
         </div>
       </div>
@@ -131,14 +131,6 @@ export class FileBrowserDialogComponent implements OnInit, OnDestroy, AfterViewI
   filter = 'all';
   files: MatTableDataSource<FileModel> = new MatTableDataSource([]);
   filesFormControl = new FormControl([], [Validators.nullValidator, Validators.required]);
-
-  // doneUpload(response): void {
-  //   if (response && response.body && response.body.urls && Array.isArray(response.body.urls) && response.body.urls.length > 0) {
-  //     this.filesState.appendFile(response.body.urls[0], this.data.shop);
-  //     this.files.paginator.firstPage();
-  //     document.getElementById('dialog-contents').scrollTo(0, 0);
-  //   }
-  // }
   filesSelected = [];
   filterFiles = new FormControl('');
 

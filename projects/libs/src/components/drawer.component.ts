@@ -100,11 +100,5 @@ export class DrawerComponent implements OnInit {
 
   shouldExpand(menuName: string): void {
     this.configs.selectedModuleName = menuName.toLowerCase().trim();
-    // if (this.configs.selectedModuleName && this.configs.selectedModuleName !== '') {
-    //   return this.configs.selectedModuleName === route;
-    // } else {
-    //   const url = new URL(location.href);
-    //   return url.pathname.startsWith('/' + route);
-    // }
   }
 }

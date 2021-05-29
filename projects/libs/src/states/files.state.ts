@@ -1,17 +1,23 @@
 import {Injectable} from '@angular/core';
-import {FilesService} from '../services/files.service';
 import {BehaviorSubject} from 'rxjs';
 import {FileModel} from '../models/file.model';
 import {MessageService} from '../services/message.service';
 import {StorageService} from '../services/storage.service';
+import {FileResponseModel} from '../models/file-response.model';
+import {BFast} from 'bfastjs';
+import {MatDialog} from '@angular/material/dialog';
+import {DeviceState} from './device.state';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FilesState {
 
-  constructor(private readonly fileService: FilesService,
-              private readonly storageService: StorageService,
+  constructor(private readonly storageService: StorageService,
+              private readonly matDialog: MatDialog,
+              private readonly deviceState: DeviceState,
+              private readonly bottomSheet: MatBottomSheet,
               private readonly messageService: MessageService) {
   }
 
@@ -41,7 +47,7 @@ export class FilesState {
     this.isFetchFiles.next(true);
     this.storageService.getActiveShop().then(async shop => {
       return {
-        files: await this.fileService.getFiles(),
+        files: await this._getFiles(),
         shop
       };
     }).then(value => {
@@ -84,7 +90,7 @@ export class FilesState {
   uploadFile(file: File, done: () => void): void {
     this.isUploading.next(true);
     this.uploadingPercentage.next(0);
-    this.fileService.uploadFile(file, progress => {
+    this._uploadFile(file, progress => {
       this.uploadingPercentage.next(progress);
     }).then(value => {
       this.appendFile(value);
@@ -96,4 +102,29 @@ export class FilesState {
       this.isUploading.next(false);
     });
   }
+
+  async _getFiles(): Promise<FileResponseModel[]> {
+    const shop = await this.storageService.getActiveShop();
+    BFast.init({
+      applicationId: shop.applicationId,
+      projectId: shop.projectId
+    }, shop.projectId);
+    return BFast.storage(shop.projectId).list({
+      // need some improvement from server
+      size: 1000000000000000000,
+      skip: 0
+    });
+  }
+
+  async _uploadFile(file: File, callback: (progress: any) => void): Promise<string> {
+    const shop = await this.storageService.getActiveShop();
+    return BFast.storage(shop.projectId).save({
+      filename: file.name,
+      data: file,
+      pn: false
+    }, progress => {
+      callback(((progress.loaded / progress.total) * 100).toFixed(2));
+    });
+  }
+
 }

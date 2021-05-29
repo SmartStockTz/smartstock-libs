@@ -1,44 +1,43 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {MatSidenav} from '@angular/material/sidenav';
 import {Router} from '@angular/router';
 import {FormControl} from '@angular/forms';
-import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {StorageService} from '../services/storage.service';
 import {UserService} from '../services/user.service';
 import {UserModel} from '../models/user.model';
+import {Subject} from 'rxjs';
+import {DeviceState} from '../states/device.state';
 
 @Component({
   selector: 'app-toolbar',
   template: `
-    <mat-toolbar style="position: sticky; top: 0; z-index: 3000000000" [color]="color" class="mat-elevation-z4">
+    <mat-toolbar [ngStyle]="(deviceState.isSmallScreen | async)===true?{}:{position: 'sticky', top: 0, 'z-index': 3000000000}"
+                 color="{{(deviceState.isSmallScreen | async)===true?'':'primary'}}"
+                 [ngClass]="(deviceState.isSmallScreen | async)===true?'mat-elevation-z0':'mat-elevation-z2'">
       <mat-toolbar-row>
-        <!--        <button routerLink="{{backLink}}" *ngIf="hasBackRoute && backLink" mat-icon-button>-->
-        <!--          <mat-icon>arrow_back</mat-icon>-->
-        <!--        </button>-->
-        <button mat-icon-button *ngIf="sidenav" (click)="sidenav.toggle()">
+        <button routerLink="{{backLink}}" *ngIf="hasBackRoute && backLink && (deviceState.isSmallScreen | async)===true" mat-icon-button>
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <button mat-icon-button *ngIf="sidenav && (deviceState.isSmallScreen | async)===false" (click)="sidenav.toggle()">
           <mat-icon>menu</mat-icon>
         </button>
-        <span>{{heading}}</span>
-        <span *ngIf="isMobile" style="flex: 1 1 auto"></span>
-        <span *ngIf="!isMobile && showSearch" style="width: 16px"></span>
-        <span *ngIf="!isMobile && !showSearch" style="flex: 1 1 auto"></span>
+        <span class="text-truncate">{{heading}}</span>
+        <span *ngIf="(deviceState.isSmallScreen | async)===true" style="flex: 1 1 auto"></span>
+        <span *ngIf=" (deviceState.isSmallScreen | async)===false && showSearch" style="width: 16px"></span>
+        <span *ngIf="(deviceState.isSmallScreen | async)===false && !showSearch" style="flex: 1 1 auto"></span>
         <app-search-input [searchProgressFlag]="searchProgressFlag"
-                                 *ngIf="!isMobile && showSearch" style="flex: 1 1 auto"
-                                 [showSearch]="showSearch"
-                                 [searchInputControl]="searchInputControl"
-                                 [searchPlaceholder]="searchPlaceholder">
+                          *ngIf="(deviceState.isSmallScreen | async)===false && showSearch" style="flex: 1 1 auto"
+                          [showSearch]="showSearch"
+                          [searchInputControl]="searchInputControl"
+                          [searchPlaceholder]="searchPlaceholder">
         </app-search-input>
-        <span *ngIf="!isMobile && showSearch" style="width: 16px"></span>
+        <span *ngIf="(deviceState.isSmallScreen | async)===false && showSearch" style="width: 16px"></span>
         <button *ngIf="cartDrawer" mat-icon-button (click)="cartDrawer.toggle()">
           <mat-icon>shopping_cart</mat-icon>
         </button>
-        <button class="ft-button" mat-button [matMenuTriggerFor]="menu">
-          <mat-icon>account_circle</mat-icon>
-          <span *ngIf="currentUser">{{"  " + currentUser.firstname}}</span>
-        </button>
-        <button *ngIf="isMobile" mat-icon-button [matMenuTriggerFor]="menu">
+        <button *ngIf="(deviceState.isSmallScreen | async)===false" mat-icon-button [matMenuTriggerFor]="menu">
           <mat-icon>more_vert</mat-icon>
-          <!--      <span *ngIf="currentUser">{{"  " + currentUser.username}}</span>-->
         </button>
         <mat-menu #menu>
           <button mat-menu-item (click)="logout()">
@@ -47,25 +46,22 @@ import {UserModel} from '../models/user.model';
           </button>
           <button mat-menu-item routerLink="/account/profile">
             <mat-icon>person</mat-icon>
-            My Profile
+            <span *ngIf="currentUser">{{"  " + currentUser.firstname}}</span>
           </button>
         </mat-menu>
       </mat-toolbar-row>
-
-      <mat-toolbar-row *ngIf="isMobile && showSearch">
-        <!--    <span style="flex-grow: 1"></span>-->
-        <app-search-input [searchProgressFlag]="searchProgressFlag"
-                                 style="flex: 1 1 auto"
-                                 [showSearch]="showSearch"
-                                 [searchInputControl]="searchInputControl"
-                                 [searchPlaceholder]="searchPlaceholder">
-        </app-search-input>
-        <!--    <span style="flex-grow: 1"></span>-->
-      </mat-toolbar-row>
     </mat-toolbar>
+    <mat-toolbar-row *ngIf="(deviceState.isSmallScreen | async)===true && showSearch">
+      <app-search-input [searchProgressFlag]="searchProgressFlag"
+                        style="flex: 1 1 auto"
+                        [showSearch]="showSearch"
+                        [searchInputControl]="searchInputControl"
+                        [searchPlaceholder]="searchPlaceholder">
+      </app-search-input>
+    </mat-toolbar-row>
   `,
 })
-export class ToolbarComponent implements OnInit {
+export class ToolbarComponent implements OnInit, OnDestroy {
   @Input() color = 'primary';
   @Input() heading: string;
   @Input() showProgress = false;
@@ -79,14 +75,20 @@ export class ToolbarComponent implements OnInit {
   @Input() searchPlaceholder: string | 'Type to search';
   currentUser: UserModel;
   @Input() searchProgressFlag = false;
-  @Input() isMobile = false;
+  destroy = new Subject();
 
   constructor(private readonly router: Router,
               private readonly storage: StorageService,
+              public readonly deviceState: DeviceState,
               private readonly userService: UserService) {
   }
 
   ngOnInit(): void {
+    this.deviceState.isSmallScreen.pipe(takeUntil(this.destroy)).subscribe(value => {
+      if (this.sidenav && value === true) {
+        this.sidenav.close().catch(console.log);
+      }
+    });
     this.storage.getActiveUser().then(user => {
       this.currentUser = user;
     });
@@ -97,6 +99,10 @@ export class ToolbarComponent implements OnInit {
       this.searchCallback.emit(this.searchInputControl.value);
     });
     this._clearSearchInputListener();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy.next(true);
   }
 
   logout(): void {

@@ -10,7 +10,7 @@ export abstract class DeviceInfoUtil {
     return width > 1000;
   }
 
-  openDrawer(sidenav: MatSidenav) {
+  openDrawer(sidenav: MatSidenav): any {
     sidenav.open().catch();
   }
 }

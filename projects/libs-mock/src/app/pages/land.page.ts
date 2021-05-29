@@ -2,8 +2,7 @@ import {Component} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {MessageService} from '../../../../libs/src/services/message.service';
-import {UserService} from '../../../../libs/src/services/user.service';
-import {FileBrowserDialogComponent} from '../../../../libs/src/components/file-browser-dialog.component';
+import {FilesService} from '../../../../libs/src/public-api';
 
 @Component({
   template: `
@@ -11,6 +10,10 @@ import {FileBrowserDialogComponent} from '../../../../libs/src/components/file-b
                         [leftDrawer]="drawer"
                         [leftDrawerMode]="'side'"
                         [leftDrawerOpened]="true"
+                        [hasBackRoute]="true"
+                        [backLink]="'/'"
+                        [showSearch]="true"
+                        [searchPlaceholder]="'search...'"
                         [version]="mock" [body]="body">
       <ng-template #drawer>
         <app-drawer></app-drawer>
@@ -32,23 +35,12 @@ export class LandPageComponent {
 
   constructor(private readonly dialog: MatDialog,
               private readonly messageService: MessageService,
-              private readonly userService: UserService) {
+              private readonly filesService: FilesService) {
   }
 
   async showFileBrowser(): Promise<void> {
-    this.dialog.open(FileBrowserDialogComponent, {
-      closeOnNavigation: false,
-      disableClose: true,
-      data: {
-        shop: await this.userService.getCurrentShop()
-      }
-    }).afterClosed().subscribe(value => {
-      if (value && value.url) {
-        console.log(value.url);
-      } else {
-        this.messageService.showMobileInfoMessage(value && value.message ?
-          value.message : 'Fails to select file', 2000, 'bottom');
-      }
+    this.filesService.browse().then(value => {
+      console.log(value);
     });
   }
 }

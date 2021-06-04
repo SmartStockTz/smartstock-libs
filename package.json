@@ -1,14 +1,13 @@
 {
   "name": "@smartstocktz/core-libs",
-  "version": "0.2.7",
+  "version": "0.2.10",
   "scripts": {
     "ng": "ng",
     "start": "ng serve libs-mock",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "doc": "npx compodoc projects/libs/src/ -p tsconfig.json --disableSourceCode --disablePrivateOrInternalSupport --hideGenerator --disableCoverage --disableGraph"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
@@ -36,7 +35,6 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",
-    "compodoc": "^0.0.41",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~6.3.2",

@@ -1,8 +1,7 @@
 import {Component} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
-import {MessageService} from '../../../../libs/src/public-api';
-import {FilesService} from '../../../../libs/src/public-api';
+import {FilesService, MessageService} from '../../../../libs/src/public-api';
 
 @Component({
   template: `
@@ -24,6 +23,12 @@ import {FilesService} from '../../../../libs/src/public-api';
           <button color="primary" (click)="showFileBrowser()" mat-flat-button>
             Show File Browser
           </button>
+          <h1>RBAC</h1>
+          <app-libs-rbac *ngFor="let i of [1,2,3,4,5]" [groups]="['*']">
+            <ng-template>
+              <h1>Access To All {{i}}</h1>
+            </ng-template>
+          </app-libs-rbac>
         </div>
       </ng-template>
     </app-layout-sidenav>

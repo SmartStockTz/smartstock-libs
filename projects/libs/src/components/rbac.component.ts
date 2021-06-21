@@ -1,26 +1,32 @@
-import {Component, Input, OnInit, TemplateRef} from '@angular/core';
+import {AfterViewInit, Component, ContentChild, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
 import {RbacService} from '../services/rbac.service';
 
 @Component({
   selector: 'app-libs-rbac',
   template: `
     <div *ngIf="hasAccess">
-      <ng-container *ngTemplateOutlet="component"></ng-container>
+      <ng-template [ngTemplateOutlet]="component" #ref></ng-template>
     </div>
   `
 })
-export class RbacComponent implements OnInit{
+export class RbacComponent implements OnInit, OnDestroy, AfterViewInit {
   hasAccess = false;
   @Input() groups: string[] = [];
-  @Input() component: TemplateRef<any>;
+  @ContentChild(TemplateRef) component: TemplateRef<any>;
 
-  constructor(private readonly rbacService: RbacService) {
+  constructor(public readonly rbacService: RbacService) {
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.rbacService.hasAccess(this.groups).then(value => {
       this.hasAccess = value;
     }).catch(console.log);
+  }
+
+  async ngAfterViewInit(): Promise<void> {
+  }
+
+  async ngOnDestroy(): Promise<void> {
   }
 
 }

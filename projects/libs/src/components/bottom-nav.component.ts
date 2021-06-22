@@ -76,7 +76,7 @@ export class BottomNavComponent implements OnInit, OnDestroy {
     });
     let c = 0;
     for (const menu of this.configs.getMenu()) {
-      if (await this.rbacServices.hasAccess(menu.roles)) {
+      if (await this.rbacServices.hasAccess(menu.roles, null)) {
         this.menus.push(menu);
       }
     }
@@ -84,7 +84,7 @@ export class BottomNavComponent implements OnInit, OnDestroy {
       if (c === 3) {
         return;
       }
-      if (await this.rbacServices.hasAccess(menu.roles)) {
+      if (await this.rbacServices.hasAccess(menu.roles, null)) {
         this.first4.push(menu);
         c++;
       }

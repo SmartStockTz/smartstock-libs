@@ -3,7 +3,7 @@ import {EventService} from './event.service';
 import {BFast} from 'bfastjs';
 import {SecurityUtil} from '../utils/security.util';
 import {SsmEvents} from '../utils/eventsNames.util';
-import {UserModel} from '../models/user.model';
+import {LibUserModel} from '../models/lib-user.model';
 import {ShopModel} from '../models/shop.model';
 import {CustomerModel} from '../models/customer.model';
 import {StockModel} from '../models/stock.model';
@@ -19,7 +19,7 @@ export class StorageService {
   constructor(private readonly eventApi: EventService) {
   }
 
-  async getActiveUser(): Promise<UserModel> {
+  async getActiveUser(): Promise<LibUserModel> {
     try {
       return await BFast.auth().currentUser();
     } catch (e) {
@@ -66,7 +66,7 @@ export class StorageService {
     return await this.smartStockCache.clearAll();
   }
 
-  async saveActiveUser(user: UserModel): Promise<any> {
+  async saveActiveUser(user: LibUserModel): Promise<any> {
     return BFast.auth().setCurrentUser(user, 6);
   }
 

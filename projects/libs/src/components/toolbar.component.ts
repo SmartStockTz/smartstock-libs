@@ -5,7 +5,7 @@ import {FormControl} from '@angular/forms';
 import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {StorageService} from '../services/storage.service';
 import {UserService} from '../services/user.service';
-import {UserModel} from '../models/user.model';
+import {LibUserModel} from '../models/lib-user.model';
 import {Subject} from 'rxjs';
 import {DeviceState} from '../states/device.state';
 
@@ -73,7 +73,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   @Output() searchCallback = new EventEmitter<string>();
   @Input() searchInputControl = new FormControl('');
   @Input() searchPlaceholder: string | 'Type to search';
-  currentUser: UserModel;
+  currentUser: LibUserModel;
   @Input() searchProgressFlag = false;
   destroy = new Subject();
 

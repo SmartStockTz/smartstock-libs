@@ -22,7 +22,7 @@ export class DrawerSubMenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.rbacService.hasAccess(this.page.roles).then(value => {
+    this.rbacService.hasAccess(this.page.roles, this.page.link).then(value => {
       this.hasAccess = value;
     }).catch(_ => {
     });

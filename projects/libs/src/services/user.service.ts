@@ -5,7 +5,7 @@ import {BFast} from 'bfastjs';
 import {LogService} from './log.service';
 import {StorageService} from './storage.service';
 import {ShopModel} from '../models/shop.model';
-import {UserModel} from '../models/user.model';
+import {LibUserModel} from '../models/lib-user.model';
 import {SettingsService} from './settings.service';
 import {VerifyEMailDialogComponent} from '../components/verify-email-dialog.component';
 
@@ -46,7 +46,7 @@ export class UserService {
       });
   }
 
-  async getAllUser(pagination: { size: number, skip: number }): Promise<UserModel[]> {
+  async getAllUser(pagination: { size: number, skip: number }): Promise<LibUserModel[]> {
     const projectId = await this.settingsService.getCustomerProjectId();
     return BFast.database().collection('_User')
       .query()
@@ -54,17 +54,17 @@ export class UserService {
       .includesIn('role', ['user', 'manager'])
       .size(pagination.size)
       .skip(pagination.skip)
-      .find<UserModel[]>({
+      .find<LibUserModel[]>({
         useMasterKey: true
       });
   }
 
-  getUser(user: UserModel, callback?: (user: UserModel) => void): void {
+  getUser(user: LibUserModel, callback?: (user: LibUserModel) => void): void {
 
   }
 
-  async login(user: { username: string, password: string }): Promise<UserModel> {
-    const authUser = await BFast.auth().logIn<UserModel>(user.username, user.password);
+  async login(user: { username: string, password: string }): Promise<LibUserModel> {
+    const authUser = await BFast.auth().logIn<any>(user.username, user.password);
     await this.storageService.removeActiveShop();
     if (authUser && authUser.role !== 'admin') {
       await this.storageService.saveActiveUser(authUser);
@@ -82,14 +82,14 @@ export class UserService {
     }
   }
 
-  async logout(user: UserModel): Promise<void> {
+  async logout(user: LibUserModel): Promise<void> {
     await BFast.auth().logOut();
     await this.storageService.removeActiveUser();
     await this.storageService.removeActiveShop();
     return;
   }
 
-  async register(user: UserModel): Promise<UserModel> {
+  async register(user: LibUserModel): Promise<LibUserModel> {
     user.settings = {
       printerFooter: 'Thank you',
       printerHeader: '',
@@ -121,7 +121,7 @@ export class UserService {
    * @deprecate will be removed in next minor release
    * @param user - {UserModel} model to save
    */
-  async addUser(user: UserModel): Promise<UserModel> {
+  async addUser(user: LibUserModel): Promise<LibUserModel> {
     const shop = await this.storageService.getActiveShop();
     const shops = user.shops ? user.shops : [];
     const shops1 = shops.filter(value => value.applicationId !== shop.applicationId);
@@ -137,7 +137,7 @@ export class UserService {
     });
   }
 
-  async getShops(user: UserModel): Promise<ShopModel[]> {
+  async getShops(user: LibUserModel): Promise<ShopModel[]> {
     try {
       const shops = [];
       user.shops.forEach(element => {
@@ -160,7 +160,7 @@ export class UserService {
     }
   }
 
-  async updateShops(shops: ShopModel[], user: UserModel): Promise<boolean> {
+  async updateShops(shops: ShopModel[], user: LibUserModel): Promise<boolean> {
     const topLevelShop = shops.filter(x => x.projectId === user.projectId);
     const otherShops = shops.filter(x => x.projectId !== user.projectId);
     if (topLevelShop && Array.isArray(topLevelShop) && topLevelShop[0]) {
@@ -193,7 +193,7 @@ export class UserService {
     return this.storageService.saveActiveShop(shop);
   }
 
-  createShop(data: { admin: UserModel, shop: ShopModel }): Promise<ShopModel> {
+  createShop(data: { admin: LibUserModel, shop: ShopModel }): Promise<ShopModel> {
     return undefined;
     // return new Promise<ShopModel>(async (resolve, reject) => {
     //   this.httpClient.post<ShopModel>(this.settings.ssmFunctionsURL + '/functions/shop', data, {
@@ -214,7 +214,7 @@ export class UserService {
     // });
   }
 
-  updatePassword(user: UserModel, password: string): Promise<any> {
+  updatePassword(user: LibUserModel, password: string): Promise<any> {
     return BFast.functions().request('/functions/users/password/' + user.id).put({
       password
     }, {
@@ -222,17 +222,17 @@ export class UserService {
     });
   }
 
-  updateUser(user: UserModel, data: { [p: string]: any }): Promise<UserModel> {
+  updateUser(user: LibUserModel, data: { [p: string]: any }): Promise<LibUserModel> {
     return BFast.functions().request('/functions/users/' + user.id).put(data, {
       headers: this.settingsService.ssmFunctionsHeader
     });
   }
 
-  async updateCurrentUser(user: UserModel): Promise<UserModel> {
+  async updateCurrentUser(user: LibUserModel): Promise<LibUserModel> {
     return await this.storageService.saveActiveUser(user);
   }
 
-  changePasswordFromOld(data: { lastPassword: string; password: string; user: UserModel }): Promise<any> {
+  changePasswordFromOld(data: { lastPassword: string; password: string; user: LibUserModel }): Promise<any> {
     return BFast.functions().request('/functions/users/password/change/' + data.user.id).put({
       lastPassword: data.lastPassword,
       username: data.user.username,

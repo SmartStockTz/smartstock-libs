@@ -64,8 +64,7 @@
               "projects/libs-mock/src/assets"
             ],
             "styles": [
-              "projects/libs-mock/src/custom-theme.scss",
-              "projects/libs-mock/src/styles.css"
+              "projects/libs-mock/src/custom-theme.scss"
             ],
             "scripts": []
           },
@@ -128,7 +127,7 @@
               "projects/libs-mock/src/assets"
             ],
             "styles": [
-              "projects/libs-mock/src/styles.css"
+              "projects/libs-mock/src/custom-theme.scss"
             ],
             "scripts": []
           }

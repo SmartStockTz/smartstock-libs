@@ -18,17 +18,21 @@ import {FilesService, MessageService} from '../../../../libs/src/public-api';
         <app-drawer></app-drawer>
       </ng-template>
       <ng-template #body>
-        <div style="height: 200vh">
-          <h1>body Contents</h1>
-          <button color="primary" (click)="showFileBrowser()" mat-flat-button>
-            Show File Browser
+        <div style="min-height: 120vh; padding: 24px">
+          <h1>File Browser</h1>
+          <button style="margin-bottom: 16px" color="primary" (click)="showFileBrowser()" mat-flat-button>
+            Choose
           </button>
+          <mat-divider></mat-divider>
           <h1>RBAC</h1>
-          <app-libs-rbac *ngFor="let i of [1,2,3,4,5]" [groups]="['*']">
+          <app-libs-rbac *ngFor="let i of [1,2]" [groups]="['*']">
             <ng-template>
               <h1>Access To All {{i}}</h1>
             </ng-template>
           </app-libs-rbac>
+          <mat-divider></mat-divider>
+          <h1>Protected path by using RbacGuard</h1>
+          <button routerLink="/profile" mat-flat-button color="primary">Go to</button>
         </div>
       </ng-template>
     </app-layout-sidenav>

@@ -32,8 +32,8 @@ import {ConfigsService} from '../services/configs.service';
         </div>
 
         <mat-nav-list>
-          <app-libs-rbac *ngFor="let modules of configs.getMenu()" [groups]="modules.roles" [component]="menu">
-            <ng-template #menu>
+          <app-libs-rbac *ngFor="let modules of configs.getMenu()" [groups]="modules.roles" [pagePath]="modules.link">
+            <ng-template>
               <mat-list-item style="height: 38px"
                              (click)="shouldExpand(this.modules.name.toLowerCase().trim())"
                              [ngStyle]="this.configs.selectedModuleName.toLowerCase().trim() === modules.name.toLowerCase().trim()?selectedMenu:{}"

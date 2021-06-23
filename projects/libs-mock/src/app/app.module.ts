@@ -20,6 +20,7 @@ import {LandPageComponent} from './pages/land.page';
 import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
+import {MatDividerModule} from '@angular/material/divider';
 
 
 const routes: Routes = [
@@ -49,7 +50,8 @@ const routes: Routes = [
     MatProgressSpinnerModule,
     MatInputModule,
     MatDialogModule,
-    MatBottomSheetModule
+    MatBottomSheetModule,
+    MatDividerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
@@ -104,6 +106,25 @@ export class AppModule {
     });
 
     this.configs.addMenu({
+      name: 'Report',
+      link: '/report',
+      roles: ['admin'],
+      icon: 'shop_front',
+      pages: [
+        {
+          name: 'overview',
+          link: '/report/retail',
+          roles: ['admin']
+        },
+        {
+          name: 'performance',
+          link: '/report/whole',
+          roles: ['admin']
+        }
+      ]
+    });
+
+    this.configs.addMenu({
       name: 'Sale',
       link: '/sale',
       roles: ['*'],
@@ -113,6 +134,11 @@ export class AppModule {
           name: 'retail',
           link: '/sale/retail',
           roles: ['*']
+        },
+        {
+          name: 'wholesale',
+          link: '/sale/whole',
+          roles: ['admin']
         }
       ]
     });

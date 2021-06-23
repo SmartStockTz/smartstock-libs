@@ -58,7 +58,6 @@
             "main": "projects/libs-mock/src/main.ts",
             "polyfills": "projects/libs-mock/src/polyfills.ts",
             "tsConfig": "projects/libs-mock/tsconfig.app.json",
-            "aot": true,
             "assets": [
               "projects/libs-mock/src/favicon.ico",
               "projects/libs-mock/src/assets"
@@ -66,7 +65,13 @@
             "styles": [
               "projects/libs-mock/src/custom-theme.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -96,7 +101,8 @@
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",

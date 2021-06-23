@@ -15,6 +15,8 @@ export * from './services/rbac.service';
 export * from './services/files.service';
 export * from './services/configs.service';
 
+// export * from './guards/rbac.guard';
+
 export * from './states/device.state';
 export * from './states/files.state';
 

@@ -14,9 +14,10 @@ import {BatchModel} from '../models/batch.model';
   providedIn: 'root'
 })
 export class StorageService {
-  smartStockCache = BFast.cache({database: 'smartstock', collection: 'config'});
+  smartStockCache: any;
 
   constructor(private readonly eventApi: EventService) {
+    this.smartStockCache = BFast.cache({database: 'smartstock', collection: 'config'});
   }
 
   async getActiveUser(): Promise<LibUserModel> {
@@ -36,7 +37,7 @@ export class StorageService {
   }
 
   async getActiveShop(): Promise<ShopModel> {
-    const response = await this.smartStockCache.get<ShopModel>('activeShop');
+    const response = await this.smartStockCache.get('activeShop');
     if (response) {
       return response;
     } else {
@@ -45,7 +46,7 @@ export class StorageService {
   }
 
   async saveActiveShop(shop: ShopModel): Promise<any> {
-    const response = await this.smartStockCache.set<ShopModel>('activeShop', shop, {
+    const response = await this.smartStockCache.set('activeShop', shop, {
       dtl: 7
     });
     this.eventApi.broadcast(SsmEvents.ACTIVE_SHOP_SET);
@@ -53,11 +54,11 @@ export class StorageService {
   }
 
   async getCurrentProjectId(): Promise<string> {
-    return await this.smartStockCache.get<string>('cPID');
+    return await this.smartStockCache.get('cPID');
   }
 
   async saveCurrentProjectId(projectId: string): Promise<any> {
-    return await this.smartStockCache.set<string>('cPID', projectId, {
+    return await this.smartStockCache.set('cPID', projectId, {
       dtl: 7
     });
   }

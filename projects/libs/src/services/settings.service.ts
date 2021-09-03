@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {StorageService} from './storage.service';
-import bfast from 'bfastjs';
+import * as bfast from 'bfast';
 
 @Injectable({
   providedIn: 'root'

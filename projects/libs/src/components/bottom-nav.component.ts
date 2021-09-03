@@ -8,18 +8,18 @@ import {RbacService} from '../services/rbac.service';
 @Component({
   selector: 'app-bottom-nav',
   template: `
-    <ngx-bottom-nav style="position: sticky; bottom: 0; box-shadow: #0b2e13 0 0 4px; background: white">
+    <div style="position: sticky; bottom: 0; box-shadow: #0b2e13 0 0 4px; background: white">
 
-      <button *ngFor="let m of first4" ngx-bottom-nav routerLink="{{m.link}}" exact="true">
-        <mat-icon [color]="" ngxBottomNavIcon>{{m.icon}}</mat-icon>
+      <button *ngFor="let m of first4" routerLink="{{m.link}}">
+        <mat-icon [color]="" >{{m.icon}}</mat-icon>
         <span>{{m.name}}</span>
       </button>
 
-      <button ngx-bottom-nav [matMenuTriggerFor]="menu">
-        <mat-icon ngxBottomNavIcon>dehaze</mat-icon>
+      <button [matMenuTriggerFor]="menu">
+        <mat-icon>dehaze</mat-icon>
       </button>
 
-    </ngx-bottom-nav>
+    </div>
 
     <mat-menu #menu>
       <div style="min-width: 200px">

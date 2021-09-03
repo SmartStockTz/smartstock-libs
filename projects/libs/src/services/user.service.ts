@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {HttpClient} from '@angular/common/http';
-import {BFast} from 'bfastjs';
+import * as bfast from 'bfast';
 import {LogService} from './log.service';
 import {StorageService} from './storage.service';
 import {ShopModel} from '../models/shop.model';
@@ -25,30 +25,30 @@ export class UserService {
 
   async currentUser(): Promise<any> {
     try {
-      const user = await BFast.auth().currentUser();
+      const user = await bfast.auth().currentUser();
       if (user && user.role !== 'admin') {
         return user;
       } else if (user && user.verified === true) {
         return user;
       } else {
-        return await BFast.auth().setCurrentUser(undefined);
+        return await bfast.auth().setCurrentUser(undefined);
       }
     } catch (reason) {
-      return await BFast.auth().setCurrentUser(undefined);
+      return await bfast.auth().setCurrentUser(undefined);
     }
   }
 
   async deleteUser(user: any): Promise<any> {
-    return BFast.functions()
+    return bfast.functions()
       .request('/functions/users/' + user.id)
       .delete({
-        headers: {'smartstock-context': {user: (await BFast.auth().currentUser()).id}}
+        headers: {'smartstock-context': {user: (await bfast.auth().currentUser()).id}}
       });
   }
 
   async getAllUser(pagination: { size: number, skip: number }): Promise<LibUserModel[]> {
     const projectId = await this.settingsService.getCustomerProjectId();
-    return BFast.database().collection('_User')
+    return bfast.database().collection('_User')
       .query()
       .equalTo('projectId', projectId)
       .includesIn('role', ['user', 'manager'])
@@ -64,7 +64,7 @@ export class UserService {
   }
 
   async login(user: { username: string, password: string }): Promise<LibUserModel> {
-    const authUser = await BFast.auth().logIn<any>(user.username, user.password);
+    const authUser = await bfast.auth().logIn(user.username, user.password);
     await this.storageService.removeActiveShop();
     if (authUser && authUser.role !== 'admin') {
       await this.storageService.saveActiveUser(authUser);
@@ -73,7 +73,7 @@ export class UserService {
       await this.storageService.saveActiveUser(authUser);
       return authUser;
     } else {
-      await BFast.functions().request('/functions/users/reVerifyAccount/' + user.username).post();
+      await bfast.functions().request('/functions/users/reVerifyAccount/' + user.username).post();
       this.dialog.open(VerifyEMailDialogComponent, {
         closeOnNavigation: true,
         disableClose: true
@@ -83,7 +83,7 @@ export class UserService {
   }
 
   async logout(user: LibUserModel): Promise<void> {
-    await BFast.auth().logOut();
+    await bfast.auth().logOut();
     await this.storageService.removeActiveUser();
     await this.storageService.removeActiveShop();
     return;
@@ -100,20 +100,20 @@ export class UserService {
     user.ecommerce = {};
     user.shops = [];
     await this.storageService.removeActiveShop();
-    return await BFast.functions().request('/functions/users/create').post(user, {
+    return await bfast.functions().request('/functions/users/create').post(user, {
       headers: this.settingsService.ssmFunctionsHeader
     });
   }
 
   resetPassword(username: string): Promise<any> {
-    return BFast.functions().request('/functions/users/resetPassword/' + encodeURIComponent(username)).get();
+    return bfast.functions().request('/functions/users/resetPassword/' + encodeURIComponent(username)).get();
   }
 
   async refreshToken(): Promise<any> {
     try {
-      return BFast.auth().currentUser();
+      return bfast.auth().currentUser();
     } catch (e) {
-      return BFast.auth().setCurrentUser(undefined);
+      return bfast.auth().setCurrentUser(undefined);
     }
   }
 
@@ -132,7 +132,7 @@ export class UserService {
     user.settings = shop.settings;
     user.ecommerce = shop.ecommerce;
     user.shops = shops1;
-    return BFast.functions().request('/functions/users/seller').post(user, {
+    return bfast.functions().request('/functions/users/seller').post(user, {
       headers: this.settingsService.ssmFunctionsHeader
     });
   }
@@ -215,7 +215,7 @@ export class UserService {
   }
 
   updatePassword(user: LibUserModel, password: string): Promise<any> {
-    return BFast.functions().request('/functions/users/password/' + user.id).put({
+    return bfast.functions().request('/functions/users/password/' + user.id).put({
       password
     }, {
       headers: this.settingsService.ssmFunctionsHeader
@@ -223,7 +223,7 @@ export class UserService {
   }
 
   updateUser(user: LibUserModel, data: { [p: string]: any }): Promise<LibUserModel> {
-    return BFast.functions().request('/functions/users/' + user.id).put(data, {
+    return bfast.functions().request('/functions/users/' + user.id).put(data, {
       headers: this.settingsService.ssmFunctionsHeader
     });
   }
@@ -233,7 +233,7 @@ export class UserService {
   }
 
   changePasswordFromOld(data: { lastPassword: string; password: string; user: LibUserModel }): Promise<any> {
-    return BFast.functions().request('/functions/users/password/change/' + data.user.id).put({
+    return bfast.functions().request('/functions/users/password/change/' + data.user.id).put({
       lastPassword: data.lastPassword,
       username: data.user.username,
       password: data.password

@@ -4,7 +4,7 @@ import {FileModel} from '../models/file.model';
 import {MessageService} from '../services/message.service';
 import {StorageService} from '../services/storage.service';
 import {FileResponseModel} from '../models/file-response.model';
-import {BFast} from 'bfastjs';
+import * as bfast from 'bfast';
 import {MatDialog} from '@angular/material/dialog';
 import {DeviceState} from './device.state';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
@@ -105,11 +105,11 @@ export class FilesState {
 
   async _getFiles(): Promise<FileResponseModel[]> {
     const shop = await this.storageService.getActiveShop();
-    BFast.init({
+    bfast.init({
       applicationId: shop.applicationId,
       projectId: shop.projectId
     }, shop.projectId);
-    return BFast.storage(shop.projectId).list({
+    return bfast.storage(shop.projectId).list({
       // need some improvement from server
       size: 1000000000000000000,
       skip: 0
@@ -118,7 +118,7 @@ export class FilesState {
 
   async _uploadFile(file: File, callback: (progress: any) => void): Promise<string> {
     const shop = await this.storageService.getActiveShop();
-    return BFast.storage(shop.projectId).save({
+    return bfast.storage(shop.projectId).save({
       filename: file.name,
       data: file,
       pn: false

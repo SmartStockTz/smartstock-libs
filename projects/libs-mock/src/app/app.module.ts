@@ -7,7 +7,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule, Routes} from '@angular/router';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {HttpClientModule} from '@angular/common/http';
-import {BFast} from 'bfastjs';
+import * as bfast from 'bfast';
 import {environment} from '../environments/environment';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
@@ -58,7 +58,7 @@ const routes: Routes = [
 })
 export class AppModule {
   constructor(private readonly configs: ConfigsService) {
-    BFast.init({
+    bfast.init({
       applicationId: environment.smartstock.applicationId,
       projectId: environment.smartstock.projectId,
       appPassword: environment.smartstock.pass,

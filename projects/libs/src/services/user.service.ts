@@ -126,7 +126,6 @@ export class UserService {
     const shops = user.shops ? user.shops : [];
     const shops1 = shops.filter(value => value.applicationId !== shop.applicationId);
     user.applicationId = shop.applicationId;
-    user.projectUrlId = shop.projectUrlId;
     user.projectId = shop.projectId;
     user.businessName = shop.businessName;
     user.settings = shop.settings;
@@ -167,7 +166,6 @@ export class UserService {
       user.businessName = topLevelShop[0].businessName;
       user.projectId = topLevelShop[0].projectId;
       user.applicationId = topLevelShop[0].applicationId;
-      user.projectUrlId = topLevelShop[0].projectUrlId;
       user.settings = topLevelShop[0].settings;
       user.ecommerce = topLevelShop[0].ecommerce;
       user.street = topLevelShop[0].street;
@@ -181,7 +179,7 @@ export class UserService {
 
   async getCurrentShop(): Promise<ShopModel> {
     const activeShop = await this.storageService.getActiveShop();
-    if (activeShop && activeShop.projectId && activeShop.applicationId && activeShop.projectUrlId) {
+    if (activeShop && activeShop.projectId && activeShop.applicationId) {
       return activeShop;
     } else {
       throw new Error('No active shop in records');

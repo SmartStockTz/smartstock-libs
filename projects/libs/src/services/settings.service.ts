@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {StorageService} from './storage.service';
 import * as bfast from 'bfast';
+import {ShopSettingsModel} from '../models/shop-settings.model';
 
 @Injectable({
   providedIn: 'root'
@@ -57,18 +58,6 @@ export class SettingsService {
     }
   }
 
-  async getCustomerServerURLId(): Promise<string> {
-    try {
-      const activeShop = await this.storageService.getActiveShop();
-      if (!activeShop) {
-        throw new Error('No user in local storage');
-      }
-      return activeShop.projectUrlId;
-    } catch (reason) {
-      throw {message: 'Fails to get user', reason: reason.toString()};
-    }
-  }
-
   async getCustomerHeader(): Promise<any> {
     try {
       return {
@@ -88,14 +77,6 @@ export class SettingsService {
       };
     } catch (e) {
       throw {message: 'Fails to get customer post header', reason: e.toString()};
-    }
-  }
-
-  async getCustomerServerURL(): Promise<string> {
-    try {
-      return `https://${await this.getCustomerServerURLId()}.bfast.fahamutech.com`;
-    } catch (e) {
-      throw {message: 'Fails to get server url', reason: e.toString()};
     }
   }
 
@@ -146,19 +127,19 @@ export class SettingsService {
     return activeShop;
   }
 
-  async getSettings(): Promise<{
-    printerFooter: string, printerHeader: string, saleWithoutPrinter: boolean,
-    allowRetail: boolean, allowWholesale: boolean
-  }> {
+  async getSettings(): Promise<ShopSettingsModel> {
     try {
       const activeShop = await this.storageService.getActiveShop();
       if (!activeShop || !activeShop.settings) {
         return {
+          currency: 'Tsh',
+          module: {},
+          printerUrl: 'https://localhost:8080',
           printerFooter: 'Thank you',
           printerHeader: '',
           saleWithoutPrinter: true,
           allowRetail: true,
-          allowWholesale: true,
+          allowWholesale: true
         };
       }
       return activeShop.settings;

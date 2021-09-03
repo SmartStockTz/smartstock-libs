@@ -42,6 +42,7 @@ import {DrawerSubMenuComponent} from './components/drawer-sub-menu.component';
 import {FileBrowserSheetComponent} from './components/file-browser-sheet.component';
 import {BottomNavComponent} from './components/bottom-nav.component';
 import {RbacGuardComponent} from './components/rbac-guard.component';
+import {MenuSheetComponent} from "./components/menu-sheet.component";
 
 @NgModule({
   imports: [
@@ -105,7 +106,8 @@ import {RbacGuardComponent} from './components/rbac-guard.component';
     SidenavLayoutComponent,
     RbacComponent,
     FileBrowserSheetComponent,
-    BottomNavComponent
+    BottomNavComponent,
+    MenuSheetComponent
   ]
 })
 

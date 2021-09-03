@@ -1,65 +1,41 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ConfigsService} from '../services/configs.service';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
+import {MenuSheetComponent} from './menu-sheet.component';
+import {ShopModel} from '../models/shop.model';
 import {MenuModel} from '../models/menu.model';
 import {UserService} from '../services/user.service';
-import {Router} from '@angular/router';
+import {ConfigsService} from '../services/configs.service';
 import {RbacService} from '../services/rbac.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-bottom-nav',
   template: `
-    <div style="position: sticky; bottom: 0; box-shadow: #0b2e13 0 0 4px; background: white">
+    <div class="n-container">
 
-      <button *ngFor="let m of first4" routerLink="{{m.link}}">
-        <mat-icon [color]="" >{{m.icon}}</mat-icon>
+      <div matRipple class="nav-item" *ngFor="let m of first4" routerLink="{{m.link}}">
+        <mat-icon [color]="">{{m.icon}}</mat-icon>
         <span>{{m.name}}</span>
-      </button>
+      </div>
 
-      <button [matMenuTriggerFor]="menu">
+      <div (click)="openMenu()" matRipple class="nav-item">
         <mat-icon>dehaze</mat-icon>
-      </button>
+        <span>Menu</span>
+      </div>
 
     </div>
-
-    <mat-menu #menu>
-      <div style="min-width: 200px">
-        <div style="padding-bottom: 8px; display: flex; flex-direction: column; justify-content: center;align-items: center">
-          <div style="padding: 16px; justify-content: center; align-items: center">
-            <mat-icon style="width: 70px; height: 70px; font-size: 70px" color="primary">store</mat-icon>
-          </div>
-          <span style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;"
-                *ngIf="shop">{{shop.businessName}}</span>
-          <span style="width: 4px; height: 4px"></span>
-          <button style="width: 80%"
-                  color="primary"
-                  class="btn-block"
-                  routerLink="/account/shop" mat-button>
-            Change Shop
-          </button>
-        </div>
-        <button mat-menu-item (click)="logout()">
-          <mat-icon>exit_to_app</mat-icon>
-          Logout
-        </button>
-        <div *ngFor="let mm of menus">
-          <button mat-menu-item routerLink="{{mm.link}}">
-            <mat-icon>{{mm.icon}}</mat-icon>
-            {{mm.name}}
-          </button>
-        </div>
-      </div>
-    </mat-menu>
   `,
-  styleUrls: []
+  styleUrls: ['../styles/bottom-nav.style.scss']
 })
 
 export class BottomNavComponent implements OnInit, OnDestroy {
+  shop: ShopModel;
   first4: MenuModel[] = [];
-  shop;
   menus = [];
 
-  constructor(public readonly configs: ConfigsService,
-              public readonly userService: UserService,
+  constructor(private readonly matBottomSheet: MatBottomSheet,
+              private readonly userService: UserService,
+              public readonly configs: ConfigsService,
               public readonly rbacServices: RbacService,
               private readonly router: Router) {
   }
@@ -91,10 +67,13 @@ export class BottomNavComponent implements OnInit, OnDestroy {
     }
   }
 
-  logout(): void {
-    this.userService.logout(null).finally(() => {
-      return this.router.navigateByUrl('/account/login');
-    }).catch(console.log);
+  openMenu(): void {
+    this.matBottomSheet.open(MenuSheetComponent, {
+      closeOnNavigation: true,
+      data: {
+        shop: this.shop,
+        menus: this.menus
+      }
+    });
   }
-
 }

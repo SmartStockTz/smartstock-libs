@@ -30,7 +30,7 @@ import {takeUntil} from 'rxjs/operators';
                      [searchProgressFlag]="searchProgressFlag"
                      [heading]="heading">
         </app-toolbar>
-        <div style="margin-bottom: 100px">
+        <div id="m-body" style="margin-bottom: 100px">
           <ng-container *ngTemplateOutlet="body"></ng-container>
         </div>
         <app-bottom-nav *ngIf="isSmallScreen"></app-bottom-nav>

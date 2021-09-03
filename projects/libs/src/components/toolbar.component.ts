@@ -15,7 +15,7 @@ import {DeviceState} from '../states/device.state';
     <mat-toolbar [ngStyle]="(deviceState.isSmallScreen | async)===true?{}:{position: 'sticky', top: 0, 'z-index': 3000000000}"
                  color="{{(deviceState.isSmallScreen | async)===true?'':'primary'}}"
                  [ngClass]="(deviceState.isSmallScreen | async)===true?'mat-elevation-z0':'mat-elevation-z2'">
-      <mat-toolbar-row>
+      <mat-toolbar-row [class]="(deviceState.isSmallScreen | async)===true?'toolbar-position-mobile nav-mobile':''">
         <button routerLink="{{backLink}}" *ngIf="hasBackRoute && backLink && (deviceState.isSmallScreen | async)===true" mat-icon-button>
           <mat-icon>chevron_left</mat-icon>
         </button>
@@ -60,6 +60,7 @@ import {DeviceState} from '../states/device.state';
       </app-search-input>
     </mat-toolbar-row>
   `,
+  styleUrls: ['../styles/toolbar.style.scss']
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
   @Input() color = 'primary';

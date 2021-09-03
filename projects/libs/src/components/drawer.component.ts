@@ -14,7 +14,8 @@ import {ConfigsService} from '../services/configs.service';
       <div>
         <div style="padding-bottom: 8px; display: flex; flex-direction: column; justify-content: center;align-items: center">
           <div style="padding: 16px; justify-content: center; align-items: center">
-            <mat-icon style="width: 70px; height: 70px; font-size: 70px" color="primary">store</mat-icon>
+            <mat-icon *ngIf="!shop?.ecommerce?.logo" class="logo" color="primary">store</mat-icon>
+            <img *ngIf="shop?.ecommerce?.logo" alt="logo" class="logo" src="{{shop?.ecommerce?.logo}}">
           </div>
           <span style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;"
                 *ngIf="shop">{{shop.businessName}}</span>
@@ -57,7 +58,7 @@ import {ConfigsService} from '../services/configs.service';
       </div>
     </div>
   `,
-  styleUrls: ['../styles/admin-drawer.style.scss']
+  styleUrls: ['../styles/admin-drawer.style.scss', '../styles/menu-sheet.component.scss']
 })
 export class DrawerComponent implements OnInit {
 

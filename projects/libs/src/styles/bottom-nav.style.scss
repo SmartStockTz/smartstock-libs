@@ -1,0 +1,21 @@
+.n-container {
+  display: grid;
+  grid-template-columns: 25% 25% 25% 25%;
+  height: 58px!important;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  box-shadow: #adadad 0 0 4px;
+  background: white
+}
+
+.nav-item{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  span{
+    color: rgba(0, 0, 0, 0.71);
+  }
+}

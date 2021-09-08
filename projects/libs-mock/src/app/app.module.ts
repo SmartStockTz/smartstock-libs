@@ -21,6 +21,8 @@ import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatIconModule} from "@angular/material/icon";
+import {MatMenuModule} from "@angular/material/menu";
 
 
 const routes: Routes = [
@@ -51,7 +53,9 @@ const routes: Routes = [
     MatInputModule,
     MatDialogModule,
     MatBottomSheetModule,
-    MatDividerModule
+    MatDividerModule,
+    MatIconModule,
+    MatMenuModule
   ],
   providers: [],
   bootstrap: [AppComponent]

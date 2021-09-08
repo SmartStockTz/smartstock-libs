@@ -12,8 +12,21 @@ import {FilesService, MessageService} from '../../../../libs/src/public-api';
                         [hasBackRoute]="true"
                         [backLink]="'/'"
                         [showSearch]="true"
+                        [visibleMenu]="vM"
+                        [hiddenMenu]="iVM"
                         [searchPlaceholder]="'search...'"
                         [version]="mock" [body]="body">
+      <ng-template #vM>
+        <button mat-icon-button>
+          <mat-icon>add</mat-icon>
+        </button>
+      </ng-template>
+      <ng-template #iVM>
+        <button mat-menu-item>
+          <span>More buttons</span>
+          <mat-icon>favorite</mat-icon>
+        </button>
+      </ng-template>
       <ng-template #drawer>
         <app-drawer></app-drawer>
       </ng-template>

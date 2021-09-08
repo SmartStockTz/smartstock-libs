@@ -28,6 +28,8 @@ import {takeUntil} from 'rxjs/operators';
                      [searchInputControl]="searchInputControl"
                      [searchPlaceholder]="searchPlaceholder"
                      [searchProgressFlag]="searchProgressFlag"
+                     [visibleMenu]="visibleMenu"
+                     [hiddenMenu]="hiddenMenu"
                      [heading]="heading">
         </app-toolbar>
         <div id="m-body" style="margin-bottom: 100px">
@@ -39,6 +41,8 @@ import {takeUntil} from 'rxjs/operators';
   `
 })
 export class SidenavLayoutComponent implements OnInit, OnDestroy {
+  @Input() visibleMenu: TemplateRef<any>;
+  @Input() hiddenMenu: TemplateRef<any>;
   @Input() body: TemplateRef<any>;
   @Input() version: Observable<string>;
   @Input() isMobile = false;

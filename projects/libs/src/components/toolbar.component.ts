@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef} from '@angular/core';
 import {MatSidenav} from '@angular/material/sidenav';
 import {Router} from '@angular/router';
 import {FormControl} from '@angular/forms';
@@ -36,10 +36,14 @@ import {DeviceState} from '../states/device.state';
         <button *ngIf="cartDrawer" mat-icon-button (click)="cartDrawer.toggle()">
           <mat-icon>shopping_cart</mat-icon>
         </button>
-        <button *ngIf="(deviceState.isSmallScreen | async)===false" mat-icon-button [matMenuTriggerFor]="menu">
+
+        <ng-container *ngTemplateOutlet="visibleMenu"></ng-container>
+        <button mat-icon-button [matMenuTriggerFor]="menu">
           <mat-icon>more_vert</mat-icon>
         </button>
+
         <mat-menu #menu>
+          <ng-container *ngTemplateOutlet="hiddenMenu"></ng-container>
           <button mat-menu-item (click)="logout()">
             <mat-icon>exit_to_app</mat-icon>
             Logout
@@ -63,6 +67,8 @@ import {DeviceState} from '../states/device.state';
   styleUrls: ['../styles/toolbar.style.scss']
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
+  @Input() visibleMenu: TemplateRef<any>;
+  @Input() hiddenMenu: TemplateRef<any>;
   @Input() color = 'primary';
   @Input() heading: string;
   @Input() showProgress = false;

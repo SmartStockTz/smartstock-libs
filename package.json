@@ -6,6 +6,7 @@
     "start": "ng serve libs-mock",
     "build": "ng build",
     "build:lib": "npx ng build --configuration production libs",
+    "publish": "npx ng build -c production libs && cd dist/libs && npm publish --ignore-script",
     "publish:beta": "npx ng build -c production libs && cd dist/libs && npm publish --tag beta",
     "test": "ng test",
     "lint": "ng lint",

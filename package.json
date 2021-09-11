@@ -24,7 +24,8 @@
     "@angular/platform-browser": "~12.2.4",
     "@angular/platform-browser-dynamic": "~12.2.4",
     "@angular/router": "~12.2.4",
-    "bfast": "^5.0.0-beta.0",
+    "bfast": "^5.0.1",
+    "ipfs": "^0.58.4",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

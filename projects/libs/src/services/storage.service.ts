@@ -1,13 +1,9 @@
 import {Injectable} from '@angular/core';
-import {EventService} from './event.service';
 import * as bfast from 'bfast';
 import {SecurityUtil} from '../utils/security.util';
-import {SsmEvents} from '../utils/eventsNames.util';
-import {LibUserModel} from '../models/lib-user.model';
-import {ShopModel} from '../models/shop.model';
-import {CustomerModel} from '../models/customer.model';
 import {StockModel} from '../models/stock.model';
 import {BatchModel} from '../models/batch.model';
+import {UserService} from './user.service';
 
 
 @Injectable({
@@ -16,41 +12,16 @@ import {BatchModel} from '../models/batch.model';
 export class StorageService {
   smartStockCache: any;
 
-  constructor(private readonly eventApi: EventService) {
+  constructor(private readonly userService: UserService) {
     this.smartStockCache = bfast.cache({database: 'smartstock', collection: 'config'});
   }
 
-  async getActiveUser(): Promise<LibUserModel> {
-    try {
-      return await bfast.auth().currentUser();
-    } catch (e) {
-      return await bfast.auth().setCurrentUser(undefined);
-    }
-  }
-
   async saveSales(batchs: BatchModel[]): Promise<any> {
-    const activeShop = await this.getActiveShop();
+    const activeShop = await this.userService.getCurrentShop();
     await bfast.cache({database: 'sales', collection: activeShop.projectId})
       .set<BatchModel[]>(SecurityUtil.randomString(12), batchs, {
         dtl: 720
       });
-  }
-
-  async getActiveShop(): Promise<ShopModel> {
-    const response = await this.smartStockCache.get('activeShop');
-    if (response) {
-      return response;
-    } else {
-      throw {message: 'No Active Shop'};
-    }
-  }
-
-  async saveActiveShop(shop: ShopModel): Promise<any> {
-    const response = await this.smartStockCache.set('activeShop', shop, {
-      dtl: 7
-    });
-    this.eventApi.broadcast(SsmEvents.ACTIVE_SHOP_SET);
-    return response;
   }
 
   async getCurrentProjectId(): Promise<string> {
@@ -67,14 +38,8 @@ export class StorageService {
     return await this.smartStockCache.clearAll();
   }
 
-  async saveActiveUser(user: LibUserModel): Promise<any> {
-    return bfast.auth().setCurrentUser(user, 6);
-  }
-
   async removeActiveShop(): Promise<any> {
-    const response = await this.smartStockCache.set('activeShop', undefined);
-    this.eventApi.broadcast(SsmEvents.ACTIVE_SHOP_REMOVE);
-    return response;
+    return this.smartStockCache.set('activeShop', undefined);
   }
 
   async removeActiveUser(): Promise<any> {
@@ -82,46 +47,20 @@ export class StorageService {
   }
 
   async removeStocks(): Promise<any> {
-    const shop = await this.getActiveShop();
+    const shop = await this.userService.getCurrentShop();
     return await bfast.cache({database: 'stocks', collection: shop.projectId}).clearAll();
   }
 
   async getStocks(): Promise<StockModel[]> {
-    const shop = await this.getActiveShop();
+    const shop = await this.userService.getCurrentShop();
     const stocksCache = bfast.cache({database: 'stocks', collection: shop.projectId});
     return await stocksCache.get<StockModel[]>('all');
   }
 
   async saveStocks(stocks: StockModel[]): Promise<any> {
-    const shop = await this.getActiveShop();
+    const shop = await this.userService.getCurrentShop();
     const stocksCache = bfast.cache({database: 'stocks', collection: shop.projectId});
     return await stocksCache.set('all', stocks, {
-      dtl: 360
-    });
-  }
-
-  async saveStock(stock: StockModel): Promise<StockModel> {
-    // const shop = await this.getActiveShop();
-    // const stocksCache = bfast.cache({database: 'stocks', collection: shop.projectId});
-    // return stocksCache.set(stock.id, stock);
-    return undefined;
-  }
-
-  async getCustomers(): Promise<CustomerModel[]> {
-    const shop = await this.getActiveShop();
-    const customersCache = bfast.cache({database: 'customers', collection: shop.projectId});
-    const customersKey = await customersCache.keys();
-    const customers = [];
-    for (const key of customersKey) {
-      customers.push(await customersCache.get<CustomerModel>(key));
-    }
-    return customers;
-  }
-
-  async saveCustomer(customer: CustomerModel): Promise<CustomerModel> {
-    const shop = await this.getActiveShop();
-    const customersCache = bfast.cache({database: 'customers', collection: shop.projectId});
-    return await customersCache.set<CustomerModel>(customer.displayName, customer, {
       dtl: 360
     });
   }

@@ -42,7 +42,7 @@ import {DrawerSubMenuComponent} from './components/drawer-sub-menu.component';
 import {FileBrowserSheetComponent} from './components/file-browser-sheet.component';
 import {BottomNavComponent} from './components/bottom-nav.component';
 import {RbacGuardComponent} from './components/rbac-guard.component';
-import {MenuSheetComponent} from "./components/menu-sheet.component";
+import {MenuSheetComponent} from './components/menu-sheet.component';
 
 @NgModule({
   imports: [
@@ -112,13 +112,4 @@ import {MenuSheetComponent} from "./components/menu-sheet.component";
 })
 
 export class LibModule {
-
-  static start(config: {
-    browser?: boolean;
-    production?: boolean;
-    electron?: boolean;
-    version?: string
-  }): void {
-
-  }
 }

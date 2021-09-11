@@ -2,7 +2,7 @@ export interface LibUserModel {
   applicationId?: string;
   projectUrlId?: string;
   projectId?: string;
-  username: string;
+  username?: string;
   password?: string;
   firstname?: string;
   lastname?: string;

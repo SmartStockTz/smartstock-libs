@@ -8,18 +8,20 @@ import {ShopModel} from '../models/shop.model';
 import {LibUserModel} from '../models/lib-user.model';
 import {SettingsService} from './settings.service';
 import {VerifyEMailDialogComponent} from '../components/verify-email-dialog.component';
+import {IpfsService} from './ipfs.service';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-
+  private smartStockCache = bfast.cache({database: 'smartstock', collection: 'config'});
 
   constructor(private readonly httpClient: HttpClient,
               private readonly settingsService: SettingsService,
               private readonly dialog: MatDialog,
               private readonly logger: LogService,
+              private readonly ipfsService: IpfsService,
               private readonly storageService: StorageService) {
   }
 
@@ -47,30 +49,30 @@ export class UserService {
   }
 
   async getAllUser(pagination: { size: number, skip: number }): Promise<LibUserModel[]> {
-    const projectId = await this.settingsService.getCustomerProjectId();
-    return bfast.database().collection('_User')
+    const shop = await this.getCurrentShop();
+    const cids = await bfast.database().collection('_User')
       .query()
-      .equalTo('projectId', projectId)
+      .cids(true)
+      .equalTo('projectId', shop.projectId)
       .includesIn('role', ['user', 'manager'])
       .size(pagination.size)
       .skip(pagination.skip)
-      .find<LibUserModel[]>({
+      .find<any[]>({
         useMasterKey: true
       });
-  }
-
-  getUser(user: LibUserModel, callback?: (user: LibUserModel) => void): void {
-
+    return await Promise.all(cids.map(x => {
+      return this.ipfsService.getDataFromCid(x);
+    })) as any;
   }
 
   async login(user: { username: string, password: string }): Promise<LibUserModel> {
     const authUser = await bfast.auth().logIn(user.username, user.password);
     await this.storageService.removeActiveShop();
     if (authUser && authUser.role !== 'admin') {
-      await this.storageService.saveActiveUser(authUser);
+      await this.updateCurrentUser(authUser);
       return authUser;
     } else if (authUser && authUser.verified === true) {
-      await this.storageService.saveActiveUser(authUser);
+      await this.updateCurrentUser(authUser);
       return authUser;
     } else {
       await bfast.functions().request('/functions/users/reVerifyAccount/' + user.username).post();
@@ -100,9 +102,7 @@ export class UserService {
     user.ecommerce = {};
     user.shops = [];
     await this.storageService.removeActiveShop();
-    return await bfast.functions().request('/functions/users/create').post(user, {
-      headers: this.settingsService.ssmFunctionsHeader
-    });
+    return await bfast.functions().request('/functions/users/create').post(user);
   }
 
   resetPassword(username: string): Promise<any> {
@@ -122,7 +122,7 @@ export class UserService {
    * @param user - {UserModel} model to save
    */
   async addUser(user: LibUserModel): Promise<LibUserModel> {
-    const shop = await this.storageService.getActiveShop();
+    const shop = await this.getCurrentShop();
     const shops = user.shops ? user.shops : [];
     const shops1 = shops.filter(value => value.applicationId !== shop.applicationId);
     user.applicationId = shop.applicationId;
@@ -131,9 +131,7 @@ export class UserService {
     user.settings = shop.settings;
     user.ecommerce = shop.ecommerce;
     user.shops = shops1;
-    return bfast.functions().request('/functions/users/seller').post(user, {
-      headers: this.settingsService.ssmFunctionsHeader
-    });
+    return bfast.functions().request('/functions/users/seller').post(user);
   }
 
   async getShops(user: LibUserModel): Promise<ShopModel[]> {
@@ -173,61 +171,35 @@ export class UserService {
       user.region = topLevelShop[0].region;
     }
     user.shops = otherShops as any;
-    await this.storageService.saveActiveUser(user);
+    await this.updateCurrentUser(user);
     return true;
   }
 
   async getCurrentShop(): Promise<ShopModel> {
-    const activeShop = await this.storageService.getActiveShop();
-    if (activeShop && activeShop.projectId && activeShop.applicationId) {
-      return activeShop;
-    } else {
-      throw new Error('No active shop in records');
-    }
+      const activeShop = await this.smartStockCache.get<ShopModel>('activeShop');
+      if (activeShop && activeShop.projectId && activeShop.applicationId) {
+        return activeShop;
+      } else {
+        throw {message: 'No Active Shop'};
+      }
   }
 
   async saveCurrentShop(shop: ShopModel): Promise<ShopModel> {
-    await this.storageService.saveCurrentProjectId(shop.projectId);
-    return this.storageService.saveActiveShop(shop);
-  }
-
-  createShop(data: { admin: LibUserModel, shop: ShopModel }): Promise<ShopModel> {
-    return undefined;
-    // return new Promise<ShopModel>(async (resolve, reject) => {
-    //   this.httpClient.post<ShopModel>(this.settings.ssmFunctionsURL + '/functions/shop', data, {
-    //     headers: this.settings.ssmFunctionsHeader
-    //   }).subscribe(value => {
-    //     resolve(value);
-    //   }, error => {
-    //     reject(error);
-    //   });
-    // });
-  }
-
-  deleteShop(shop: ShopModel): Promise<ShopModel> {
-    return undefined;
-    // return new Promise<ShopModel>((resolve, reject) => {
-    //   this.httpClient.delete(this.settings.ssmFunctionsURL + '/functions/shop', {
-    //   })
-    // });
+    return this.smartStockCache.set('activeShop', shop);
   }
 
   updatePassword(user: LibUserModel, password: string): Promise<any> {
     return bfast.functions().request('/functions/users/password/' + user.id).put({
       password
-    }, {
-      headers: this.settingsService.ssmFunctionsHeader
     });
   }
 
   updateUser(user: LibUserModel, data: { [p: string]: any }): Promise<LibUserModel> {
-    return bfast.functions().request('/functions/users/' + user.id).put(data, {
-      headers: this.settingsService.ssmFunctionsHeader
-    });
+    return bfast.functions().request('/functions/users/' + user.id).put(data);
   }
 
   async updateCurrentUser(user: LibUserModel): Promise<LibUserModel> {
-    return await this.storageService.saveActiveUser(user);
+    return bfast.auth().setCurrentUser(user);
   }
 
   changePasswordFromOld(data: { lastPassword: string; password: string; user: LibUserModel }): Promise<any> {
@@ -235,8 +207,6 @@ export class UserService {
       lastPassword: data.lastPassword,
       username: data.user.username,
       password: data.password
-    }, {
-      headers: this.settingsService.ssmFunctionsHeader
     });
   }
 }

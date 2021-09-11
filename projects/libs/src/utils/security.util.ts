@@ -4,7 +4,7 @@ export class SecurityUtil {
   static generateUUID(): string {
     return uuid.v4();
   }
-  static randomString(length) {
+  static randomString(length): string {
     let result           = '';
     const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;

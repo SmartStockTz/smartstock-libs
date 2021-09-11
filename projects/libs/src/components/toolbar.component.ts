@@ -96,7 +96,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
         this.sidenav.close().catch(console.log);
       }
     });
-    this.storage.getActiveUser().then(user => {
+    this.userService.currentUser().then(user => {
       this.currentUser = user;
     });
     this.searchInputControl.valueChanges.pipe(

@@ -2,19 +2,19 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {FileModel} from '../models/file.model';
 import {MessageService} from '../services/message.service';
-import {StorageService} from '../services/storage.service';
 import {FileResponseModel} from '../models/file-response.model';
 import * as bfast from 'bfast';
 import {MatDialog} from '@angular/material/dialog';
 import {DeviceState} from './device.state';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
+import {UserService} from '../services/user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FilesState {
 
-  constructor(private readonly storageService: StorageService,
+  constructor(private readonly userService: UserService,
               private readonly matDialog: MatDialog,
               private readonly deviceState: DeviceState,
               private readonly bottomSheet: MatBottomSheet,
@@ -45,7 +45,7 @@ export class FilesState {
 
   fetchFiles(): void {
     this.isFetchFiles.next(true);
-    this.storageService.getActiveShop().then(async shop => {
+    this.userService.getCurrentShop().then(async shop => {
       return {
         files: await this._getFiles(),
         shop
@@ -104,7 +104,7 @@ export class FilesState {
   }
 
   async _getFiles(): Promise<FileResponseModel[]> {
-    const shop = await this.storageService.getActiveShop();
+    const shop = await this.userService.getCurrentShop();
     bfast.init({
       applicationId: shop.applicationId,
       projectId: shop.projectId
@@ -117,7 +117,7 @@ export class FilesState {
   }
 
   async _uploadFile(file: File, callback: (progress: any) => void): Promise<string> {
-    const shop = await this.storageService.getActiveShop();
+    const shop = await this.userService.getCurrentShop();
     return bfast.storage(shop.projectId).save({
       filename: file.name,
       data: file,

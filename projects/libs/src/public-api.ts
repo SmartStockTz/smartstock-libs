@@ -14,6 +14,7 @@ export * from './services/user.service';
 export * from './services/rbac.service';
 export * from './services/files.service';
 export * from './services/configs.service';
+export * from './services/ipfs.service';
 
 // export * from './guards/rbac.guard';
 
@@ -21,7 +22,6 @@ export * from './states/device.state';
 export * from './states/files.state';
 
 export * from './utils/date.util';
-export * from './utils/device-info.util';
 export * from './utils/eventsNames.util';
 export * from './utils/security.util';
 
@@ -39,3 +39,14 @@ export * from './components/upload-files.component';
 export * from './components/dash-card.component';
 export * from './components/upload-file-progress.component';
 export * from './components/data-not-ready.component';
+
+export * from './models/batch.model';
+export * from './models/customer.model';
+export * from './models/file.model';
+export * from './models/menu.model';
+export * from './models/lib-user.model';
+export * from './models/file-response.model';
+export * from './models/printer.model';
+export * from './models/shop.model';
+export * from './models/stock.model';
+export * from './models/sale.model';

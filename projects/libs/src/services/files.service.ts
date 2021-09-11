@@ -7,13 +7,14 @@ import {MatDialog} from '@angular/material/dialog';
 import {DeviceState} from '../states/device.state';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {MessageService} from './message.service';
+import {UserService} from './user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class FilesService {
-  constructor(private readonly storageService: StorageService,
+  constructor(private readonly userService: UserService,
               private readonly matDialog: MatDialog,
               private readonly deviceState: DeviceState,
               private readonly bottomSheet: MatBottomSheet,
@@ -27,7 +28,7 @@ export class FilesService {
         closeOnNavigation: false,
         disableClose: true,
         data: {
-          shop: await this.storageService.getActiveShop()
+          shop: await this.userService.getCurrentShop()
         }
       }).afterDismissed().toPromise();
       if (value && value.url) {
@@ -42,7 +43,7 @@ export class FilesService {
         closeOnNavigation: false,
         disableClose: true,
         data: {
-          shop: await this.storageService.getActiveShop()
+          shop: await this.userService.getCurrentShop()
         }
       }).afterClosed().toPromise();
       if (value && value.url) {

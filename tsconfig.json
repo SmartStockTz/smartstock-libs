@@ -15,11 +15,11 @@
       "es2018",
       "dom"
     ],
-    "paths": {
-      "libs": [
-        "dist/libs/libs",
-        "dist/libs"
-      ]
-    }
+//    "paths": {
+//      "libs": [
+//        "dist/libs/libs",
+//        "dist/libs"
+//      ]
+//    }
   }
 }

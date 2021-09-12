@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
-import {FilesService, MessageService} from '../../../../libs/src/public-api';
+import {FilesService, IpfsService, MessageService} from '../../../../libs/src/public-api';
 
 @Component({
   template: `
@@ -46,17 +46,20 @@ import {FilesService, MessageService} from '../../../../libs/src/public-api';
           <mat-divider></mat-divider>
           <h1>Protected path by using RbacGuard</h1>
           <button routerLink="/profile" mat-flat-button color="primary">Go to</button>
+          <mat-divider></mat-divider>
+          <h1>Ipfs</h1>
+          <button (click)="check()" mat-flat-button color="primary">check</button>
         </div>
       </ng-template>
     </app-layout-sidenav>
   `
 })
 export class LandPageComponent {
-  title = 'libs-mock';
   mock: Observable<string> = of('mock_11');
 
   constructor(private readonly dialog: MatDialog,
               private readonly messageService: MessageService,
+              private readonly ipfsService: IpfsService,
               private readonly filesService: FilesService) {
   }
 
@@ -64,5 +67,11 @@ export class LandPageComponent {
     this.filesService.browse().then(value => {
       console.log(value);
     });
+  }
+
+  check(): void {
+    this.ipfsService.getDataFromCid('bafkreid6gb3zs5ov3lwg6pqv3ncufe6ch3i27s6srywla6d6thr4je74pq')
+      .then(console.log)
+      .catch(console.log);
   }
 }

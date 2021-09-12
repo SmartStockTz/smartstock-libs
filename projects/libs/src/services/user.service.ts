@@ -3,10 +3,8 @@ import {MatDialog} from '@angular/material/dialog';
 import {HttpClient} from '@angular/common/http';
 import * as bfast from 'bfast';
 import {LogService} from './log.service';
-import {StorageService} from './storage.service';
 import {ShopModel} from '../models/shop.model';
 import {LibUserModel} from '../models/lib-user.model';
-import {SettingsService} from './settings.service';
 import {VerifyEMailDialogComponent} from '../components/verify-email-dialog.component';
 import {IpfsService} from './ipfs.service';
 
@@ -18,11 +16,9 @@ export class UserService {
   private smartStockCache = bfast.cache({database: 'smartstock', collection: 'config'});
 
   constructor(private readonly httpClient: HttpClient,
-              private readonly settingsService: SettingsService,
               private readonly dialog: MatDialog,
               private readonly logger: LogService,
-              private readonly ipfsService: IpfsService,
-              private readonly storageService: StorageService) {
+              private readonly ipfsService: IpfsService) {
   }
 
   async currentUser(): Promise<any> {
@@ -65,9 +61,13 @@ export class UserService {
     })) as any;
   }
 
+  async removeActiveShop(): Promise<any> {
+    return this.smartStockCache.set('activeShop', undefined);
+  }
+
   async login(user: { username: string, password: string }): Promise<LibUserModel> {
     const authUser = await bfast.auth().logIn(user.username, user.password);
-    await this.storageService.removeActiveShop();
+    await this.removeActiveShop();
     if (authUser && authUser.role !== 'admin') {
       await this.updateCurrentUser(authUser);
       return authUser;
@@ -84,10 +84,14 @@ export class UserService {
     }
   }
 
+  async removeActiveUser(): Promise<any> {
+    return await bfast.auth().setCurrentUser(undefined, 0);
+  }
+
   async logout(user: LibUserModel): Promise<void> {
     await bfast.auth().logOut();
-    await this.storageService.removeActiveUser();
-    await this.storageService.removeActiveShop();
+    await this.removeActiveUser();
+    await this.removeActiveShop();
     return;
   }
 
@@ -101,7 +105,7 @@ export class UserService {
     };
     user.ecommerce = {};
     user.shops = [];
-    await this.storageService.removeActiveShop();
+    await this.removeActiveShop();
     return await bfast.functions().request('/functions/users/create').post(user);
   }
 

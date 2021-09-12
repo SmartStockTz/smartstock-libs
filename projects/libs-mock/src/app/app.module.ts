@@ -1,8 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-
 import {AppComponent} from './app.component';
-import {ConfigsService, LibModule} from '../../../libs/src/public-api';
+import {ConfigsService, IpfsService, LibModule} from '../../../libs/src/public-api';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule, Routes} from '@angular/router';
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -21,8 +20,8 @@ import {MatInputModule} from '@angular/material/input';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {MatDividerModule} from '@angular/material/divider';
-import {MatIconModule} from "@angular/material/icon";
-import {MatMenuModule} from "@angular/material/menu";
+import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
 
 
 const routes: Routes = [
@@ -57,7 +56,9 @@ const routes: Routes = [
     MatIconModule,
     MatMenuModule
   ],
-  providers: [],
+  providers: [
+    IpfsService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
@@ -127,7 +128,6 @@ export class AppModule {
         }
       ]
     });
-
     this.configs.addMenu({
       name: 'Sale',
       link: '/sale',

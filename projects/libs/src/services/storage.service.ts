@@ -38,14 +38,6 @@ export class StorageService {
     return await this.smartStockCache.clearAll();
   }
 
-  async removeActiveShop(): Promise<any> {
-    return this.smartStockCache.set('activeShop', undefined);
-  }
-
-  async removeActiveUser(): Promise<any> {
-    return await bfast.auth().setCurrentUser(undefined, 0);
-  }
-
   async removeStocks(): Promise<any> {
     const shop = await this.userService.getCurrentShop();
     return await bfast.cache({database: 'stocks', collection: shop.projectId}).clearAll();

@@ -11,4 +11,5 @@ export interface SubMenuModel {
   name?: string;
   link?: string;
   roles?: string[];
+  click: () => void;
 }

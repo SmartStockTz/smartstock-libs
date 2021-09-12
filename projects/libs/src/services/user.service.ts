@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {HttpClient} from '@angular/common/http';
 import * as bfast from 'bfast';
-import {LogService} from './log.service';
 import {ShopModel} from '../models/shop.model';
 import {LibUserModel} from '../models/lib-user.model';
 import {VerifyEMailDialogComponent} from '../components/verify-email-dialog.component';
@@ -13,11 +11,8 @@ import {IpfsService} from './ipfs.service';
   providedIn: 'root'
 })
 export class UserService {
-  private smartStockCache = bfast.cache({database: 'smartstock', collection: 'config'});
 
-  constructor(private readonly httpClient: HttpClient,
-              private readonly dialog: MatDialog,
-              private readonly logger: LogService) {
+  constructor(private readonly dialog: MatDialog) {
   }
 
   async currentUser(): Promise<any> {
@@ -61,7 +56,8 @@ export class UserService {
   }
 
   async removeActiveShop(): Promise<any> {
-    return this.smartStockCache.set('activeShop', undefined);
+    const smartStockCache = bfast.cache({database: 'smartstock', collection: 'config'});
+    return smartStockCache.set('activeShop', undefined);
   }
 
   async login(user: { username: string, password: string }): Promise<LibUserModel> {
@@ -179,16 +175,18 @@ export class UserService {
   }
 
   async getCurrentShop(): Promise<ShopModel> {
-      const activeShop = await this.smartStockCache.get<ShopModel>('activeShop');
-      if (activeShop && activeShop.projectId && activeShop.applicationId) {
-        return activeShop;
-      } else {
-        throw {message: 'No Active Shop'};
-      }
+    const smartStockCache = bfast.cache({database: 'smartstock', collection: 'config'});
+    const activeShop = await smartStockCache.get<ShopModel>('activeShop');
+    if (activeShop && activeShop.projectId && activeShop.applicationId) {
+      return activeShop;
+    } else {
+      throw {message: 'No Active Shop'};
+    }
   }
 
   async saveCurrentShop(shop: ShopModel): Promise<ShopModel> {
-    return this.smartStockCache.set('activeShop', shop);
+    const smartStockCache = bfast.cache({database: 'smartstock', collection: 'config'});
+    return smartStockCache.set('activeShop', shop);
   }
 
   updatePassword(user: LibUserModel, password: string): Promise<any> {

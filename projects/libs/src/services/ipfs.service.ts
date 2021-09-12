@@ -2,18 +2,6 @@ export class IpfsService {
   private static instance;
 
   private static async ipfs(): Promise<any> {
-    // const getter = async () => {
-    //   let node = this.ipfsSource.getValue();
-    //   if (node == null) {
-    //     console.log('Waiting node creation...');
-    //     // @ts-ignore
-    //     node = await window.Ipfs.create();
-    //     this.ipfsSource.next(node);
-    //   }
-    //   return node;
-    // };
-    // return getter();
-
     if (!this.instance) {
       // @ts-ignore
       this.instance = await window.Ipfs.create();
@@ -36,7 +24,20 @@ export class IpfsService {
     for await (const chunk of results) {
       data += chunk.toString();
     }
-    return JSON.parse(data);
+    const dt = JSON.parse(data);
+    if (dt?._id) {
+      dt.id = dt._id;
+      delete dt._id;
+    }
+    if (dt?._created_at) {
+      dt.createdAt = dt._created_at;
+      delete dt._created_at;
+    }
+    if (dt?._updated_at) {
+      dt.updatedAt = dt._updated_at;
+      delete dt._updated_at;
+    }
+    return dt;
   }
 
   static async getId(): Promise<any> {

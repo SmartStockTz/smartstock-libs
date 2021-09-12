@@ -1,32 +1,32 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
-
-@Injectable({
-  providedIn: 'root'
-})
 export class IpfsService {
-  private readonly ipfsSource = new BehaviorSubject<any>(null);
-  // private readonly ipfsPromise: Promise<any>;
+  private static instance;
 
-  private get ipfs(): Promise<any> {
-    const getter = async () => {
-      let node = this.ipfsSource.getValue();
-      if (node == null) {
-        console.log('Waiting node creation...');
-        // @ts-ignore
-        node = await window.Ipfs.create();
-        this.ipfsSource.next(node);
-      }
-      return node;
-    };
-    return getter();
+  private static async ipfs(): Promise<any> {
+    // const getter = async () => {
+    //   let node = this.ipfsSource.getValue();
+    //   if (node == null) {
+    //     console.log('Waiting node creation...');
+    //     // @ts-ignore
+    //     node = await window.Ipfs.create();
+    //     this.ipfsSource.next(node);
+    //   }
+    //   return node;
+    // };
+    // return getter();
+
+    if (!this.instance) {
+      // @ts-ignore
+      this.instance = await window.Ipfs.create();
+      return this.instance;
+    }
+    return this.instance;
   }
 
-  constructor() {
+  private constructor() {
   }
 
-  async getDataFromCid<T>(cid: string): Promise<T> {
-    const node = await this.ipfs;
+  static async getDataFromCid<T>(cid: string): Promise<T> {
+    const node = await IpfsService.ipfs();
     const results = await node.cat(cid, {
       timeout: 1000 * 60 * 5,
     });
@@ -39,18 +39,18 @@ export class IpfsService {
     return JSON.parse(data);
   }
 
-  async getId(): Promise<any> {
-    const node = await this.ipfs;
+  static async getId(): Promise<any> {
+    const node = await this.ipfs();
     return await node.id();
   }
 
-  async getVersion(): Promise<any> {
-    const node = await this.ipfs;
+  static async getVersion(): Promise<any> {
+    const node = await this.ipfs();
     return await node.version();
   }
 
-  async getStatus(): Promise<boolean> {
-    const node = await this.ipfs;
+  static async getStatus(): Promise<boolean> {
+    const node = await this.ipfs();
     return node.isOnline();
   }
 }

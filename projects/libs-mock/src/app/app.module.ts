@@ -56,9 +56,7 @@ const routes: Routes = [
     MatIconModule,
     MatMenuModule
   ],
-  providers: [
-    IpfsService
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {

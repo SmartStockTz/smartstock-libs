@@ -17,8 +17,7 @@ export class UserService {
 
   constructor(private readonly httpClient: HttpClient,
               private readonly dialog: MatDialog,
-              private readonly logger: LogService,
-              private readonly ipfsService: IpfsService) {
+              private readonly logger: LogService) {
   }
 
   async currentUser(): Promise<any> {
@@ -57,7 +56,7 @@ export class UserService {
         useMasterKey: true
       });
     return await Promise.all(cids.map(x => {
-      return this.ipfsService.getDataFromCid(x);
+      return IpfsService.getDataFromCid(x);
     })) as any;
   }
 

@@ -59,7 +59,6 @@ export class LandPageComponent {
 
   constructor(private readonly dialog: MatDialog,
               private readonly messageService: MessageService,
-              private readonly ipfsService: IpfsService,
               private readonly filesService: FilesService) {
   }
 
@@ -70,7 +69,7 @@ export class LandPageComponent {
   }
 
   check(): void {
-    this.ipfsService.getDataFromCid('bafkreid6gb3zs5ov3lwg6pqv3ncufe6ch3i27s6srywla6d6thr4je74pq')
+    IpfsService.getDataFromCid('bafkreid6gb3zs5ov3lwg6pqv3ncufe6ch3i27s6srywla6d6thr4je74pq')
       .then(console.log)
       .catch(console.log);
   }

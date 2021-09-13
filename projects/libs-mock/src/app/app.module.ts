@@ -1,7 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
-import {ConfigsService, IpfsService, LibModule} from '../../../libs/src/public-api';
+import {ConfigsService, LibModule} from '../../../libs/src/public-api';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule, Routes} from '@angular/router';
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -117,12 +117,14 @@ export class AppModule {
         {
           name: 'overview',
           link: '/report/retail',
-          roles: ['admin']
+          roles: ['admin'],
+          click: null
         },
         {
           name: 'performance',
           link: '/report/whole',
-          roles: ['admin']
+          roles: ['admin'],
+          click: null
         }
       ]
     });
@@ -135,12 +137,14 @@ export class AppModule {
         {
           name: 'retail',
           link: '/sale/retail',
-          roles: ['*']
+          roles: ['*'],
+          click: null
         },
         {
           name: 'wholesale',
           link: '/sale/whole',
-          roles: ['admin']
+          roles: ['admin'],
+          click: null
         }
       ]
     });

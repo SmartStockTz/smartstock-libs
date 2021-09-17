@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {SettingsService} from './settings.service';
 import {ConfigsService} from './configs.service';
 import {PrinterModel} from '../models/printer.model';
+import {UserService} from './user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +10,7 @@ import {PrinterModel} from '../models/printer.model';
 export class PrintService {
   url: string;
 
-  constructor(private readonly settings: SettingsService,
+  constructor(private readonly userService: UserService,
               private readonly configService: ConfigsService,
               private readonly httpClient: HttpClient) {
   }
@@ -29,7 +29,7 @@ export class PrintService {
   }
 
   async print(printModel: PrinterModel, forcePrint = false): Promise<any> {
-    const cSettings = await this.settings.getSettings();
+    const cSettings = await this.userService.getSettings();
     let data = '';
     data = data.concat(cSettings.printerHeader + '\n');
     data = data.concat(printModel.data);

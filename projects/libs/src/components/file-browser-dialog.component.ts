@@ -186,7 +186,7 @@ export class FileBrowserDialogComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   ngOnDestroy(): void {
-    this.destroy.next();
+    this.destroy.next('done');
   }
 
   uploadFile(): void {

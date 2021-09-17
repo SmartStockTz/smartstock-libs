@@ -192,7 +192,7 @@ export class FileBrowserSheetComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   ngOnDestroy(): void {
-    this.destroy.next();
+    this.destroy.next('done');
   }
 
   uploadFile(): void {

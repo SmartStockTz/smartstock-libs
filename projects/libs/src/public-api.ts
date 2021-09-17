@@ -4,7 +4,6 @@
 
 export {LibModule} from './lib.module';
 
-export * from './services/settings.service';
 export * from './services/storage.service';
 export * from './services/message.service';
 export * from './services/printer.service';

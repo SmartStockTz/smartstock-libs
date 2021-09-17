@@ -8,8 +8,6 @@ import {MenuModel} from '../models/menu.model';
 export class ConfigsService {
   public versionName = '';
   public printerUrl = 'https://localhost:8080';
-  public production = true;
-  public electron = true;
   public browser = true;
   public selectedModuleName = '';
   private pmenu: MenuModel[] = [];

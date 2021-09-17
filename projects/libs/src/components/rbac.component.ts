@@ -1,6 +1,5 @@
 import {AfterViewInit, Component, ContentChild, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
 import {RbacService} from '../services/rbac.service';
-import * as path from 'path';
 
 @Component({
   selector: 'app-libs-rbac',

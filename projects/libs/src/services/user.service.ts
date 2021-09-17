@@ -4,7 +4,7 @@ import * as bfast from 'bfast';
 import {ShopModel} from '../models/shop.model';
 import {LibUserModel} from '../models/lib-user.model';
 import {VerifyEMailDialogComponent} from '../components/verify-email-dialog.component';
-import {IpfsService} from './ipfs.service';
+import {ShopSettingsModel} from '../models/shop-settings.model';
 
 
 @Injectable({
@@ -36,23 +36,6 @@ export class UserService {
       .delete({
         headers: {'smartstock-context': {user: (await bfast.auth().currentUser()).id}}
       });
-  }
-
-  async getAllUser(pagination: { size: number, skip: number }): Promise<LibUserModel[]> {
-    const shop = await this.getCurrentShop();
-    const cids = await bfast.database().collection('_User')
-      .query()
-      .cids(true)
-      .equalTo('projectId', shop.projectId)
-      .includesIn('role', ['user', 'manager'])
-      .size(pagination.size)
-      .skip(pagination.skip)
-      .find<any[]>({
-        useMasterKey: true
-      });
-    return await Promise.all(cids.map(x => {
-      return IpfsService.getDataFromCid(x);
-    })) as any;
   }
 
   async removeActiveShop(): Promise<any> {
@@ -209,5 +192,25 @@ export class UserService {
       username: data.user.username,
       password: data.password
     });
+  }
+  async getSettings(): Promise<ShopSettingsModel> {
+    try {
+      const activeShop = await this.getCurrentShop();
+      if (!activeShop || !activeShop.settings) {
+        return {
+          currency: 'Tsh',
+          module: {},
+          printerUrl: 'https://localhost:8080',
+          printerFooter: 'Thank you',
+          printerHeader: '',
+          saleWithoutPrinter: true,
+          allowRetail: true,
+          allowWholesale: true
+        };
+      }
+      return activeShop.settings;
+    } catch (e) {
+      throw {message: 'Fails to get settings', reason: e.toString()};
+    }
   }
 }

@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {FileModel} from '../models/file.model';
 import {FileBrowserSheetComponent} from '../components/file-browser-sheet.component';
 import {FileBrowserDialogComponent} from '../components/file-browser-dialog.component';
-import {StorageService} from './storage.service';
 import {MatDialog} from '@angular/material/dialog';
 import {DeviceState} from '../states/device.state';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';

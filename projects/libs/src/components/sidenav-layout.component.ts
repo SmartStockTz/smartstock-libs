@@ -1,10 +1,20 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {MatSidenav} from '@angular/material/sidenav';
 import {FormControl} from '@angular/forms';
 import {DeviceState} from '../states/device.state';
 import {takeUntil} from 'rxjs/operators';
-import {CartDrawerState} from "../states/cart-drawer-state";
+import {CartDrawerState} from '../states/cart-drawer-state';
 
 @Component({
   selector: 'app-layout-sidenav',
@@ -41,7 +51,7 @@ import {CartDrawerState} from "../states/cart-drawer-state";
     </mat-sidenav-container>
   `
 })
-export class SidenavLayoutComponent implements OnInit, OnDestroy {
+export class SidenavLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() visibleMenu: TemplateRef<any>;
   @Input() hiddenMenu: TemplateRef<any>;
   @Input() body: TemplateRef<any>;
@@ -78,11 +88,14 @@ export class SidenavLayoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.cartDrawerState.drawer.next(this.cartDrawer);
     this.deviceState.isSmallScreen
       .pipe(takeUntil(this.destroy))
       .subscribe(value => {
         this.isSmallScreen = value;
       });
+  }
+
+  ngAfterViewInit(): void {
+    this.cartDrawerState.drawer.next(this.cartDrawer);
   }
 }

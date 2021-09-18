@@ -19,6 +19,7 @@ export * from './services/ipfs.service';
 
 export * from './states/device.state';
 export * from './states/files.state';
+export * from './states/cart-drawer-state';
 
 export * from './utils/date.util';
 export * from './utils/eventsNames.util';

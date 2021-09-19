@@ -41,6 +41,8 @@ import {CartDrawerState} from '../states/cart-drawer-state';
                      [searchProgressFlag]="searchProgressFlag"
                      [visibleMenu]="visibleMenu"
                      [hiddenMenu]="hiddenMenu"
+                     [cartIcon]="cartIcon"
+                     [cartBadge]="cartBadge"
                      [heading]="heading">
         </app-toolbar>
         <ng-container *ngTemplateOutlet="body"></ng-container>
@@ -73,6 +75,8 @@ export class SidenavLayoutComponent implements OnInit, OnDestroy, AfterViewInit 
   @Input() rightDrawerOpened = false;
   @Input() color = 'primary';
   @ViewChild('cartDrawer') cartDrawer: MatSidenav;
+  @Input() cartIcon = 'shopping_cart';
+  @Input() cartBadge = 0;
   destroy = new Subject();
   isSmallScreen = false;
 

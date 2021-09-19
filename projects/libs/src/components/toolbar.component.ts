@@ -33,8 +33,8 @@ import {DeviceState} from '../states/device.state';
                           [searchPlaceholder]="searchPlaceholder">
         </app-search-input>
         <span *ngIf="(deviceState.isSmallScreen | async)===false && showSearch" style="width: 16px"></span>
-        <button *ngIf="cartDrawer" mat-icon-button (click)="cartDrawer.toggle()">
-          <mat-icon>shopping_cart</mat-icon>
+        <button [matBadge]="cartBadge" *ngIf="cartDrawer" mat-icon-button (click)="cartDrawer.toggle()">
+          <mat-icon>{{cartIcon}}</mat-icon>
         </button>
 
         <ng-container *ngTemplateOutlet="visibleMenu"></ng-container>
@@ -80,6 +80,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   @Output() searchCallback = new EventEmitter<string>();
   @Input() searchInputControl = new FormControl('');
   @Input() searchPlaceholder: string | 'Type to search';
+  @Input() cartIcon = 'shopping_cart';
+  @Input() cartBadge = 0;
   currentUser: LibUserModel;
   @Input() searchProgressFlag = false;
   destroy = new Subject();

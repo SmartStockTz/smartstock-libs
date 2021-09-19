@@ -28,7 +28,7 @@ import {CartDrawerState} from '../states/cart-drawer-state';
       <mat-sidenav #cartDrawer [mode]="rightDrawerMode" [opened]="rightDrawerOpened" position="end">
         <ng-container *ngTemplateOutlet="rightDrawer"></ng-container>
       </mat-sidenav>
-      <mat-sidenav-content style="height: 100vh; display: flex; flex-direction: column">
+      <mat-sidenav-content style="height: 100vh;">
         <app-toolbar [sidenav]="leftDrawer?sidenav:undefined"
                      [showProgress]="showProgress"
                      [hasBackRoute]="hasBackRoute"
@@ -43,9 +43,7 @@ import {CartDrawerState} from '../states/cart-drawer-state';
                      [hiddenMenu]="hiddenMenu"
                      [heading]="heading">
         </app-toolbar>
-        <div style="flex-direction: column; display: flex; flex-grow: 1">
-          <ng-container *ngTemplateOutlet="body"></ng-container>
-        </div>
+        <ng-container *ngTemplateOutlet="body"></ng-container>
         <app-bottom-nav *ngIf="isSmallScreen"></app-bottom-nav>
       </mat-sidenav-content>
     </mat-sidenav-container>

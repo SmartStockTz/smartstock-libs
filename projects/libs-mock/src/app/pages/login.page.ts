@@ -47,7 +47,7 @@ export class LoginPageComponent implements OnInit {
       this.snack.open('Please fill all required fields', 'Ok', {duration: 3000});
     } else {
       this.isLogin = true;
-      bfast.auth().logIn(this.loginForm.value.username, this.loginForm.value.password)
+      this.userService.login({username: this.loginForm.value.username, password: this.loginForm.value.password})
         .then(async user => {
           this.router.navigateByUrl('/').catch(console.log);
           bfast.init({

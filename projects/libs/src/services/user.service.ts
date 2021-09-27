@@ -44,7 +44,11 @@ export class UserService {
   }
 
   async login(user: { username: string, password: string }): Promise<LibUserModel> {
-    const authUser = await bfast.auth().logIn(user.username, user.password);
+    // const authUser = await bfast.auth().logIn(user.username, user.password);
+    const authUser: any = await bfast.functions().request('/users/login').post({
+      username: user.username,
+      password: user.password
+    });
     await this.removeActiveShop();
     if (authUser && authUser.role !== 'admin') {
       await this.updateCurrentUser(authUser);

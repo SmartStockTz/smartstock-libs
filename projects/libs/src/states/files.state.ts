@@ -56,7 +56,7 @@ export class FilesState {
           const nameContents = x.name.split('.');
           const suffixs = x.name.split('-');
           return {
-            url: `https://${value.shop.projectId}-daas.bfast.fahamutech.com/storage/${value.shop.applicationId}/file/${x.name}`,
+            url: `https://smartstock-faas.bfast.fahamutech.com/shop/${value.shop.projectId}/${value.shop.applicationId}/storage/${value.shop.applicationId}/file/${x.name}`,
             size: (Number(x.size) / (1024 * 1024)).toPrecision(3) + ' MB',
             suffix: suffixs[suffixs.length - 1],
             category: FilesState.getFileCategory(x.name),
@@ -107,7 +107,9 @@ export class FilesState {
     const shop = await this.userService.getCurrentShop();
     bfast.init({
       applicationId: shop.applicationId,
-      projectId: shop.projectId
+      projectId: shop.projectId,
+      databaseURL: `https://smartstock-faas.bfast.fahamutech.com/shop/${shop.projectId}/${shop.applicationId}`,
+      functionsURL: `https://smartstock-faas.bfast.fahamutech.com/shop/${shop.projectId}/${shop.applicationId}`,
     }, shop.projectId);
     return bfast.storage(shop.projectId).list({
       // need some improvement from server

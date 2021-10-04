@@ -52,7 +52,9 @@ export class LoginPageComponent implements OnInit {
           this.router.navigateByUrl('/').catch(console.log);
           bfast.init({
             applicationId: user.applicationId,
-            projectId: user.projectId
+            projectId: user.projectId,
+            databaseURL: `https://smartstock-faas.bfast.fahamutech.com/shop/${user.projectId}/${user.applicationId}`,
+            functionsURL: `https://smartstock-faas.bfast.fahamutech.com/shop/${user.projectId}/${user.applicationId}`
           }, user.projectId);
           await this.storageService.saveCurrentProjectId(user.projectId);
           await this.userService.saveCurrentShop(user as any);

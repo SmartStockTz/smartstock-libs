@@ -1,8 +1,15 @@
 import {expose} from 'comlink';
 import * as bfast from 'bfast';
 import {ShopModel} from '../models/shop.model';
-import {getDaasAddress, getFaasAddress} from '../utils/bfast.util';
 import {LibUserModel} from '../models/lib-user.model';
+
+export function getDaasAddress(shop: ShopModel): string {
+  return `https://smartstock-faas.bfast.fahamutech.com/shop/${shop.projectId}/${shop.applicationId}`;
+}
+
+export function getFaasAddress(shop: ShopModel): string {
+  return `https://smartstock-faas.bfast.fahamutech.com/shop/${shop.projectId}/${shop.applicationId}`;
+}
 
 let isRunning = false;
 

@@ -40,7 +40,7 @@ export class UserService {
 
   async removeActiveShop(): Promise<any> {
     const smartStockCache = bfast.cache({database: 'smartstock', collection: 'config'});
-    return smartStockCache.set('activeShop', undefined);
+    return smartStockCache.remove('activeShop');
   }
 
   async login(user: { username: string, password: string }): Promise<LibUserModel> {

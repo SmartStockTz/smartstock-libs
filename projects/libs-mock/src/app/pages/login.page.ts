@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import * as bfast from 'bfast';
 import {StorageService, UserService} from '../../../../libs/src/public-api';
+import {getDaasAddress, getFaasAddress} from '../../../../libs/src/public-api';
 
 @Component({
   selector: 'app-login',
@@ -53,13 +54,14 @@ export class LoginPageComponent implements OnInit {
           bfast.init({
             applicationId: user.applicationId,
             projectId: user.projectId,
-            databaseURL: `https://smartstock-faas.bfast.fahamutech.com/shop/${user.projectId}/${user.applicationId}`,
-            functionsURL: `https://smartstock-faas.bfast.fahamutech.com/shop/${user.projectId}/${user.applicationId}`
+            databaseURL: getDaasAddress(user as any),
+            functionsURL: getFaasAddress(user as any)
           }, user.projectId);
           await this.storageService.saveCurrentProjectId(user.projectId);
           await this.userService.saveCurrentShop(user as any);
         })
         .catch(reason => {
+          console.log(reason);
           this.snack.open(reason && reason.message ? reason.message : reason, 'Ok');
         }).finally(() => {
         this.isLogin = false;

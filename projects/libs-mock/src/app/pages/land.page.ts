@@ -1,7 +1,8 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {FilesService, IpfsService, MessageService} from '../../../../libs/src/public-api';
+import * as bfast from 'bfast';
 
 @Component({
   template: `
@@ -54,8 +55,9 @@ import {FilesService, IpfsService, MessageService} from '../../../../libs/src/pu
     </app-layout-sidenav>
   `
 })
-export class LandPageComponent {
+export class LandPageComponent implements OnInit, OnDestroy {
   mock: Observable<string> = of('mock_11');
+  private syncs;
 
   constructor(private readonly dialog: MatDialog,
               private readonly messageService: MessageService,
@@ -73,4 +75,20 @@ export class LandPageComponent {
       .then(console.log)
       .catch(console.log);
   }
+
+  ngOnDestroy(): void {
+    if (this.syncs && this.syncs.close) {
+      this.syncs.close();
+    }
+  }
+
+  ngOnInit(): void {
+    this.syncs = bfast.database().syncs('categories');
+    this.syncs.upload().then(_ => {
+      // console.log(value);
+      setTimeout(() => this.syncs.changes().delete('test'), 5000);
+      setTimeout(() => console.log(this.syncs.changes().toJSON()), 1000);
+    }).catch(console.log);
+  }
+
 }

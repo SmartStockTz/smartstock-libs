@@ -1,7 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
-import {ConfigsService, LibModule} from '../../../libs/src/public-api';
+import {ConfigsService, LibModule, SyncsService} from '../../../libs/src/public-api';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule, Routes} from '@angular/router';
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -60,12 +60,14 @@ const routes: Routes = [
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(private readonly configs: ConfigsService) {
+  constructor(private readonly configs: ConfigsService,
+              private readonly syncsService: SyncsService) {
     bfast.init({
       applicationId: environment.smartstock.applicationId,
       projectId: environment.smartstock.projectId,
       appPassword: environment.smartstock.pass,
     });
+    syncsService.startWorker().catch(console.log);
     configs.versionName = 'demo-libs';
     [
       {
@@ -107,7 +109,6 @@ export class AppModule {
     ].forEach(menu => {
       this.configs.addMenu(menu);
     });
-
     this.configs.addMenu({
       name: 'Report',
       link: '/report',

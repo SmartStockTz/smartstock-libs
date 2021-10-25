@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {ConfigsService} from './configs.service';
+import {NavigationService} from './navigation.service';
 import {PrinterModel} from '../models/printer.model';
 import {UserService} from './user.service';
 
@@ -11,12 +11,12 @@ export class PrintService {
   url: string;
 
   constructor(private readonly userService: UserService,
-              private readonly configService: ConfigsService,
+              private readonly navigationService: NavigationService,
               private readonly httpClient: HttpClient) {
   }
 
   private async printInDesktop(printModel: PrinterModel): Promise<any> {
-    this.url = `${this.configService.printerUrl}/print`;
+    this.url = `${this.navigationService.printerUrl}/print`;
     return this.httpClient.post(this.url, {
       data: printModel.data,
       id: printModel.id

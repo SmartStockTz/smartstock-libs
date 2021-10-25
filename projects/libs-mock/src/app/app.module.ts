@@ -1,7 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
-import {ConfigsService, LibModule, SyncsService} from '../../../libs/src/public-api';
+import {NavigationService, LibModule, SyncsService} from '../../../libs/src/public-api';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule, Routes} from '@angular/router';
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -60,7 +60,7 @@ const routes: Routes = [
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(private readonly configs: ConfigsService,
+  constructor(private readonly configs: NavigationService,
               private readonly syncsService: SyncsService) {
     bfast.init({
       applicationId: environment.smartstock.applicationId,

@@ -5,7 +5,7 @@ import {MenuModel} from '../models/menu.model';
   providedIn: 'root'
 })
 
-export class ConfigsService {
+export class NavigationService {
   public versionName = '';
   public printerUrl = 'https://localhost:8080';
   public browser = true;

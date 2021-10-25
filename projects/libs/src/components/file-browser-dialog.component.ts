@@ -38,6 +38,7 @@ import {FormControl, Validators} from '@angular/forms';
     </div>
 
     <mat-divider></mat-divider>
+
     <div *ngIf="(filesState.isFetchFiles | async)===true"
          style="display: flex; flex-direction: column; justify-content: center; align-items: center">
       <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>

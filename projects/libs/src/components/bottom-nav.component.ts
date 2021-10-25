@@ -4,7 +4,7 @@ import {MenuSheetComponent} from './menu-sheet.component';
 import {ShopModel} from '../models/shop.model';
 import {MenuModel} from '../models/menu.model';
 import {UserService} from '../services/user.service';
-import {ConfigsService} from '../services/configs.service';
+import {NavigationService} from '../services/navigation.service';
 import {RbacService} from '../services/rbac.service';
 import {Router} from '@angular/router';
 
@@ -35,7 +35,7 @@ export class BottomNavComponent implements OnInit, OnDestroy {
 
   constructor(private readonly matBottomSheet: MatBottomSheet,
               private readonly userService: UserService,
-              public readonly configs: ConfigsService,
+              public readonly configs: NavigationService,
               public readonly rbacServices: RbacService,
               private readonly router: Router) {
   }

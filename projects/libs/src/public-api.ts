@@ -12,7 +12,7 @@ export * from './services/event.service';
 export * from './services/user.service';
 export * from './services/rbac.service';
 export * from './services/files.service';
-export * from './services/configs.service';
+export * from './services/navigation.service';
 export * from './services/ipfs.service';
 export * from './services/syncs.service';
 

@@ -8,6 +8,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {DeviceState} from './device.state';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {UserService} from '../services/user.service';
+import {getDaasAddress, getFaasAddress} from '../utils/bfast.util';
 
 @Injectable({
   providedIn: 'root'
@@ -26,21 +27,23 @@ export class FilesState {
   uploadingPercentage: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   files: BehaviorSubject<FileModel[]> = new BehaviorSubject<FileModel[]>([]);
 
-  private static getFileCategory(name: string): string {
+  private static getFileCategory(type1: string): string {
     // .jpg,.png,.pdf,.docx,.txt,.gif,.jpeg,.mp4,.mkv,.mp3,.aac,.epub
-    const fileTypes = name.split('.');
-    const type = fileTypes[fileTypes.length - 1];
-    if (type === 'png' || type === 'jpg' || type === 'jpeg' || type === 'gif') {
-      return 'image';
-    } else if (type === 'mp4' || type === 'mkv') {
-      return 'video';
-    } else if (type === 'mp3' || type === 'aac' || type === 'aac4') {
-      return 'audio';
-    } else if (type === 'pdf' || type === 'epub') {
-      return 'book';
-    } else {
-      return 'other';
-    }
+    const fileTypes = type1.split('/');
+    const type = fileTypes[0];
+    return  type;
+    // if (type === 'png' || type === 'jpg' || type === 'jpeg' || type === 'gif') {
+    //   return 'image';
+    // } else if (type === 'mp4' || type === 'mkv') {
+    //   return 'video';
+    // } else if (type === 'mp3' || type === 'aac' || type === 'aac4') {
+    //   return 'audio';
+    //   // }
+    //   // else if (type === 'pdf' || type === 'epub') {
+    //   //   return 'book';
+    // } else {
+    //   return 'other';
+    // }
   }
 
   fetchFiles(): void {
@@ -53,15 +56,16 @@ export class FilesState {
     }).then(value => {
       this.files.next(
         value.files.map(x => {
-          const nameContents = x.name.split('.');
+          // const nameContents = x.name.split('.');
           const suffixs = x.name.split('-');
           return {
-            url: `https://smartstock-faas.bfast.fahamutech.com/shop/${value.shop.projectId}/${value.shop.applicationId}/storage/${value.shop.applicationId}/file/${x.name}`,
+            url: `${getFaasAddress(value.shop)}/storage/${value.shop.applicationId}/file/${x.id}`,
             size: (Number(x.size) / (1024 * 1024)).toPrecision(3) + ' MB',
             suffix: suffixs[suffixs.length - 1],
-            category: FilesState.getFileCategory(x.name),
+            category: FilesState.getFileCategory(x.type),
             name: x.name,
-            type: nameContents[nameContents.length - 1].toUpperCase()
+            extension: x.extension,
+            type: x.type
           };
         })
       );
@@ -73,7 +77,7 @@ export class FilesState {
     });
   }
 
-  appendFile(url: string): void {
+  appendFile(url: string, type: string): void {
     const nameContents = url.split('.');
     const suffixs = url.split('-');
     this.files.value.unshift({
@@ -81,8 +85,8 @@ export class FilesState {
       size: ' MB',
       suffix: suffixs[suffixs.length - 1],
       name: url,
-      category: FilesState.getFileCategory(url),
-      type: nameContents[nameContents.length - 1].toUpperCase()
+      category: FilesState.getFileCategory(type),
+      type
     });
     this.files.next(this.files.value);
   }
@@ -93,7 +97,7 @@ export class FilesState {
     this._uploadFile(file, progress => {
       this.uploadingPercentage.next(progress);
     }).then(value => {
-      this.appendFile(value);
+      this.appendFile(value, file.type);
       done();
     }).catch(reason => {
       this.messageService.showMobileInfoMessage(
@@ -108,8 +112,8 @@ export class FilesState {
     bfast.init({
       applicationId: shop.applicationId,
       projectId: shop.projectId,
-      databaseURL: `https://smartstock-faas.bfast.fahamutech.com/shop/${shop.projectId}/${shop.applicationId}`,
-      functionsURL: `https://smartstock-faas.bfast.fahamutech.com/shop/${shop.projectId}/${shop.applicationId}`,
+      databaseURL: getDaasAddress(shop),
+      functionsURL: getFaasAddress(shop),
     }, shop.projectId);
     return bfast.storage(shop.projectId).list({
       // need some improvement from server

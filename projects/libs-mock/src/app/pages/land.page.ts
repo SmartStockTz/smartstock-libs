@@ -57,7 +57,7 @@ import * as bfast from 'bfast';
 })
 export class LandPageComponent implements OnInit, OnDestroy {
   mock: Observable<string> = of('mock_11');
-  private syncs;
+  // private syncs;
 
   constructor(private readonly dialog: MatDialog,
               private readonly messageService: MessageService,
@@ -77,18 +77,18 @@ export class LandPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.syncs && this.syncs.close) {
-      this.syncs.close();
-    }
+    // if (this.syncs && this.syncs.close) {
+    //   this.syncs.close();
+    // }
   }
 
   ngOnInit(): void {
-    this.syncs = bfast.database().syncs('categories');
-    this.syncs.upload().then(_ => {
-      // console.log(value);
-      setTimeout(() => this.syncs.changes().delete('test'), 5000);
-      setTimeout(() => console.log(this.syncs.changes().toJSON()), 1000);
-    }).catch(console.log);
+    // this.syncs = bfast.database().syncs('categories');
+    // this.syncs.upload().then(_ => {
+    //   // console.log(value);
+    //   setTimeout(() => this.syncs.changes().delete('test'), 5000);
+    //   setTimeout(() => console.log(this.syncs.changes().toJSON()), 1000);
+    // }).catch(console.log);
   }
 
 }

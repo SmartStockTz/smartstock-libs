@@ -5,14 +5,15 @@ import {UserService} from '../services/user.service';
 import {LogService} from '../services/log.service';
 import {SsmEvents} from '../utils/eventsNames.util';
 import {ShopModel} from '../models/shop.model';
-import {ConfigsService} from '../services/configs.service';
+import {NavigationService} from '../services/navigation.service';
 
 @Component({
   selector: 'app-drawer',
   template: `
     <div class="my-side-nav">
       <div>
-        <div style="padding-bottom: 8px; display: flex; flex-direction: column; justify-content: center;align-items: center">
+        <div
+          style="padding-bottom: 8px; display: flex; flex-direction: column; justify-content: center;align-items: center">
           <div style="padding: 16px; justify-content: center; align-items: center">
             <mat-icon *ngIf="!shop?.ecommerce?.logo" class="logo" color="primary">store</mat-icon>
             <img *ngIf="shop?.ecommerce?.logo" alt="logo" class="logo" src="{{shop?.ecommerce?.logo}}">
@@ -33,17 +34,18 @@ import {ConfigsService} from '../services/configs.service';
         </div>
 
         <mat-nav-list>
-          <app-libs-rbac *ngFor="let modules of configs.getMenu()" [groups]="modules.roles" [pagePath]="modules.link">
+          <app-libs-rbac *ngFor="let modules of navigationService.getMenu()"
+                         [groups]="modules.roles" [pagePath]="modules.link">
             <ng-template>
               <mat-list-item style="height: 38px"
                              (click)="shouldExpand(this.modules.name.toLowerCase().trim())"
-                             [ngStyle]="this.configs.selectedModuleName.toLowerCase().trim() === modules.name.toLowerCase().trim()?selectedMenu:{}"
+                             [ngStyle]="this.navigationService.selectedModuleName.toLowerCase().trim() === modules.name.toLowerCase().trim()?selectedMenu:{}"
                              routerLink="{{modules.link}}">
                 <mat-icon matListIcon matPrefix>{{modules.icon}}</mat-icon>
                 <span matLine style="margin-left: 8px">{{modules.name}}</span>
               </mat-list-item>
               <div
-                *ngIf="modules.pages && modules.pages.length>0 && this.configs.selectedModuleName.toLowerCase().trim() === this.modules.name.toLowerCase().trim()">
+                *ngIf="modules.pages && modules.pages.length>0 && navigationService.selectedModuleName.toLowerCase().trim() === this.modules.name.toLowerCase().trim()">
                 <app-drawer-sub-menu *ngFor="let page of modules.pages" [page]="page"></app-drawer-sub-menu>
               </div>
               <mat-divider></mat-divider>
@@ -64,7 +66,7 @@ export class DrawerComponent implements OnInit {
 
   constructor(private readonly userService: UserService,
               private readonly logger: LogService,
-              public readonly configs: ConfigsService,
+              public readonly navigationService: NavigationService,
               private readonly eventApi: EventService) {
   }
 
@@ -79,7 +81,7 @@ export class DrawerComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.versionNumber = of(this.configs.versionName);
+    this.versionNumber = of(this.navigationService.versionName);
     this.userService.getCurrentShop().then(shop => {
       this.shop = shop;
     }).catch(reason => {
@@ -100,6 +102,6 @@ export class DrawerComponent implements OnInit {
   }
 
   shouldExpand(menuName: string): void {
-    this.configs.selectedModuleName = menuName.toLowerCase().trim();
+    this.navigationService.selectedModuleName = menuName.toLowerCase().trim();
   }
 }

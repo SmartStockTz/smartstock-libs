@@ -18,20 +18,23 @@ async function saveLocalDataToServer(): Promise<any> {
       const data = await bfast.cache().getOneSyncs(k);
       if (data.projectId === undefined || data.projectId === null) {
         await bfast.cache().removeOneSyncs(k);
+        return;
       }
       if (data.applicationId === undefined || data.applicationId === null) {
         await bfast.cache().removeOneSyncs(k);
+        return;
       }
       if (data.databaseURL === undefined || data.databaseURL === null) {
         await bfast.cache().removeOneSyncs(k);
+        return;
       }
+      bfast.init({
+        projectId: data.projectId,
+        applicationId: data.applicationId,
+        databaseURL: data.databaseURL,
+        functionsURL: data.databaseURL
+      }, data.projectId);
       if (data.action === 'delete') {
-        bfast.init({
-          projectId: data.projectId,
-          applicationId: data.applicationId,
-          databaseURL: data.databaseURL,
-          functionsURL: data.databaseURL
-        }, data.projectId);
         await bfast.database(data.projectId).tree(data.tree)
           .query()
           .byId(data.payload.id)
@@ -47,7 +50,14 @@ async function saveLocalDataToServer(): Promise<any> {
           .update();
       }
       if (data.action === 'create') {
-        await bfast.database(data.projectId).tree(data.tree).save(data.payload);
+        data.payload.createdAt = new Date().toISOString();
+        await bfast.database(data.projectId).tree(data.tree)
+          .query()
+          .byId(data.payload.id)
+          .updateBuilder()
+          .upsert(true)
+          .doc(data.payload)
+          .update();
       }
       await bfast.cache().removeOneSyncs(k);
     } catch (e) {

@@ -7,7 +7,6 @@ import {MenuModel} from '../models/menu.model';
 
 export class NavigationService {
   public versionName = '';
-  public printerUrl = 'https://localhost:8080';
   public browser = true;
   public selectedModuleName = '';
   private pmenu: MenuModel[] = [];

@@ -1,15 +1,10 @@
 import {expose} from 'comlink';
 import * as bfast from 'bfast';
 
-// export function getDaasAddress(shop: ShopModel): string {
-//   return `https://smartstock-faas.bfast.fahamutech.com/shop/${shop.projectId}/${shop.applicationId}`;
-// }
-//
-// export function getFaasAddress(shop: ShopModel): string {
-//   return `https://smartstock-faas.bfast.fahamutech.com/shop/${shop.projectId}/${shop.applicationId}`;
-// }
-
-let isRunning = false;
+bfast.init({
+  applicationId: 'smartstock_lb',
+  projectId: 'smartstock'
+});
 
 async function saveLocalDataToServer(): Promise<any> {
   const keys = await bfast.cache().getSyncsKeys();
@@ -67,71 +62,24 @@ async function saveLocalDataToServer(): Promise<any> {
   await Promise.all(p1);
 }
 
-// function getShops(user: LibUserModel): ShopModel[] {
-//   if (!user || !Array.isArray(user?.shops)) {
-//     return [];
-//   }
-//   const shops = [];
-//   user.shops.forEach(element => {
-//     shops.push(element);
-//   });
-//   shops.push({
-//     businessName: user.businessName,
-//     projectId: user.projectId,
-//     applicationId: user.applicationId,
-//     // masterKey: user.masterKey,
-//     projectUrlId: user.projectUrlId,
-//     settings: user.settings,
-//     ecommerce: user.ecommerce,
-//     street: user.street,
-//     country: user.country,
-//     region: user.region
-//   });
-//   return shops;
-// }
-
-async function run(): Promise<any> {
-  bfast.init({
-    applicationId: 'smartstock_lb',
-    projectId: 'smartstock'
-  });
-  await saveLocalDataToServer();
-  // const user = await bfast.auth().currentUser();
-  // const shops = getShops(user as any);
-  // if (Array.isArray(shops)) {
-  //   for (const shop of shops) {
-  //     if (shop && shop.applicationId && shop.projectId) {
-  //       bfast.init({
-  //         applicationId: shop.applicationId,
-  //         projectId: shop.projectId,
-  //         adapters: {
-  //           auth: 'DEFAULT'
-  //         },
-  //         databaseURL: getDaasAddress(shop),
-  //         functionsURL: getFaasAddress(shop),
-  //       }, shop.projectId);
-  //       await saveLocalDataToServer(shop.projectId);
-  //     }
-  //   }
-  // }
-}
-
 export class SyncsWorker {
+  isRunning = false;
   constructor() {
+    console.log('syncs worker started');
     setInterval(_1 => {
-      if (isRunning === false) {
-        isRunning = true;
-        run().then(_2 => {
+      if (this.isRunning === false) {
+        this.isRunning = true;
+        saveLocalDataToServer().then(_2 => {
           // console.log('done save for remove syncs');
         }).catch(reason => {
           console.log(reason);
         }).finally(() => {
-          isRunning = false;
+          this.isRunning = false;
         });
       } else {
         console.log('syncs for remote already running');
       }
-    }, 2000);
+    }, 3000);
   }
 }
 

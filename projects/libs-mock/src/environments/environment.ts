@@ -10,6 +10,7 @@ export const environment = {
     pass: 'ZMUGVn72o3yd8kSbMGhfWpI80N9nA2IHjxWKlAhG',
     functionsURL: 'https://smartstock-faas.bfast.fahamutech.com',
     databaseURL: 'https://smartstock-daas.bfast.fahamutech.com',
+    baseUrl: 'http://localhost'
   }
 };
 

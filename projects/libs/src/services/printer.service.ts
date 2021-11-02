@@ -8,15 +8,22 @@ import {UserService} from './user.service';
   providedIn: 'root',
 })
 export class PrintService {
-  url: string;
+  private url = `https://localhost:8080/print`;
 
   constructor(private readonly userService: UserService,
               private readonly navigationService: NavigationService,
               private readonly httpClient: HttpClient) {
   }
 
+  setUrl(url: string): void {
+    this.url = url;
+  }
+
+  getUrl(): string {
+    return this.url;
+  }
+
   private async printInDesktop(printModel: PrinterModel): Promise<any> {
-    this.url = `${this.navigationService.printerUrl}/print`;
     return this.httpClient.post(this.url, {
       data: printModel.data,
       id: printModel.id

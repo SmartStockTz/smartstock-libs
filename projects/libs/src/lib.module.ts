@@ -44,6 +44,8 @@ import {BottomNavComponent} from './components/bottom-nav.component';
 import {RbacGuardComponent} from './components/rbac-guard.component';
 import {MenuSheetComponent} from './components/menu-sheet.component';
 
+// const env = {baseUrl: 'https://smartstock-faas.bfast.fahamutech.com'};
+
 @NgModule({
   imports: [
     CommonModule,
@@ -108,8 +110,27 @@ import {MenuSheetComponent} from './components/menu-sheet.component';
     FileBrowserSheetComponent,
     BottomNavComponent,
     MenuSheetComponent
-  ]
+  ],
+  // providers: [
+  //   {
+  //     provide: 'env',
+  //     useValue: env
+  //   }
+  // ]
 })
 
 export class LibModule {
+  // public static forRoot(
+  //   environment: { baseUrl: string } = env
+  // ): ModuleWithProviders<LibModule> {
+  //   return {
+  //     ngModule: LibModule,
+  //     providers: [
+  //       {
+  //         provide: 'env',
+  //         useValue: environment
+  //       }
+  //     ]
+  //   };
+  // }
 }

@@ -59,7 +59,7 @@ export class FilesState {
           // const nameContents = x.name.split('.');
           const suffixs = x.name.split('-');
           return {
-            url: `${getFaasAddress(value.shop)}/storage/${value.shop.applicationId}/file/${x.id}`,
+            url: `${getDaasAddress(value.shop)}/storage/${value.shop.applicationId}/file/${x.id}`,
             size: (Number(x.size) / (1024 * 1024)).toPrecision(3) + ' MB',
             suffix: suffixs[suffixs.length - 1],
             category: FilesState.getFileCategory(x.type),

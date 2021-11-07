@@ -44,8 +44,6 @@ import {BottomNavComponent} from './components/bottom-nav.component';
 import {RbacGuardComponent} from './components/rbac-guard.component';
 import {MenuSheetComponent} from './components/menu-sheet.component';
 
-// const env = {baseUrl: 'https://smartstock-faas.bfast.fahamutech.com'};
-
 @NgModule({
   imports: [
     CommonModule,

@@ -6,7 +6,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule, Routes} from '@angular/router';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {HttpClientModule} from '@angular/common/http';
-import * as bfast from 'bfast';
+import {init} from 'bfast';
 import {environment} from '../environments/environment';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
@@ -22,7 +22,6 @@ import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
-
 
 const routes: Routes = [
   {path: 'login', component: LoginPageComponent},
@@ -62,7 +61,7 @@ const routes: Routes = [
 export class AppModule {
   constructor(private readonly configs: NavigationService,
               private readonly syncsService: SyncsService) {
-    bfast.init({
+    init({
       applicationId: environment.smartstock.applicationId,
       projectId: environment.smartstock.projectId,
       appPassword: environment.smartstock.pass,

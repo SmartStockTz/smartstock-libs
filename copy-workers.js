@@ -8,6 +8,7 @@ try {
   try {
     mkdirSync(join(__dirname, 'dist/libs/fesm2015/workers/'));
   } catch (_43) {
+    console.log(_43,'INFO: Create workers folder in fesm2015');
   }
   workers.forEach(w => {
     const src = join(__dirname, 'dist/libs/esm2015/workers/', w);
@@ -27,6 +28,7 @@ try {
   try {
     mkdirSync(join(__dirname, 'dist/libs/fesm2020/workers/'));
   } catch (_43) {
+    console.log(_43,'INFO: Create workers folder in fesm2020');
   }
   workers.forEach(w => {
     const src = join(__dirname, 'dist/libs/esm2020/workers/', w);

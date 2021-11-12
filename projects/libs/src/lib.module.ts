@@ -22,7 +22,6 @@ import {MatBadgeModule} from '@angular/material/badge';
 import {OnFetchComponent} from './components/on-fetch.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {SearchInputComponent} from './components/search-input.component';
-import {BottomBarComponent} from './components/bottom-bar.component';
 import {DataNotReadyComponent} from './components/data-not-ready.component';
 import {UploadFilesComponent} from './components/upload-files.component';
 import {MatRippleModule} from '@angular/material/core';
@@ -76,7 +75,6 @@ import {MenuSheetComponent} from './components/menu-sheet.component';
     ToolbarComponent,
     ShopsPipe,
     OnFetchComponent,
-    BottomBarComponent,
     DataNotReadyComponent,
     UploadFilesComponent,
     DashCardComponent,
@@ -96,7 +94,6 @@ import {MenuSheetComponent} from './components/menu-sheet.component';
     ShopsPipe,
     OnFetchComponent,
     SearchInputComponent,
-    BottomBarComponent,
     DataNotReadyComponent,
     UploadFilesComponent,
     DashCardComponent,

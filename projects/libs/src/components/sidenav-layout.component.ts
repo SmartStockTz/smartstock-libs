@@ -15,6 +15,7 @@ import {FormControl} from '@angular/forms';
 import {DeviceState} from '../states/device.state';
 import {takeUntil} from 'rxjs/operators';
 import {CartDrawerState} from '../states/cart-drawer-state';
+import {MenuModel} from '../models/menu.model';
 
 @Component({
   selector: 'app-layout-sidenav',
@@ -35,6 +36,8 @@ import {CartDrawerState} from '../states/cart-drawer-state';
                      [backLink]="backLink"
                      [cartDrawer]="rightDrawer?cartDrawer:undefined"
                      [showSearch]="showSearch"
+                     [color]="color"
+                     [showModuleMenu]="showModuleMenu"
                      (searchCallback)="searchCallback.emit($event)"
                      [searchInputControl]="searchInputControl"
                      [searchPlaceholder]="searchPlaceholder"
@@ -46,12 +49,15 @@ import {CartDrawerState} from '../states/cart-drawer-state';
                      [heading]="heading">
         </app-toolbar>
         <ng-container *ngTemplateOutlet="body"></ng-container>
-        <app-bottom-nav *ngIf="isSmallScreen"></app-bottom-nav>
+        <app-bottom-nav [first4]="first4" *ngIf="isSmallScreen && showBottomBar"></app-bottom-nav>
       </mat-sidenav-content>
     </mat-sidenav-container>
   `
 })
 export class SidenavLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
+  @Input() first4: MenuModel[];
+  @Input() showModuleMenu;
+  @Input() showBottomBar = true;
   @Input() visibleMenu: TemplateRef<any>;
   @Input() hiddenMenu: TemplateRef<any>;
   @Input() body: TemplateRef<any>;

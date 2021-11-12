@@ -36,7 +36,6 @@ export * from './components/drawer.component';
 export * from './components/toolbar.component';
 export * from './pipes/shops.pipe';
 export * from './components/on-fetch.component';
-export * from './components/bottom-bar.component';
 export * from './components/upload-files.component';
 export * from './components/dash-card.component';
 export * from './components/upload-file-progress.component';

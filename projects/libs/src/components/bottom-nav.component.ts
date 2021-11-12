@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {MenuSheetComponent} from './menu-sheet.component';
 import {ShopModel} from '../models/shop.model';
@@ -6,14 +6,13 @@ import {MenuModel} from '../models/menu.model';
 import {UserService} from '../services/user.service';
 import {NavigationService} from '../services/navigation.service';
 import {RbacService} from '../services/rbac.service';
-import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-bottom-nav',
   template: `
     <div class="n-container">
 
-      <div matRipple class="nav-item" *ngFor="let m of first4" routerLink="{{m.link}}">
+      <div matRipple class="nav-item" *ngFor="let m of first4?first4: []" routerLink="{{m.link}}">
         <mat-icon [color]="">{{m.icon}}</mat-icon>
         <span>{{m.name}}</span>
       </div>
@@ -30,14 +29,13 @@ import {Router} from '@angular/router';
 
 export class BottomNavComponent implements OnInit, OnDestroy {
   shop: ShopModel;
-  first4: MenuModel[] = [];
+  @Input() first4: MenuModel[];
   menus = [];
 
   constructor(private readonly matBottomSheet: MatBottomSheet,
               private readonly userService: UserService,
               public readonly configs: NavigationService,
-              public readonly rbacServices: RbacService,
-              private readonly router: Router) {
+              public readonly rbacServices: RbacService) {
   }
 
   ngOnDestroy(): void {
@@ -50,12 +48,16 @@ export class BottomNavComponent implements OnInit, OnDestroy {
       console.log(reason);
       this.shop = undefined;
     });
+    if (Array.isArray(this.first4)) {
+      return;
+    }
     let c = 0;
     for (const menu of this.configs.getMenu()) {
       if (await this.rbacServices.hasAccess(menu.roles, null)) {
         this.menus.push(menu);
       }
     }
+    this.first4 = [];
     for (const menu of this.configs.getMenu()) {
       if (c === 3) {
         return;

@@ -12,14 +12,16 @@ import {DeviceState} from '../states/device.state';
 @Component({
   selector: 'app-toolbar',
   template: `
-    <mat-toolbar [ngStyle]="(deviceState.isSmallScreen | async)===true?{}:{position: 'sticky', top: 0, 'z-index': 3000000000}"
-                 color="{{(deviceState.isSmallScreen | async)===true?'':'primary'}}"
-                 [ngClass]="(deviceState.isSmallScreen | async)===true?'mat-elevation-z0':'mat-elevation-z2'">
+    <mat-toolbar
+      [ngStyle]="(deviceState.isSmallScreen | async)===true?{}:{position: 'sticky', top: 0, 'z-index': 3000000000}"
+      color="{{(deviceState.isSmallScreen | async)===true?'':color?color:'primary'}}"
+      [ngClass]="(deviceState.isSmallScreen | async)===true?'mat-elevation-z0':'mat-elevation-z2'">
       <mat-toolbar-row [class]="(deviceState.isSmallScreen | async)===true?'toolbar-position-mobile nav-mobile':''">
-        <button routerLink="{{backLink}}" *ngIf="hasBackRoute && backLink && (deviceState.isSmallScreen | async)===true" mat-icon-button>
+        <button routerLink="{{backLink}}" *ngIf="hasBackRoute && backLink && (deviceState.isSmallScreen | async)===true"
+                mat-icon-button>
           <mat-icon>chevron_left</mat-icon>
         </button>
-        <button mat-icon-button *ngIf="sidenav && (deviceState.isSmallScreen | async)===false" (click)="sidenav.toggle()">
+        <button mat-icon-button *ngIf="sidenav && showModuleMenu" (click)="sidenav.toggle()">
           <mat-icon>menu</mat-icon>
         </button>
         <span class="text-truncate">{{heading}}</span>
@@ -33,7 +35,7 @@ import {DeviceState} from '../states/device.state';
                           [searchPlaceholder]="searchPlaceholder">
         </app-search-input>
         <span *ngIf="(deviceState.isSmallScreen | async)===false && showSearch" style="width: 16px"></span>
-        <button [matBadge]="cartBadge" *ngIf="cartDrawer" mat-icon-button (click)="cartDrawer.toggle()">
+        <button *ngIf="cartDrawer" mat-icon-button (click)="cartDrawer.toggle()">
           <mat-icon>{{cartIcon}}</mat-icon>
         </button>
 
@@ -85,6 +87,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   currentUser: LibUserModel;
   @Input() searchProgressFlag = false;
   destroy = new Subject();
+  @Input() showModuleMenu;
 
   constructor(private readonly router: Router,
               private readonly storage: StorageService,
@@ -93,6 +96,9 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (typeof this.showModuleMenu !== 'boolean') {
+      this.showModuleMenu = (this.deviceState.isSmallScreen.value === false);
+    }
     this.deviceState.isSmallScreen.pipe(takeUntil(this.destroy)).subscribe(value => {
       if (this.sidenav && value === true) {
         this.sidenav.close().catch(console.log);

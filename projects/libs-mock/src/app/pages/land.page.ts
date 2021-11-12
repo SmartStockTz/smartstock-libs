@@ -2,7 +2,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {FilesService, IpfsService, MessageService} from '../../../../libs/src/public-api';
-import * as bfast from 'bfast';
 
 @Component({
   template: `

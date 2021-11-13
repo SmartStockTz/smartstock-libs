@@ -22,11 +22,12 @@ import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
+import {ShopGuard} from './guards/shop-guard.service';
 
 const routes: Routes = [
   {path: 'login', component: LoginPageComponent},
-  {path: 'profile', component: LandPageComponent},
-  {path: '', component: LandPageComponent}
+  {path: 'profile', canActivate: [ShopGuard], component: LandPageComponent},
+  {path: '', canActivate: [ShopGuard], component: LandPageComponent}
 ];
 
 @NgModule({

@@ -33,7 +33,6 @@ import {DialogDeleteComponent} from './components/delete-dialog.component';
 import {SidenavLayoutComponent} from './components/sidenav-layout.component';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {RbacComponent} from './components/rbac.component';
-import {FileBrowserDialogComponent} from './components/file-browser-dialog.component';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatInputModule} from '@angular/material/input';
@@ -42,6 +41,10 @@ import {FileBrowserSheetComponent} from './components/file-browser-sheet.compone
 import {BottomNavComponent} from './components/bottom-nav.component';
 import {RbacGuardComponent} from './components/rbac-guard.component';
 import {MenuSheetComponent} from './components/menu-sheet.component';
+import {ImagePreviewComponent} from './components/image-preview.component';
+import {VideoPreviewComponent} from './components/video-preview.component';
+import {AudioPreviewComponent} from './components/audio-preview.component';
+import {OtherFilePreviewComponent} from './components/other-file-preview.component';
 
 @NgModule({
   imports: [
@@ -71,7 +74,6 @@ import {MenuSheetComponent} from './components/menu-sheet.component';
   ],
   exports: [
     DrawerComponent,
-    FileBrowserDialogComponent,
     ToolbarComponent,
     ShopsPipe,
     OnFetchComponent,
@@ -79,14 +81,16 @@ import {MenuSheetComponent} from './components/menu-sheet.component';
     UploadFilesComponent,
     DashCardComponent,
     UploadFileProgressComponent,
-    FileBrowserDialogComponent,
     FileBrowserSheetComponent,
     SidenavLayoutComponent,
     RbacComponent,
   ],
   declarations: [
+    ImagePreviewComponent,
+    VideoPreviewComponent,
+    AudioPreviewComponent,
+    OtherFilePreviewComponent,
     RbacGuardComponent,
-    FileBrowserDialogComponent,
     DrawerSubMenuComponent,
     DrawerComponent,
     ToolbarComponent,
@@ -105,27 +109,8 @@ import {MenuSheetComponent} from './components/menu-sheet.component';
     FileBrowserSheetComponent,
     BottomNavComponent,
     MenuSheetComponent
-  ],
-  // providers: [
-  //   {
-  //     provide: 'env',
-  //     useValue: env
-  //   }
-  // ]
+  ]
 })
 
 export class LibModule {
-  // public static forRoot(
-  //   environment: { baseUrl: string } = env
-  // ): ModuleWithProviders<LibModule> {
-  //   return {
-  //     ngModule: LibModule,
-  //     providers: [
-  //       {
-  //         provide: 'env',
-  //         useValue: environment
-  //       }
-  //     ]
-  //   };
-  // }
 }

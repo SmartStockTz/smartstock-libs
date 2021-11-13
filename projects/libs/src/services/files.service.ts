@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {FileModel} from '../models/file.model';
 import {FileBrowserSheetComponent} from '../components/file-browser-sheet.component';
-import {FileBrowserDialogComponent} from '../components/file-browser-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {DeviceState} from '../states/device.state';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {MessageService} from './message.service';
 import {UserService} from './user.service';
+import {firstValueFrom} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -21,37 +21,21 @@ export class FilesService {
   }
 
   async browse(): Promise<FileModel> {
-    const isMobile = this.deviceState.isSmallScreen.value;
-    if (isMobile) {
-      const value = await this.bottomSheet.open(FileBrowserSheetComponent, {
-        closeOnNavigation: false,
-        disableClose: true,
-        data: {
-          shop: await this.userService.getCurrentShop()
-        }
-      }).afterDismissed().toPromise();
-      if (value && value.url) {
-        return value;
-      } else {
-        this.messageService.showMobileInfoMessage(value && value.message ?
-          value.message : 'Fails to select file', 2000, 'bottom');
-        return null;
+    const bs = this.bottomSheet.open(FileBrowserSheetComponent, {
+      closeOnNavigation: false,
+      disableClose: true,
+      panelClass: 'bottom-sheet',
+      data: {
+        shop: await this.userService.getCurrentShop()
       }
+    });
+    const value = await firstValueFrom(bs.afterDismissed());
+    if (value && value.url) {
+      return value;
     } else {
-      const value = await this.matDialog.open(FileBrowserDialogComponent, {
-        closeOnNavigation: false,
-        disableClose: true,
-        data: {
-          shop: await this.userService.getCurrentShop()
-        }
-      }).afterClosed().toPromise();
-      if (value && value.url) {
-        return value;
-      } else {
-        this.messageService.showMobileInfoMessage(value && value.message ?
-          value.message : 'Fails to select file', 2000, 'bottom');
-        return null;
-      }
+      this.messageService.showMobileInfoMessage(value && value.message ?
+        value.message : 'Fails to select file', 2000, 'bottom');
+      return null;
     }
   }
 

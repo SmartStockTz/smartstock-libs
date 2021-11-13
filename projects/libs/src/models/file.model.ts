@@ -5,4 +5,5 @@ export interface FileModel {
   suffix: string;
   name: string;
   category: string;
+  extension?: string;
 }

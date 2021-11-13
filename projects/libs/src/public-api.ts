@@ -29,7 +29,6 @@ export * from './utils/bfast.util';
 
 export * from './components/no-stock-dialog.component';
 export * from './components/sidenav-layout.component';
-export * from './components/file-browser-dialog.component';
 export * from './components/file-browser-sheet.component';
 export * from './components/rbac.component';
 export * from './components/drawer.component';

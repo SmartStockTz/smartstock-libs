@@ -12,7 +12,8 @@ import {getDaasAddress, getFaasAddress} from '../../../../libs/src/public-api';
     <div style="height: 100vh; display: flex; justify-content: center; align-items: center; flex-direction: column">
       <mat-card>
         <mat-card-content>
-          <form *ngIf="loginForm" [formGroup]="loginForm" (submit)="login()" style="display: flex; flex-direction: column">
+          <form *ngIf="loginForm" [formGroup]="loginForm" (submit)="login()"
+                style="display: flex; flex-direction: column">
             <mat-form-field style="width: 300px">
               <mat-label>Username</mat-label>
               <input matInput formControlName="username">
@@ -24,7 +25,8 @@ import {getDaasAddress, getFaasAddress} from '../../../../libs/src/public-api';
               <mat-error>Field required</mat-error>
             </mat-form-field>
             <button *ngIf="!isLogin" mat-flat-button color="primary">Login</button>
-            <mat-progress-spinner color="primary" mode="indeterminate" diameter="30" *ngIf="isLogin"></mat-progress-spinner>
+            <mat-progress-spinner color="primary" mode="indeterminate" diameter="30"
+                                  *ngIf="isLogin"></mat-progress-spinner>
           </form>
         </mat-card-content>
       </mat-card>
@@ -48,22 +50,24 @@ export class LoginPageComponent implements OnInit {
       this.snack.open('Please fill all required fields', 'Ok', {duration: 3000});
     } else {
       this.isLogin = true;
-      this.userService.login({username: this.loginForm.value.username, password: this.loginForm.value.password})
-        .then(async user => {
-          this.router.navigateByUrl('/').catch(console.log);
-          bfast.init({
-            applicationId: user.applicationId,
-            projectId: user.projectId,
-            databaseURL: getDaasAddress(user as any),
-            functionsURL: getFaasAddress(user as any)
-          }, user.projectId);
-          await this.storageService.saveCurrentProjectId(user.projectId);
-          await this.userService.saveCurrentShop(user as any);
-        })
-        .catch(reason => {
-          console.log(reason);
-          this.snack.open(reason && reason.message ? reason.message : reason, 'Ok');
-        }).finally(() => {
+      this.userService.login({
+        username: this.loginForm.value.username,
+        password: this.loginForm.value.password
+      }).then(async user => {
+        this.router.navigateByUrl('/').catch(console.log);
+        const shops = await this.userService.getShops(user);
+        const shop = shops[0];
+        bfast.init({
+          applicationId: shop.applicationId,
+          projectId: shop.projectId,
+          databaseURL: getDaasAddress(shop),
+          functionsURL: getFaasAddress(shop)
+        }, shop.projectId);
+        await this.userService.saveCurrentShop(shop);
+      }).catch(reason => {
+        console.log(reason);
+        this.snack.open(reason && reason.message ? reason.message : reason, 'Ok');
+      }).finally(() => {
         this.isLogin = false;
       });
     }

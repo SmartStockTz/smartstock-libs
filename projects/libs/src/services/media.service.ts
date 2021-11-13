@@ -1,9 +1,8 @@
 import {Injectable} from '@angular/core';
 import {FileModel} from '../models/file.model';
 import {UserService} from './user.service';
-import {database} from 'bfast';
+import {database, storage} from 'bfast';
 import {getDaasAddress} from '../utils/bfast.util';
-import * as bfast from 'bfast';
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +44,7 @@ export class MediaService {
     const name = file.name.replace(new RegExp('[^a-zA-Z0-9]', 'gi'), '');
     const shop = await this.userService.getCurrentShop();
     const type = file.type;
-    const url = await bfast.storage(shop.projectId).save({
+    const url = await storage(shop.projectId).save({
       filename: encodeURIComponent(name),
       data: file,
       pn: true

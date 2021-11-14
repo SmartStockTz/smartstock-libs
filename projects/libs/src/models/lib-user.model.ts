@@ -9,7 +9,7 @@ export interface LibUserModel {
   mobile?: string;
   email?: string;
   category?: string; // default shop category
-  role?: string | 'admin' | 'manager' | 'user';
+  role?: string | 'admin' | 'manager' | 'user' | 'online';
   acl?: Array<string>;
   businessName?: string;
   country?: string;

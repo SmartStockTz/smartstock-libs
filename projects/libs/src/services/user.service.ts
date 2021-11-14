@@ -37,8 +37,8 @@ export class UserService {
 
   async deleteUser(user: any): Promise<any> {
     return functions().request('/functions/users/' + user.id).delete({
-        headers: {'smartstock-context': {user: (await auth().currentUser()).id}}
-      });
+      headers: {'smartstock-context': {user: (await auth().currentUser()).id}}
+    });
   }
 
   async removeActiveShop(): Promise<any> {
@@ -80,16 +80,18 @@ export class UserService {
   }
 
   async register(user: LibUserModel): Promise<LibUserModel> {
-    user.settings = {
-      printerFooter: 'Thank you',
-      printerHeader: '',
-      saleWithoutPrinter: true,
-      allowRetail: true,
-      allowWholesale: true,
-      currency: user && user.settings && user.settings.currency ? user.settings.currency : 'Tsh'
-    };
-    user.ecommerce = {};
-    user.shops = [];
+    if (user && user.role !== 'online') {
+      user.settings = {
+        printerFooter: 'Thank you',
+        printerHeader: '',
+        saleWithoutPrinter: true,
+        allowRetail: true,
+        allowWholesale: true,
+        currency: 'Tsh'
+      };
+      user.ecommerce = {};
+      user.shops = [];
+    }
     await this.removeActiveShop();
     return await functions().request('/functions/users/create').post(user);
   }

@@ -22,9 +22,7 @@ import {MenuModel} from '../models/menu.model';
   template: `
     <mat-sidenav-container>
       <mat-sidenav #sidenav [mode]="leftDrawerMode" [opened]="leftDrawerOpened" position="start">
-        <div *ngIf="!isSmallScreen">
-          <ng-container *ngTemplateOutlet="leftDrawer"></ng-container>
-        </div>
+        <ng-container *ngTemplateOutlet="leftDrawer"></ng-container>
       </mat-sidenav>
       <mat-sidenav #cartDrawer [mode]="rightDrawerMode" [opened]="rightDrawerOpened" position="end">
         <ng-container *ngTemplateOutlet="rightDrawer"></ng-container>

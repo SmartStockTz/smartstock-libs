@@ -3,6 +3,7 @@ import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef} from '@angular/material/bottom
 import {ShopModel} from '../models/shop.model';
 import {UserService} from '../services/user.service';
 import {Router} from '@angular/router';
+import {NavigationService} from '../services/navigation.service';
 
 // @dynamic
 
@@ -36,15 +37,18 @@ import {Router} from '@angular/router';
           {{mm.name}}
         </button>
       </div>
+      <div class="version">
+        <p>Version: {{version}}</p>
+      </div>
     </div>
   `,
   styleUrls: ['../styles/menu-sheet.component.scss']
 })
 export class MenuSheetComponent implements OnInit {
-
-
+  version = '';
   constructor(private readonly sheetRef: MatBottomSheetRef<MenuSheetComponent>,
               private readonly userService: UserService,
+              private readonly navService: NavigationService,
               private readonly router: Router,
               @Inject(MAT_BOTTOM_SHEET_DATA) public readonly data: {
                 shop: ShopModel,
@@ -54,7 +58,7 @@ export class MenuSheetComponent implements OnInit {
 
   logout(): void {
     this.userService.logout(null).finally(() => {
-      this.goTo('/account/login');
+      this.goTo('/');
     }).catch(console.log);
   }
 
@@ -64,6 +68,6 @@ export class MenuSheetComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-
+    this.version = this.navService.versionName;
   }
 }

@@ -122,7 +122,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.userService.logout(null).finally(() => {
-      return this.router.navigateByUrl('/account/login');
+      return this.router.navigateByUrl('/');
     }).catch(console.log);
   }
 

@@ -5,6 +5,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import * as bfast from 'bfast';
 import {StorageService, UserService} from '../../../../libs/src/public-api';
 import {getDaasAddress, getFaasAddress} from '../../../../libs/src/public-api';
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-login',
@@ -54,16 +55,21 @@ export class LoginPageComponent implements OnInit {
         username: this.loginForm.value.username,
         password: this.loginForm.value.password
       }).then(async user => {
-        this.router.navigateByUrl('/').catch(console.log);
         const shops = await this.userService.getShops(user);
         const shop = shops[0];
         bfast.init({
           applicationId: shop.applicationId,
           projectId: shop.projectId,
-          databaseURL: getDaasAddress(shop),
-          functionsURL: getFaasAddress(shop)
+          databaseURL: getDaasAddress(shop, environment.baseUrl),
+          functionsURL: getFaasAddress(shop, environment.baseUrl),
+          adapters: {
+            http: 'DEFAULT',
+            auth: 'DEFAULT',
+            cache: 'DEFAULT'
+          }
         }, shop.projectId);
         await this.userService.saveCurrentShop(shop);
+        this.router.navigateByUrl('/').catch(console.log);
       }).catch(reason => {
         console.log(reason);
         this.snack.open(reason && reason.message ? reason.message : reason, 'Ok');

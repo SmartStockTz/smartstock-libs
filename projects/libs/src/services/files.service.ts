@@ -22,8 +22,7 @@ export class FilesService {
 
   async browse(): Promise<FileModel> {
     const bs = this.bottomSheet.open(FileBrowserSheetComponent, {
-      closeOnNavigation: false,
-      disableClose: true,
+      closeOnNavigation: true,
       panelClass: 'bottom-sheet',
       data: {
         shop: await this.userService.getCurrentShop()

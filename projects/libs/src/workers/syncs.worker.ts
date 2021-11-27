@@ -1,42 +1,46 @@
 import {expose} from 'comlink';
-import * as bfast from 'bfast';
+import {cache, database, init} from 'bfast';
 
-bfast.init({
+init({
   applicationId: 'smartstock_lb',
   projectId: 'smartstock'
 });
-
 async function saveLocalDataToServer(): Promise<any> {
-  const keys = await bfast.cache().getSyncsKeys();
+  const keys = await cache().getSyncsKeys();
   const p1 = keys.map(async k => {
     try {
-      const data = await bfast.cache().getOneSyncs(k);
+      const data = await cache().getOneSyncs(k);
       if (data.projectId === undefined || data.projectId === null) {
-        await bfast.cache().removeOneSyncs(k);
+        await cache().removeOneSyncs(k);
         return;
       }
       if (data.applicationId === undefined || data.applicationId === null) {
-        await bfast.cache().removeOneSyncs(k);
+        await cache().removeOneSyncs(k);
         return;
       }
       if (data.databaseURL === undefined || data.databaseURL === null) {
-        await bfast.cache().removeOneSyncs(k);
+        await cache().removeOneSyncs(k);
         return;
       }
-      bfast.init({
+      init({
         projectId: data.projectId,
         applicationId: data.applicationId,
         databaseURL: data.databaseURL,
-        functionsURL: data.databaseURL
+        functionsURL: data.databaseURL,
+        adapters: {
+          http: 'DEFAULT',
+          cache: 'DEFAULT',
+          auth: 'DEFAULT'
+        }
       }, data.projectId);
       if (data.action === 'delete') {
-        await bfast.database(data.projectId).tree(data.tree)
+        await database(data.projectId).tree(data.tree)
           .query()
           .byId(data.payload.id)
           .delete({useMasterKey: true});
       }
       if (data.action === 'update') {
-        await bfast.database(data.projectId).tree(data.tree)
+        await database(data.projectId).tree(data.tree)
           .query()
           .byId(data.payload.id)
           .updateBuilder()
@@ -46,7 +50,7 @@ async function saveLocalDataToServer(): Promise<any> {
       }
       if (data.action === 'create') {
         data.payload.createdAt = new Date().toISOString();
-        await bfast.database(data.projectId).tree(data.tree)
+        await database(data.projectId).tree(data.tree)
           .query()
           .byId(data.payload.id)
           .updateBuilder()
@@ -54,7 +58,7 @@ async function saveLocalDataToServer(): Promise<any> {
           .doc(data.payload)
           .update();
       }
-      await bfast.cache().removeOneSyncs(k);
+      await cache().removeOneSyncs(k);
     } catch (e) {
       console.log(e);
     }
@@ -69,9 +73,7 @@ export class SyncsWorker {
     setInterval(_1 => {
       if (this.isRunning === false) {
         this.isRunning = true;
-        saveLocalDataToServer().then(_2 => {
-          // console.log('done save for remove syncs');
-        }).catch(reason => {
+        saveLocalDataToServer().then(_2 => {}).catch(reason => {
           console.log(reason);
         }).finally(() => {
           this.isRunning = false;

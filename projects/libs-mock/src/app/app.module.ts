@@ -1,7 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
-import {NavigationService, LibModule, SyncsService} from '../../../libs/src/public-api';
+import {LibModule, NavigationService, SmartstockHttpAdapter, SyncsService} from '../../../libs/src/public-api';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule, Routes} from '@angular/router';
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -61,11 +61,17 @@ const routes: Routes = [
 })
 export class AppModule {
   constructor(private readonly configs: NavigationService,
+              private readonly smartstockHttp: SmartstockHttpAdapter,
               private readonly syncsService: SyncsService) {
     init({
-      applicationId: environment.smartstock.applicationId,
-      projectId: environment.smartstock.projectId,
-      appPassword: environment.smartstock.pass,
+      applicationId: 'smartstock_lb',
+      projectId: 'smartstock',
+      appPassword: 'ZMUGVn72o3yd8kSbMGhfWpI80N9nA2IHjxWKlAhG',
+      databaseURL: environment.baseUrl,
+      functionsURL: environment.baseUrl,
+      adapters: {
+        http: _ => this.smartstockHttp
+      }
     });
     syncsService.startWorker().catch(console.log);
     configs.versionName = 'demo-libs';

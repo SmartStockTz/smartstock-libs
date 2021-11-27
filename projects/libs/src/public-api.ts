@@ -15,6 +15,7 @@ export * from './services/files.service';
 export * from './services/navigation.service';
 export * from './services/ipfs.service';
 export * from './services/syncs.service';
+export * from './services/smartstock-http-adapter';
 
 // export * from './guards/rbac.guard';
 

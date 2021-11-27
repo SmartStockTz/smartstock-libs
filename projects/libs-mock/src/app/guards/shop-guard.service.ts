@@ -3,6 +3,7 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTre
 import {Observable} from 'rxjs';
 import {getDaasAddress, getFaasAddress, UserService} from '../../../../libs/src/public-api';
 import {init} from 'bfast';
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -23,16 +24,21 @@ export class ShopGuard implements CanActivate {
           init({
             applicationId: shop.applicationId,
             projectId: shop.projectId,
-            databaseURL: getDaasAddress(shop),
-            functionsURL: getFaasAddress(shop)
+            databaseURL: getDaasAddress(shop, environment.baseUrl),
+            functionsURL: getFaasAddress(shop, environment.baseUrl),
+            adapters: {
+              auth: 'DEFAULT',
+              cache: 'DEFAULT',
+              http: 'DEFAULT'
+            }
           }, shop.projectId);
           resolve(true);
         } else {
-          this.router.navigateByUrl('/login').catch();
+          this.router.navigateByUrl('/account/login').catch();
           reject(false);
         }
       }).catch(_ => {
-        this.router.navigateByUrl('/login').catch();
+        this.router.navigateByUrl('/account/login').catch();
         reject();
       });
     });

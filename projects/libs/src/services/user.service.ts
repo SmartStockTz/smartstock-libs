@@ -16,18 +16,14 @@ export class UserService {
   }
 
   async currentUser(): Promise<any> {
-    try {
-      const user = await auth().currentUser();
-      if (user && user.role !== 'admin') {
-        return user;
-      } else if (user && user.verified === true) {
-        return user;
-      } else {
-        return await auth().setCurrentUser(undefined);
-      }
-    } catch (reason) {
-      return await auth().setCurrentUser(undefined);
+    const user = await auth().currentUser();
+    if (user && user.role !== 'admin') {
+      return user;
     }
+    if (user && user.verified === true) {
+      return user;
+    }
+    return await auth().setCurrentUser(undefined);
   }
 
   async isPersonalAccount(): Promise<boolean> {
@@ -36,9 +32,7 @@ export class UserService {
   }
 
   async deleteUser(user: any): Promise<any> {
-    return functions().request('/functions/users/' + user.id).delete({
-      headers: {'smartstock-context': {user: (await auth().currentUser()).id}}
-    });
+    return functions().request('/functions/users/' + user.id).delete();
   }
 
   async removeActiveShop(): Promise<any> {
@@ -55,24 +49,24 @@ export class UserService {
     if (authUser && authUser.role !== 'admin') {
       await this.updateCurrentUser(authUser);
       return authUser;
-    } else if (authUser && authUser.verified === true) {
+    }
+    if (authUser && authUser.verified === true) {
       await this.updateCurrentUser(authUser);
       return authUser;
-    } else {
-      await functions().request('/functions/users/reVerifyAccount/' + user.username).post();
-      this.dialog.open(VerifyEMailDialogComponent, {
-        closeOnNavigation: true,
-        disableClose: true
-      });
-      throw {code: 403, err: 'account not verified'};
     }
+    await functions().request('/functions/users/reVerifyAccount/' + user.username).post();
+    this.dialog.open(VerifyEMailDialogComponent, {
+      closeOnNavigation: true,
+      disableClose: true
+    });
+    throw {code: 403, err: 'account not verified'};
   }
 
   async removeActiveUser(): Promise<any> {
-    return await auth().setCurrentUser(undefined, 0);
+    return auth().setCurrentUser(undefined);
   }
 
-  async logout(user: LibUserModel): Promise<void> {
+  async logout(_): Promise<void> {
     await auth().logOut();
     await this.removeActiveUser();
     await this.removeActiveShop();
@@ -87,13 +81,13 @@ export class UserService {
         saleWithoutPrinter: true,
         allowRetail: true,
         allowWholesale: true,
-        currency: 'Tsh'
+        currency: ''
       };
       user.ecommerce = {};
       user.shops = [];
     }
     await this.removeActiveShop();
-    return await functions().request('/functions/users/create').post(user);
+    return functions().request('/functions/users/create').post(user);
   }
 
   resetPassword(username: string): Promise<any> {
@@ -108,20 +102,18 @@ export class UserService {
     }
   }
 
-  /**
-   * @deprecate will be removed in next minor release
-   * @param user - {UserModel} model to save
-   */
   async addUser(user: LibUserModel): Promise<LibUserModel> {
-    const shop = await this.getCurrentShop();
     const shops = user.shops ? user.shops : [];
-    const shops1 = shops.filter(value => value.applicationId !== shop.applicationId);
-    user.applicationId = shop.applicationId;
-    user.projectId = shop.projectId;
-    user.businessName = shop.businessName;
-    user.settings = shop.settings;
-    user.ecommerce = shop.ecommerce;
-    user.shops = shops1;
+    if (shops.length === 0) {
+      throw {message: 'user must have at least 1 shop'};
+    }
+    user.applicationId = shops[0].applicationId;
+    user.projectId = shops[0].projectId;
+    user.businessName = shops[0].businessName;
+    user.settings = shops[0].settings;
+    user.ecommerce = shops[0].ecommerce;
+    shops.splice(0, 1);
+    user.shops = shops;
     return functions().request('/functions/users/seller').post(user);
   }
 
@@ -200,23 +192,19 @@ export class UserService {
   }
 
   async getSettings(): Promise<ShopSettingsModel> {
-    try {
-      const activeShop = await this.getCurrentShop();
-      if (!activeShop || !activeShop.settings) {
-        return {
-          currency: 'Tsh',
-          module: {},
-          printerUrl: 'https://localhost:8080',
-          printerFooter: 'Thank you',
-          printerHeader: '',
-          saleWithoutPrinter: true,
-          allowRetail: true,
-          allowWholesale: true
-        };
-      }
-      return activeShop.settings;
-    } catch (e) {
-      throw {message: 'Fails to get settings', reason: e.toString()};
+    const activeShop = await this.getCurrentShop();
+    if (!activeShop || !activeShop.settings) {
+      return {
+        currency: 'Tsh',
+        module: {},
+        printerUrl: 'https://localhost:8080',
+        printerFooter: 'Thank you',
+        printerHeader: '',
+        saleWithoutPrinter: true,
+        allowRetail: true,
+        allowWholesale: true
+      };
     }
+    return activeShop.settings;
   }
 }

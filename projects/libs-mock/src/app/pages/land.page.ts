@@ -9,7 +9,7 @@ import {FilesService, IpfsService, MessageService} from '../../../../libs/src/pu
                         [leftDrawer]="drawer"
                         [leftDrawerMode]="'side'"
                         [leftDrawerOpened]="true"
-                        [hasBackRoute]="true"
+                        [hasBackRoute]="false"
                         [backLink]="'/'"
                         [showSearch]="true"
                         [visibleMenu]="vM"
@@ -31,7 +31,7 @@ import {FilesService, IpfsService, MessageService} from '../../../../libs/src/pu
         <app-drawer></app-drawer>
       </ng-template>
       <ng-template #body>
-        <div style="min-height: 120vh; padding: 24px">
+        <div style="padding: 24px; height: 100%; margin-top: 40vh">
           <h1>File Browser</h1>
           <button style="margin-bottom: 16px" color="primary" (click)="showFileBrowser()" mat-flat-button>
             Choose
@@ -47,7 +47,7 @@ import {FilesService, IpfsService, MessageService} from '../../../../libs/src/pu
           <h1>Protected path by using RbacGuard</h1>
           <button routerLink="/profile" mat-flat-button color="primary">Go to</button>
           <mat-divider></mat-divider>
-          <h1>Ipfs</h1>
+          <h1></h1>
           <button (click)="check()" mat-flat-button color="primary">check</button>
         </div>
       </ng-template>

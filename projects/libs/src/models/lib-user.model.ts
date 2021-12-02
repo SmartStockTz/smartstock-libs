@@ -32,6 +32,15 @@ export interface LibUserModel {
   };
   ecommerce?: any;
   shops?: {
+    ecommerce: any;
+    settings: {
+      saleWithoutPrinter?: boolean;
+      printerFooter?: string;
+      printerHeader?: string;
+      allowRetail?: boolean;
+      allowWholesale?: boolean;
+      currency?: string
+    };
     projectId?: string,
     applicationId?: string;
     projectUrlId?: string;

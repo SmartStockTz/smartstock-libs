@@ -25,7 +25,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {ShopGuard} from './guards/shop-guard.service';
 
 const routes: Routes = [
-  {path: 'login', component: LoginPageComponent},
+  {path: 'account/login', component: LoginPageComponent},
   {path: 'profile', canActivate: [ShopGuard], component: LandPageComponent},
   {path: '', canActivate: [ShopGuard], component: LandPageComponent}
 ];
@@ -67,10 +67,10 @@ export class AppModule {
       applicationId: 'smartstock_lb',
       projectId: 'smartstock',
       appPassword: 'ZMUGVn72o3yd8kSbMGhfWpI80N9nA2IHjxWKlAhG',
-      databaseURL: environment.baseUrl,
-      functionsURL: environment.baseUrl,
+      // databaseURL: environment.baseUrl,
+      // functionsURL: environment.baseUrl,
       adapters: {
-        http: _ => this.smartstockHttp
+        // http: _ => this.smartstockHttp
       }
     });
     syncsService.startWorker().catch(console.log);

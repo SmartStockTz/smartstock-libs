@@ -27,7 +27,7 @@ import {MenuModel} from '../models/menu.model';
       <mat-sidenav #cartDrawer [mode]="rightDrawerMode" [opened]="rightDrawerOpened" position="end">
         <ng-container *ngTemplateOutlet="rightDrawer"></ng-container>
       </mat-sidenav>
-      <mat-sidenav-content style="height: 100vh;">
+      <mat-sidenav-content class="sidenav-container">
         <app-toolbar [sidenav]="leftDrawer?sidenav:undefined"
                      [showProgress]="showProgress"
                      [hasBackRoute]="hasBackRoute"
@@ -46,11 +46,14 @@ import {MenuModel} from '../models/menu.model';
                      [cartBadge]="cartBadge"
                      [heading]="heading">
         </app-toolbar>
-        <ng-container *ngTemplateOutlet="body"></ng-container>
+        <div class="sidenav-body">
+          <ng-container *ngTemplateOutlet="body"></ng-container>
+        </div>
         <app-bottom-nav [first4]="first4" *ngIf="isSmallScreen && showBottomBar"></app-bottom-nav>
       </mat-sidenav-content>
     </mat-sidenav-container>
-  `
+  `,
+  styleUrls: ['../styles/index.style.scss']
 })
 export class SidenavLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() first4: MenuModel[];

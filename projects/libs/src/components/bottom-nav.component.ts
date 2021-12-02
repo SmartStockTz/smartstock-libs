@@ -11,17 +11,14 @@ import {RbacService} from '../services/rbac.service';
   selector: 'app-bottom-nav',
   template: `
     <div class="n-container">
-
       <div matRipple class="nav-item" *ngFor="let m of first4?first4: []" routerLink="{{m.link}}">
         <mat-icon [color]="">{{m.icon}}</mat-icon>
-        <span>{{m.name}}</span>
+<!--        <span>{{m.name}}</span>-->
       </div>
-
       <div (click)="openMenu()" matRipple class="nav-item">
         <mat-icon>dehaze</mat-icon>
-        <span>Menu</span>
+<!--        <span>Menu</span>-->
       </div>
-
     </div>
   `,
   styleUrls: ['../styles/bottom-nav.style.scss']

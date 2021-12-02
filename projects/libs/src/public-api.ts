@@ -4,11 +4,9 @@
 
 export {LibModule} from './lib.module';
 
-export * from './services/storage.service';
 export * from './services/message.service';
 export * from './services/printer.service';
 export * from './services/log.service';
-export * from './services/event.service';
 export * from './services/user.service';
 export * from './services/rbac.service';
 export * from './services/files.service';
@@ -17,7 +15,11 @@ export * from './services/ipfs.service';
 export * from './services/syncs.service';
 export * from './services/smartstock-http-adapter';
 
-// export * from './guards/rbac.guard';
+export * from './guards/active-shop.guard';
+export * from './guards/authentication.guard';
+export * from './guards/admin.guard';
+export * from './guards/manager.guard';
+export * from './guards/payment.guard';
 
 export * from './states/device.state';
 export * from './states/files.state';
@@ -40,6 +42,7 @@ export * from './components/upload-files.component';
 export * from './components/dash-card.component';
 export * from './components/upload-file-progress.component';
 export * from './components/data-not-ready.component';
+export * from './components/payment-dialog.component';
 
 export * from './models/batch.model';
 export * from './models/customer.model';

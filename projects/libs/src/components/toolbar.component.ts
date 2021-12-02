@@ -3,7 +3,6 @@ import {MatSidenav} from '@angular/material/sidenav';
 import {Router} from '@angular/router';
 import {FormControl} from '@angular/forms';
 import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
-import {StorageService} from '../services/storage.service';
 import {UserService} from '../services/user.service';
 import {LibUserModel} from '../models/lib-user.model';
 import {Subject} from 'rxjs';
@@ -21,7 +20,7 @@ import {DeviceState} from '../states/device.state';
                 mat-icon-button>
           <mat-icon>chevron_left</mat-icon>
         </button>
-        <button mat-icon-button *ngIf="sidenav && showModuleMenu" (click)="sidenav.toggle()">
+        <button mat-icon-button *ngIf="sidenav && getShoModule()" (click)="sidenav.toggle()">
           <mat-icon>menu</mat-icon>
         </button>
         <span class="text-truncate">{{heading}}</span>
@@ -38,12 +37,10 @@ import {DeviceState} from '../states/device.state';
         <button *ngIf="cartDrawer" mat-icon-button (click)="cartDrawer.toggle()">
           <mat-icon>{{cartIcon}}</mat-icon>
         </button>
-
         <ng-container *ngTemplateOutlet="visibleMenu"></ng-container>
         <button mat-icon-button [matMenuTriggerFor]="menu">
           <mat-icon>more_vert</mat-icon>
         </button>
-
         <mat-menu #menu>
           <ng-container *ngTemplateOutlet="hiddenMenu"></ng-container>
           <button mat-menu-item (click)="logout()">
@@ -90,16 +87,15 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   @Input() showModuleMenu;
 
   constructor(private readonly router: Router,
-              private readonly storage: StorageService,
               public readonly deviceState: DeviceState,
               private readonly userService: UserService) {
   }
 
   ngOnInit(): void {
-    if (typeof this.showModuleMenu !== 'boolean') {
-      this.showModuleMenu = (this.deviceState.isSmallScreen.value === false);
-    }
     this.deviceState.isSmallScreen.pipe(takeUntil(this.destroy)).subscribe(value => {
+      // if (typeof this.showModuleMenu !== 'boolean') {
+      //   this.showModuleMenu = !value;
+      // }
       if (this.sidenav && value === true) {
         this.sidenav.close().catch(console.log);
       }
@@ -113,7 +109,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     ).subscribe(_ => {
       this.searchCallback.emit(this.searchInputControl.value);
     });
-    this._clearSearchInputListener();
   }
 
   ngOnDestroy(): void {
@@ -122,13 +117,11 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.userService.logout(null).finally(() => {
-      return this.router.navigateByUrl('/');
+      location.replace('/');
     }).catch(console.log);
   }
 
-  private _clearSearchInputListener(): void {
-    // this.eventService.listen(SsmEvents.ADD_CART, data => {
-    //   this.searchInputControl.reset('');
-    // });
+  getShoModule(): boolean {
+    return !(this.hasBackRoute && this.backLink && this.deviceState.isSmallScreen.value === true);
   }
 }

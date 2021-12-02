@@ -45,6 +45,8 @@ import {ImagePreviewComponent} from './components/image-preview.component';
 import {VideoPreviewComponent} from './components/video-preview.component';
 import {AudioPreviewComponent} from './components/audio-preview.component';
 import {OtherFilePreviewComponent} from './components/other-file-preview.component';
+import {FedhaPipe} from './pipes/fedha.pipe';
+import {PaymentDialogComponent} from './components/payment-dialog.component';
 
 @NgModule({
   imports: [
@@ -73,6 +75,7 @@ import {OtherFilePreviewComponent} from './components/other-file-preview.compone
     MatInputModule,
   ],
   exports: [
+    PaymentDialogComponent,
     DrawerComponent,
     ToolbarComponent,
     ShopsPipe,
@@ -84,8 +87,11 @@ import {OtherFilePreviewComponent} from './components/other-file-preview.compone
     FileBrowserSheetComponent,
     SidenavLayoutComponent,
     RbacComponent,
+    FedhaPipe
   ],
   declarations: [
+    FedhaPipe,
+    PaymentDialogComponent,
     ImagePreviewComponent,
     VideoPreviewComponent,
     AudioPreviewComponent,

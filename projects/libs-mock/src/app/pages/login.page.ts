@@ -3,9 +3,9 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import * as bfast from 'bfast';
-import {StorageService, UserService} from '../../../../libs/src/public-api';
+import {UserService} from '../../../../libs/src/public-api';
 import {getDaasAddress, getFaasAddress} from '../../../../libs/src/public-api';
-import {environment} from "../../environments/environment";
+import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -41,7 +41,6 @@ export class LoginPageComponent implements OnInit {
 
   constructor(private readonly formBuilder: FormBuilder,
               private readonly router: Router,
-              private readonly storageService: StorageService,
               private readonly userService: UserService,
               private readonly snack: MatSnackBar) {
   }

@@ -1,9 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Observable, of} from 'rxjs';
-import {EventService} from '../services/event.service';
 import {UserService} from '../services/user.service';
 import {LogService} from '../services/log.service';
-import {SsmEvents} from '../utils/eventsNames.util';
 import {ShopModel} from '../models/shop.model';
 import {NavigationService} from '../services/navigation.service';
 
@@ -66,8 +64,7 @@ export class DrawerComponent implements OnInit {
 
   constructor(private readonly userService: UserService,
               private readonly logger: LogService,
-              public readonly navigationService: NavigationService,
-              private readonly eventApi: EventService) {
+              public readonly navigationService: NavigationService) {
   }
 
   shop: ShopModel;
@@ -90,14 +87,6 @@ export class DrawerComponent implements OnInit {
     });
     this.userService.currentUser().then(user => {
       this.currentUser = user;
-    });
-    this.eventApi.listen(SsmEvents.SETTINGS_UPDATED, data => {
-      this.userService.getCurrentShop().then(shop => {
-        this.shop = shop;
-      }).catch(reason => {
-        this.logger.e(reason, 'AdminDrawerComponent:37');
-        this.shop = undefined;
-      });
     });
   }
 

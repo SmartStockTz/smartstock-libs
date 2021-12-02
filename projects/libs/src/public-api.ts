@@ -54,3 +54,5 @@ export * from './models/printer.model';
 export * from './models/shop.model';
 export * from './models/stock.model';
 export * from './models/sale.model';
+
+export * from './pipes/fedha.pipe';

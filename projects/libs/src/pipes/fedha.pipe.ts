@@ -5,6 +5,7 @@ import {UserService} from '../services/user.service';
 @Pipe({
   name: 'fedha'
 })
+
 export class FedhaPipe implements PipeTransform {
 
   constructor(private readonly userService: UserService) {

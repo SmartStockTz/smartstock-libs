@@ -122,6 +122,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
   getShoModule(): boolean {
-    return !(this.hasBackRoute && this.backLink && this.deviceState.isSmallScreen.value === true);
+    return !(this.hasBackRoute === true && this.backLink && this.deviceState.isSmallScreen.value === true);
   }
 }

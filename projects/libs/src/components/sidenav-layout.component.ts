@@ -49,7 +49,7 @@ import {MenuModel} from '../models/menu.model';
         <div class="sidenav-body">
           <ng-container *ngTemplateOutlet="body"></ng-container>
         </div>
-        <app-bottom-nav [first4]="first4" *ngIf="isSmallScreen && showBottomBar"></app-bottom-nav>
+<!--        <app-bottom-nav [first4]="first4" *ngIf="isSmallScreen && showBottomBar"></app-bottom-nav>-->
       </mat-sidenav-content>
     </mat-sidenav-container>
   `,

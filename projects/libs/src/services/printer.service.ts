@@ -4,7 +4,7 @@ import {NavigationService} from './navigation.service';
 import {PrinterModel} from '../models/printer.model';
 import {UserService} from './user.service';
 import {firstValueFrom} from 'rxjs';
-import {isNode} from 'bfast';
+import {isElectron} from 'bfast';
 
 @Injectable({
   providedIn: 'root',
@@ -45,7 +45,7 @@ export class PrintService {
     data = data.concat(printModel.data);
     data = data.concat(cSettings.printerFooter);
     printModel.data = data;
-    if (!isNode) {
+    if (!isElectron) {
       console.log('can not print in web browser');
       return 'can not print in web browser';
     }

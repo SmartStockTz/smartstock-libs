@@ -3,6 +3,8 @@ import {HttpClient} from '@angular/common/http';
 import {NavigationService} from './navigation.service';
 import {PrinterModel} from '../models/printer.model';
 import {UserService} from './user.service';
+import {firstValueFrom} from 'rxjs';
+import {isNode} from 'bfast';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +26,7 @@ export class PrintService {
   }
 
   private async printInDesktop(printModel: PrinterModel): Promise<any> {
-    return this.httpClient.post(this.url, {
+    const o = this.httpClient.post(this.url, {
       data: printModel.data,
       id: printModel.id
     }, {
@@ -32,7 +34,8 @@ export class PrintService {
         'Access-Control-Allow-Origin': '*'
       },
       responseType: 'text'
-    }).toPromise();
+    });
+    return firstValueFrom(o);
   }
 
   async print(printModel: PrinterModel, forcePrint = false): Promise<any> {
@@ -41,31 +44,14 @@ export class PrintService {
     data = data.concat(cSettings.printerHeader + '\n');
     data = data.concat(printModel.data);
     data = data.concat(cSettings.printerFooter);
-
     printModel.data = data;
-
-    // if (!ConfigsService.production) {
-    //   console.warn('print services disabled in dev mode');
-    //   return;
-    // }
-
-    // // console.log(cSettings.saleWithoutPrinter);
-    // if (ConfigsService.android && !cSettings.saleWithoutPrinter) {
-    //   return 'done printing';
-    // }
-
-    if (typeof process === 'undefined' && forcePrint === false) {
+    if (!isNode) {
+      console.log('can not print in web browser');
       return 'can not print in web browser';
     }
-
     if (!cSettings.saleWithoutPrinter || forcePrint) {
       return await this.printInDesktop(printModel);
     }
-
-    // if (!cSettings.saleWithoutPrinter) {
-    //   return await this.printInDesktop(printModel);
-    // }
-
     return;
   }
 

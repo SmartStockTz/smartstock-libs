@@ -6,7 +6,7 @@ import {Subject} from 'rxjs';
 import {FilesState} from '../states/files.state';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {FileModel} from '../models/file.model';
-import {FormControl, Validators} from '@angular/forms';
+import {UntypedFormControl, Validators} from '@angular/forms';
 import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef} from '@angular/material/bottom-sheet';
 
 // @dynamic
@@ -66,9 +66,9 @@ export class FileBrowserSheetComponent implements OnInit, OnDestroy, AfterViewIn
   destroy: Subject<any> = new Subject<any>();
   filter = 'all';
   files: MatTableDataSource<FileModel> = new MatTableDataSource([]);
-  filesFormControl = new FormControl([], [Validators.nullValidator, Validators.required]);
+  filesFormControl = new UntypedFormControl([], [Validators.nullValidator, Validators.required]);
   filesSelected = [];
-  filterFiles = new FormControl('');
+  filterFiles = new UntypedFormControl('');
 
   constructor(public readonly sheetRef: MatBottomSheetRef<FileBrowserSheetComponent>,
               public readonly filesState: FilesState,

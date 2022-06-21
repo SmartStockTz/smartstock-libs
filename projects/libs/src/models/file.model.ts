@@ -6,4 +6,5 @@ export interface FileModel {
   name: string;
   category: string;
   extension?: string;
+  cid?: string;
 }

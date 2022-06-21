@@ -1,14 +1,13 @@
 {
-  "name": "@smartstocktz/core-libs",
-  "version": "0.5.3",
+  "name": "smartstockt-core",
+  "version": "1.0.0",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
   "repository": {
     "url": "git://github.com/SmartStockTz/smartstock-libs.git"
   },
-  "peerDependencies": {
-  },
+  "peerDependencies": {},
   "dependencies": {
     "tslib": "^2.0.0"
   }

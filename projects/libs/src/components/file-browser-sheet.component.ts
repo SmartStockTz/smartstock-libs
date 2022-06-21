@@ -57,7 +57,6 @@ import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef} from '@angular/material/bottom
         <app-other-file-preview *ngIf="file.category === 'other'" [file]="file"></app-other-file-preview>
       </div>
     </div>
-<!--    <mat-paginator #matPaginator [length]="total" [pageSize]="filesState.paginationSize"></mat-paginator>-->
   `,
   styleUrls: ['../styles/files-browser.style.scss']
 })

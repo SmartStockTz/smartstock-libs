@@ -1,8 +1,9 @@
 {
   "name": "smartstock-core",
-  "version":"1.0.0",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
+    "box": "yarn install && yarn start",
     "start": "ng serve --disableHostCheck=true --host=0.0.0.0 -c dev libs-mock",
     "build": "ng build -c production libs && node copy-workers.js",
     "build:lib": "npx ng build --configuration production libs",

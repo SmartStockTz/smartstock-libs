@@ -15,8 +15,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '16.x'
-      - run: npm install -g @angular/cli
-      - run: npm install -g npm
+      - run: npm install --location=global @angular/cli
+      - run: npm install --location=global npm
+      - run: npm install
       - run: npm run publish
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

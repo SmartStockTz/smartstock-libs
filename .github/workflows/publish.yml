@@ -17,7 +17,7 @@ jobs:
           node-version: '16.x'
       - run: npm install --location=global @angular/cli
       - run: npm install --location=global npm
-      - run: npm install
+      - run: npm install --legacy-peer-deps
       - run: npm run publish
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

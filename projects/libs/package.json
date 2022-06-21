@@ -1,5 +1,5 @@
 {
-  "name": "smartstockt-core",
+  "name": "smartstock-core",
   "version": "1.0.0",
   "publishConfig": {
     "registry": "https://registry.npmjs.org"

@@ -16,9 +16,9 @@ jobs:
         with:
           node-version: '16.x'
       - run: npm install --location=global @angular/cli
-      - run: npm install --location=global npm
-      - run: npm install --legacy-peer-deps
+      - run: npm install --location=global yarn
+      - run: yarn install
       - run: npm config set //registry.npmjs.org/:_authToken=${NPM_TOKEN}
-      - run: npm run publish
+      - run: yarn run publish
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

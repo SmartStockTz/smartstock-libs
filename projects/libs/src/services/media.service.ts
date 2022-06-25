@@ -11,15 +11,19 @@ export class MediaService {
   constructor(private readonly userService: UserService) {}
 
   private static getFileCategory(type1: string): string {
-    if (!type1) {
-      return "unknown";
+    try {
+      if (!type1) {
+        return "unknown";
+      }
+      const fileTypes = type1.split("/");
+      const type = fileTypes[0];
+      if (type === "image") {
+        return type;
+      }
+      return "other";
+    } catch (e) {
+      return "other";
     }
-    const fileTypes = type1.split("/");
-    const type = fileTypes[0];
-    if (type === "image") {
-      return type;
-    }
-    return "other";
   }
 
   async fetchFiles(query: string): Promise<FileModel[]> {

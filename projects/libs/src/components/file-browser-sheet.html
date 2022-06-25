@@ -1,0 +1,86 @@
+<div class="media-header">
+  <input
+    class="media-filter"
+    [formControl]="filterFiles"
+    placeholder="Search file by name..."
+  />
+  <!--      <span style="flex: 1 1 auto"></span>-->
+  <button (click)="filesState.fetchFiles()" color="primary" mat-icon-button>
+    <mat-icon>refresh</mat-icon>
+  </button>
+  <button
+    color="warn"
+    mat-icon-button
+    (click)="sheetRef.dismiss({message: 'No file selected'})"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+  <mat-divider></mat-divider>
+</div>
+
+<div *ngIf="(filesState.isFetchFiles | async)===false">
+  <div style="width: 100%;">
+    <app-upload-files
+      [files]="filesSelected"
+      [uploadFileFormControl]="filesFormControl"
+      [multiple]="true"
+    >
+    </app-upload-files>
+
+    <button
+      *ngIf="filesFormControl.valid"
+      [disabled]="filesState.isUploading | async"
+      (click)="uploadFile()"
+      mat-flat-button
+      color="primary"
+    >
+      Upload
+    </button>
+    <div style="width: 20px; height: 20px;"></div>
+    <app-upload-file-progress
+      *ngIf="filesState.isUploading | async"
+      [onUploadFlag]="true"
+      [name]="'Upload '+filesFormControl.value[0].name"
+      [uploadPercentage]="filesState.uploadingPercentage | async"
+    >
+    </app-upload-file-progress>
+  </div>
+</div>
+
+<div
+  *ngIf="(filesState.isFetchFiles | async)===true"
+  style="
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+  "
+>
+  <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+  <p>Fetch files...</p>
+</div>
+
+<div class="medias-container">
+  <div
+    (click)="selectedFile(file)"
+    *ngFor="let file of files.connect() | async"
+  >
+    <app-image-preview
+      *ngIf="file.category === 'image'"
+      [file]="file"
+    ></app-image-preview>
+    <app-video-preview
+      *ngIf="file.category === 'video'"
+      [file]="file"
+    ></app-video-preview>
+    <app-audio-preview
+      *ngIf="file.category === 'audio'"
+      [file]="file"
+    ></app-audio-preview>
+    <app-other-file-preview
+      *ngIf="file.category === 'other'"
+      [file]="file"
+    ></app-other-file-preview>
+  </div>
+</div>

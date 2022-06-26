@@ -69,7 +69,12 @@ export class AppModule {
       applicationId: "smartstock_lb",
       projectId: "smartstock"
     });
-    syncsService.startWorker().catch(console.log);
+    syncsService
+      .startWorker()
+      .then((x) => {
+        console.log("syncs worker stated");
+      })
+      .catch(console.log);
     configs.versionName = "demo-libs";
     [
       {

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import * as bfast from 'bfast';
@@ -36,10 +36,10 @@ import {environment} from '../../environments/environment';
 })
 export class LoginPageComponent implements OnInit {
 
-  loginForm: FormGroup;
+  loginForm: UntypedFormGroup;
   isLogin = false;
 
-  constructor(private readonly formBuilder: FormBuilder,
+  constructor(private readonly formBuilder: UntypedFormBuilder,
               private readonly router: Router,
               private readonly userService: UserService,
               private readonly snack: MatSnackBar) {

@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {MatSidenav} from '@angular/material/sidenav';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {DeviceState} from '../states/device.state';
 import {takeUntil} from 'rxjs/operators';
 import {CartDrawerState} from '../states/cart-drawer-state';
@@ -72,7 +72,7 @@ export class SidenavLayoutComponent implements OnInit, OnDestroy, AfterViewInit 
   @Input() rightDrawer: TemplateRef<any>;
   @Input() showSearch = false;
   @Output() searchCallback = new EventEmitter<string>();
-  @Input() searchInputControl = new FormControl('');
+  @Input() searchInputControl = new UntypedFormControl('');
   @Input() searchPlaceholder: string | 'Type to search';
   @Input() searchProgressFlag = false;
   @Input() leftDrawer: TemplateRef<any>;

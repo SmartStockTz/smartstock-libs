@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 
 @Component({
   selector: 'app-search-input',
@@ -19,7 +19,7 @@ import {FormControl} from '@angular/forms';
   styleUrls: ['../styles/search-input.style.scss']
 })
 export class SearchInputComponent implements OnInit {
-  @Input() searchInputControl: FormControl;
+  @Input() searchInputControl: UntypedFormControl;
   @Input() showSearch = false;
   @Input() searchProgressFlag = false;
   @Input() searchPlaceholder = 'Enter something...';

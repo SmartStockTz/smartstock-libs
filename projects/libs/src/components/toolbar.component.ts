@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef} from '@angular/core';
 import {MatSidenav} from '@angular/material/sidenav';
 import {Router} from '@angular/router';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {UserService} from '../services/user.service';
 import {LibUserModel} from '../models/lib-user.model';
@@ -77,7 +77,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   @Input() cartDrawer: MatSidenav;
   @Input() showSearch = false;
   @Output() searchCallback = new EventEmitter<string>();
-  @Input() searchInputControl = new FormControl('');
+  @Input() searchInputControl = new UntypedFormControl('');
   @Input() searchPlaceholder: string | 'Type to search';
   @Input() cartIcon = 'shopping_cart';
   @Input() cartBadge = 0;

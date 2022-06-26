@@ -61,7 +61,8 @@
             "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true
+            "namedChunks": true,
+            "webWorkerTsConfig": "projects/libs-mock/tsconfig.worker.json"
           },
           "configurations": {
             "production": {
@@ -139,7 +140,8 @@
             ],
             "scripts": [
 
-            ]
+            ],
+            "webWorkerTsConfig": "projects/libs-mock/tsconfig.worker.json"
           }
         },
         "e2e": {
@@ -159,6 +161,5 @@
   },
   "cli": {
     "analytics": "b472af18-ac63-41a0-8cbe-5ebb21a1ea4b"
-  },
-  "defaultProject": "libs"
+  }
 }

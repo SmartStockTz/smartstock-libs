@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {UntypedFormControl, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-upload-files',
@@ -30,7 +30,7 @@ import {FormControl, Validators} from '@angular/forms';
 export class UploadFilesComponent implements OnInit {
   @Input() files: { name: string, type: string, url: File, size: string }[] = [];
   @Input() multiple = true;
-  @Input() uploadFileFormControl: FormControl = new FormControl([], [Validators.nullValidator, Validators.required]);
+  @Input() uploadFileFormControl: UntypedFormControl = new UntypedFormControl([], [Validators.nullValidator, Validators.required]);
 
   constructor() {
   }

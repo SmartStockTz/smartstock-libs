@@ -1,10 +1,6 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {NavigationService} from './navigation.service';
 import {PrinterModel} from '../models/printer.model';
 import {UserService} from './user.service';
-import {firstValueFrom} from 'rxjs';
-import {isElectron} from 'bfast';
 
 @Injectable({
   providedIn: 'root',
@@ -12,9 +8,7 @@ import {isElectron} from 'bfast';
 export class PrintService {
   private url = `https://localhost:8080/print`;
 
-  constructor(private readonly userService: UserService,
-              private readonly navigationService: NavigationService,
-              private readonly httpClient: HttpClient) {
+  constructor(private readonly userService: UserService) {
   }
 
   setUrl(url: string): void {
@@ -25,19 +19,6 @@ export class PrintService {
     return this.url;
   }
 
-  private async printInDesktop(printModel: PrinterModel): Promise<any> {
-    const o = this.httpClient.post(this.url, {
-      data: printModel.data,
-      id: printModel.id
-    }, {
-      headers: {
-        'Access-Control-Allow-Origin': '*'
-      },
-      responseType: 'text'
-    });
-    return firstValueFrom(o);
-  }
-
   async print(printModel: PrinterModel, forcePrint = false): Promise<any> {
     const cSettings = await this.userService.getSettings();
     let data = '';
@@ -45,14 +26,17 @@ export class PrintService {
     data = data.concat(printModel.data);
     data = data.concat(cSettings.printerFooter);
     printModel.data = data;
-    if (!isElectron) {
-      console.log('can not print in web browser');
-      return 'can not print in web browser';
+    // @ts-ignore
+    if(window && window.smartstock && window.smartstock.print){
+      if (!cSettings.saleWithoutPrinter || forcePrint) {
+        // @ts-ignore
+        return window.smartstock.print(printModel.data);
+      }
+      return;
+    }else{
+      console.log('INFO: printer is not implemented');
+      return 'can not print, printer is not implemented';
     }
-    if (!cSettings.saleWithoutPrinter || forcePrint) {
-      return await this.printInDesktop(printModel);
-    }
-    return;
   }
 
 }

@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
-import {FilesService, IpfsService, MessageService} from '../../../../libs/src/public-api';
+import {FilesService, IpfsService, MessageService, PrintService} from '../../../../libs/src/public-api';
 
 @Component({
   template: `
@@ -32,6 +32,10 @@ import {FilesService, IpfsService, MessageService} from '../../../../libs/src/pu
       </ng-template>
       <ng-template #body>
         <div style="padding: 24px; height: 100%; margin-top: 40vh">
+          <h1>Choose Printer</h1>
+          <button style="margin-bottom: 16px" color="primary" (click)="choosePrinter()" mat-flat-button>
+            Choose
+          </button>
           <h1>File Browser</h1>
           <button style="margin-bottom: 16px" color="primary" (click)="showFileBrowser()" mat-flat-button>
             Choose
@@ -60,6 +64,7 @@ export class LandPageComponent implements OnInit, OnDestroy {
 
   constructor(private readonly dialog: MatDialog,
               private readonly messageService: MessageService,
+              private readonly printerService: PrintService,
               private readonly filesService: FilesService) {
   }
 
@@ -67,6 +72,10 @@ export class LandPageComponent implements OnInit, OnDestroy {
     this.filesService.browse().then(value => {
       console.log(value);
     });
+  }
+
+  choosePrinter(){
+    this.printerService.showChoosePrinter();
   }
 
   check(): void {

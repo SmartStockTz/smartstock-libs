@@ -47,6 +47,7 @@ import {AudioPreviewComponent} from './components/audio-preview.component';
 import {OtherFilePreviewComponent} from './components/other-file-preview.component';
 import {FedhaPipe} from './pipes/fedha.pipe';
 import {PaymentDialogComponent} from './components/payment-dialog.component';
+import { ChoosePrinterDialog } from './components/choose-printer';
 
 @NgModule({
   imports: [
@@ -72,7 +73,7 @@ import {PaymentDialogComponent} from './components/payment-dialog.component';
     MatSidenavModule,
     MatPaginatorModule,
     MatChipsModule,
-    MatInputModule,
+    MatInputModule
   ],
   exports: [
     PaymentDialogComponent,
@@ -114,7 +115,8 @@ import {PaymentDialogComponent} from './components/payment-dialog.component';
     RbacComponent,
     FileBrowserSheetComponent,
     BottomNavComponent,
-    MenuSheetComponent
+    MenuSheetComponent,
+    ChoosePrinterDialog
   ]
 })
 

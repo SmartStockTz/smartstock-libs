@@ -27,6 +27,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { ShopGuard } from "./guards/shop-guard.service";
+import { MatListModule } from "@angular/material/list";
 
 const routes: Routes = [
   { path: "account/login", component: LoginPageComponent },
@@ -54,7 +55,8 @@ const routes: Routes = [
     MatBottomSheetModule,
     MatDividerModule,
     MatIconModule,
-    MatMenuModule
+    MatMenuModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

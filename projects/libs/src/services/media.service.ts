@@ -63,14 +63,15 @@ export class MediaService {
     file: File,
     callback: (progress: any) => void
   ): Promise<FileModel> {
-    const name = file.name.replace(new RegExp("[^a-zA-Z0-9]", "gi"), "");
+    const name = file.name.replace(new RegExp("[^a-zA-Z0-9\.]", "gi"), "");
+    // console.log(name);
     const shop = await this.userService.getCurrentShop();
     const type = file.type;
     const url = await storage(shop.projectId).save(
       {
         filename: encodeURIComponent(name),
         data: file,
-        pn: true
+        pn: false
       },
       (progress) => {
         callback(((progress.loaded / progress.total) * 100).toFixed(2));
